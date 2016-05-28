@@ -5,6 +5,8 @@
  */
 package com.mycompany.jgit;
 
+import java.io.File;
+import org.eclipse.jgit.api.Git;
 /**
  *
  * @author Anderson Souza
@@ -17,7 +19,7 @@ public class SVN implements IRepository {
     }
 
     @Override
-    public IRepository clone(String url) {
+    public Git clone(File directory, String url) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

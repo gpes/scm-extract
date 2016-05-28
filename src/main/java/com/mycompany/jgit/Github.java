@@ -5,6 +5,12 @@
  */
 package com.mycompany.jgit;
 
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+
 /**
  *
  * @author Anderson Souza
@@ -17,8 +23,8 @@ public class Github implements IRepository {
     }
 
     @Override
-    public IRepository clone(String url) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Git clone(File directory, String url) throws GitAPIException {
+        return Git.cloneRepository().setURI(url).setDirectory(directory).call();
     }
 
     @Override
@@ -31,5 +37,4 @@ public class Github implements IRepository {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
 }

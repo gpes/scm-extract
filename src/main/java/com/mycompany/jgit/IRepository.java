@@ -5,13 +5,16 @@
  */
 package com.mycompany.jgit;
 
+import java.io.File;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 /**
  *
  * @author Anderson Souza
  */
 public interface IRepository {
 
-    public IRepository clone(String url);
+    public Git clone(File directory, String url) throws GitAPIException;
 
     public IRepository checkoutBranch(String branch);
 
