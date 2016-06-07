@@ -13,6 +13,4 @@ public abstract class AbstractFactory {
 
     public abstract IRepository createGithub();
 
-    public abstract IRepository createSVN();
-
 }

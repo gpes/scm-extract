@@ -8,6 +8,7 @@ package com.mycompany.jgit;
 import java.io.File;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
 /**
  *
  * @author Anderson Souza
@@ -16,7 +17,7 @@ public interface IRepository {
 
     public Git clone(File directory, String url) throws GitAPIException;
 
-    public IRepository checkoutBranch(String branch);
+    public Ref checkoutBranch(Git repository, String branch)throws GitAPIException;
 
     public IRepository connectRepository(String jass2125, String string);
     
