@@ -6,10 +6,10 @@
 package com.mycompany.jgit;
 
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
 
 /**
  *
@@ -20,6 +20,15 @@ public class Github implements IRepository {
     @Override
     public IRepository checkoutBranch(String branch) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Ref checkout(Git git, String check) throws GitAPIException {
+        return git.checkout().
+                setCreateBranch(true).
+                setName(check).
+                setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).
+                setStartPoint("origin/" + check).call();
     }
 
     @Override
@@ -35,6 +44,22 @@ public class Github implements IRepository {
     @Override
     public IRepository getRepository() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Ref checkoutByCommit(Git git, String check) throws GitAPIException {
+//        git.checkout().setName(check).
+//                setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).
+//                setStartPoint("origin/" + check).
+//                call();
+
+        return git.checkout().setName(check).setName("master").call();
+//        git.checkout().setCreateBranch(true).setName("new-branch").setStartPoint(check).call();
+//                git.checkout().
+//                setCreateBranch(true).
+//                setName("master").
+//                setStartPoint(check).
+//                call();
     }
 
 }

@@ -16,9 +16,6 @@ public class Factory extends AbstractFactory {
         return new Github();
     }
 
-    @Override
-    public IRepository createSVN() {
-        return new SVN();
-    }
+    
     
 }

@@ -8,6 +8,8 @@ package com.mycompany.jgit;
 import java.io.File;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
+
 /**
  *
  * @author Anderson Souza
@@ -19,7 +21,10 @@ public interface IRepository {
     public IRepository checkoutBranch(String branch);
 
     public IRepository connectRepository(String jass2125, String string);
-    
+
     public IRepository getRepository();
 
+    public Ref checkout(Git git, String check) throws GitAPIException;
+
+    public Ref checkoutByCommit(Git git, String check) throws GitAPIException;
 }

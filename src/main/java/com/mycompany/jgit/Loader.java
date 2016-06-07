@@ -10,14 +10,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
 /**
  *
  * @author Anderson Souza
  */
 public class Loader {
 
-    public static final File DIRECTORY = new File("C:/Users/Pris/Desktop/Teste");
-    public static final String REMOTE_URL = "https://github.com/prisgouveia/prisgouveia.github.io";
+    public static final File DIRECTORY = new File("/home/jairanderson/Área de Trabalho/Folder");
+    public static final String REMOTE_URL = "https://github.com/ricardojob/SwissArmyJavaGit";
+    public static final String PARAM = "822f0c75641731ab61863bc540b8cfe06f909c5f";
     
     public static void main(String[] args) {
         
@@ -25,6 +27,9 @@ public class Loader {
         AbstractFactory factory = new Factory();
         try {
             Git repository = factory.createGithub().clone(DIRECTORY, REMOTE_URL);
+            IRepository repo = new Github();
+            Ref ref = repo.checkoutByCommit(repository, PARAM);
+            System.out.println(ref.getName());
         } catch (GitAPIException ex) {
             Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
         }
