@@ -22,6 +22,16 @@ public class Github implements IRepository {
         return repository.checkout().setCreateBranch(true).setName(branch).
                 setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).
                 setStartPoint("origin/"+branch).call();
+ 
+    }
+
+    @Override
+    public Ref checkout(Git git, String check) throws GitAPIException {
+        return git.checkout().
+                setCreateBranch(true).
+                setName(check).
+                setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).
+                setStartPoint("origin/" + check).call();
     }
 
     @Override
@@ -37,6 +47,22 @@ public class Github implements IRepository {
     @Override
     public IRepository getRepository() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Ref checkoutByCommit(Git git, String check) throws GitAPIException {
+//        git.checkout().setName(check).
+//                setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).
+//                setStartPoint("origin/" + check).
+//                call();
+
+        return git.checkout().setName(check).setName("master").call();
+//        git.checkout().setCreateBranch(true).setName("new-branch").setStartPoint(check).call();
+//                git.checkout().
+//                setCreateBranch(true).
+//                setName("master").
+//                setStartPoint(check).
+//                call();
     }
 
 }

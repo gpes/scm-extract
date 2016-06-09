@@ -20,7 +20,10 @@ public interface IRepository {
     public Ref checkoutBranch(Git repository, String branch)throws GitAPIException;
 
     public IRepository connectRepository(String jass2125, String string);
-    
+
     public IRepository getRepository();
 
+    public Ref checkout(Git git, String check) throws GitAPIException;
+
+    public Ref checkoutByCommit(Git git, String check) throws GitAPIException;
 }
