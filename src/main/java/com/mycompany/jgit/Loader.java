@@ -33,6 +33,7 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 public class Loader {
 
     public static final File DIRECTORY_PRIS = new File("C:/Users/Pris/Desktop/Teste1");
+    public static final File DIRECTORY_ANDERSON = new File("/home/jairanderson/Área de Trabalho/Folder");
     public static final File DIRECTORY_JOB = new File("/Users/job/Documents/dev/testes/exemplo-jcabi/dataTeste/v2");
     public static final String REMOTE_URL = "https://github.com/google/gson";
     public static final String HASH = "d4a9eb4e7bcbf0fa9e9e76c81fc86ff669f7c8ea";
@@ -42,21 +43,24 @@ public class Loader {
 
         AbstractFactory factory = new Factory();
         try {
+            /* Fazendo clone de um repositório */
+            Git gitRepository = factory.createGithub().clone(DIRECTORY_ANDERSON, REMOTE_URL);
 
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
 //          Git repository = factory.createGithub().clone(DIRECTORY, "/Users/job/Documents/dev/testes/exemplo-jcabi/dataTeste/v1");
 
-            /*Fazendo clone de um repositório*/
-            Git gitRepository = factory.createGithub().clone(DIRECTORY_PRIS, REMOTE_URL);
-            
-            /*Fazendo checkout de uma revisão específica*/
+        /*Fazendo checkout de uma revisão específica*/
 //          Ref call = gitRepository.checkout().setName(HASH).call();
 
-            /*Recuperando commits a partir de um intervalo de tempo - Teste*/
-            LogCommand log = gitRepository.log();
-            
-            log.call().forEach(t -> {
-                lista.add(new Versao(t.getAuthorIdent().getEmailAddress(), t.getCommitterIdent().getWhen()));
-            });
+        /*Recuperando commits a partir de um intervalo de tempo - Teste*/
+//            LogCommand log = gitRepository.log();
+//            
+//            log.call().forEach(t -> {
+//                lista.add(new Versao(t.getAuthorIdent().getEmailAddress(), t.getCommitterIdent().getWhen()));
+//            });
 //
 //          String inicio = "01/06/2016";
 //          String fim = "10/06/2016";
@@ -68,22 +72,19 @@ public class Loader {
 ////          bw(since, until).forEach(System.out::println);
 ////          bw(t->t.getData().after(since)).forEach(System.out::println);
 //          bw(t -> t.getEmail().startsWith("j")).forEach(System.out::println);
-            /*END*/
-            
+        /*END*/
 //          DIRECTORY_JOB.delete();
-            
-           /*Mostrando o tipo e quais arquivos foram alterados*/
-            showDiffs(gitRepository);
-            
-           /*Mostrando que alterações foram feitas no(s) arquivo(s)*/ 
-            showFileDiffs(gitRepository);
-            
-        } catch (GitAPIException ex) {
-            Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            DIRECTORY_PRIS.delete();
-        }
-
+        /*Mostrando o tipo e quais arquivos foram alterados*/
+//            showDiffs(gitRepository);
+//            
+//           /*Mostrando que alterações foram feitas no(s) arquivo(s)*/ 
+//            showFileDiffs(gitRepository);
+//            
+//        } catch (GitAPIException ex) {
+//            Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
+//        } finally {
+//            DIRECTORY_PRIS.delete();
+//        }
     }
 
     // É um exemplo :)

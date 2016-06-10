@@ -6,6 +6,7 @@
 package com.mycompany.jgit;
 
 import java.io.File;
+import java.io.IOException;
 import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -21,8 +22,8 @@ public class Github implements IRepository {
     public Ref checkoutBranch(Git repository, String branch) throws GitAPIException {
         return repository.checkout().setCreateBranch(true).setName(branch).
                 setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).
-                setStartPoint("origin/"+branch).call();
- 
+                setStartPoint("origin/" + branch).call();
+
     }
 
     @Override
@@ -34,19 +35,52 @@ public class Github implements IRepository {
                 setStartPoint("origin/" + check).call();
     }
 
+    /**
+     * Realiza um clone
+     *
+     * @param directory
+     * @param url
+     * @return
+     * @throws GitAPIException
+     * @throws CloneException
+     * @throws java.io.IOException
+     */
     @Override
-    public Git clone(File directory, String url) throws GitAPIException {
-        return Git.cloneRepository().setURI(url).setDirectory(directory).call();
+    public Git clone(File directory, String url) throws GitAPIException, CloneException, IOException {
+        try {
+            if (!directory.exists() && !directory.isDirectory()) {
+                /* realiza um clone */
+                return Git.cloneRepository().setURI(url).setDirectory(directory).call();
+            }
+            //se já existe pegue a referencia do diretorio
+            return this.getRepository(directory);
+        } catch (SecurityException e) {
+            throw new CloneException("fatal: permissão de pasta", e);
+        } catch (ReferenceException e) {
+            throw new IOException("fatal: Not a repository git.");
+        }
     }
-    
+
     @Override
     public IRepository connectRepository(String jass2125, String string) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Recupera um repositorio local
+     *
+     * @param directory\
+     * @return Git git
+     * @throws com.mycompany.jgit.ReferenceException
+     * @throws IOException Diretório não existe
+     */
     @Override
-    public IRepository getRepository() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Git getRepository(File directory) throws ReferenceException {
+        try {
+            return Git.open(directory);
+        } catch (IOException e) {
+            throw new ReferenceException(e);
+        }
     }
 
     @Override

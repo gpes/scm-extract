@@ -6,22 +6,24 @@
 package com.mycompany.jgit;
 
 import java.io.File;
+import java.io.IOException;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
+
 /**
  *
  * @author Anderson Souza
  */
 public interface IRepository {
 
-    public Git clone(File directory, String url) throws GitAPIException;
+    public Git clone(File directory, String url) throws GitAPIException, CloneException, IOException;
 
-    public Ref checkoutBranch(Git repository, String branch)throws GitAPIException;
+    public Ref checkoutBranch(Git repository, String branch) throws GitAPIException;
 
     public IRepository connectRepository(String jass2125, String string);
 
-    public IRepository getRepository();
+    public Git getRepository(File directory) throws ReferenceException;
 
     public Ref checkout(Git git, String check) throws GitAPIException;
 
