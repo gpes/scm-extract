@@ -7,13 +7,10 @@ package com.mycompany.jgit;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,7 +18,13 @@ import java.util.stream.Collectors;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 
 /**
  *
@@ -40,51 +43,45 @@ public class Loader {
         AbstractFactory factory = new Factory();
         try {
 
-//            Git repository = factory.createGithub().clone(DIRECTORY, "/Users/job/Documents/dev/testes/exemplo-jcabi/dataTeste/v1");
-            Git gitRepository = factory.createGithub().clone(DIRECTORY_JOB, REMOTE_URL);
-//            Ref call = gitRepository.checkout().setName(HASH).call();
+//          Git repository = factory.createGithub().clone(DIRECTORY, "/Users/job/Documents/dev/testes/exemplo-jcabi/dataTeste/v1");
 
+            /*Fazendo clone de um repositório*/
+            Git gitRepository = factory.createGithub().clone(DIRECTORY_PRIS, REMOTE_URL);
+            
+            /*Fazendo checkout de uma revisão específica*/
+//          Ref call = gitRepository.checkout().setName(HASH).call();
+
+            /*Recuperando commits a partir de um intervalo de tempo - Teste*/
             LogCommand log = gitRepository.log();
-
-//            for (RevCommit t : log.call()) {
-////                Date commitDate = new Date(commit.getCommitTime() * 1000L);
-////                System.out.println("Autor: " + commit.getAuthorIdent() + "Data: " + commitDate);
-////                System.out.print(commit.getCommitterIdent().getWhen().equals(commitDate)?"":"false "+commit.getAuthorIdent().getWhen()+ " - "+commitDate+"\n");
-////                System.out.println(commit.getCommitterIdent().getWhen() + " - " + commitDate);
-//                lista.add(new Versao(t.getAuthorIdent().getEmailAddress(),
-//                        t.getCommitterIdent().getWhen()));
-//            }
-            log.call().forEach( t -> {
+            
+            log.call().forEach(t -> {
                 lista.add(new Versao(t.getAuthorIdent().getEmailAddress(), t.getCommitterIdent().getWhen()));
             });
+//
+//          String inicio = "01/06/2016";
+//          String fim = "10/06/2016";
+//
+//          DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+//
+//          Date since = df.parse(inicio);
+//          Date until = df.parse(fim);
+////          bw(since, until).forEach(System.out::println);
+////          bw(t->t.getData().after(since)).forEach(System.out::println);
+//          bw(t -> t.getEmail().startsWith("j")).forEach(System.out::println);
+            /*END*/
             
-            String inicio = "01/06/2016";
-            String fim = "10/06/2016";
-
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
-            Date since = df.parse(inicio);
-            Date until = df.parse(fim);
-            //            bw(since, until).forEach(System.out::println);
-            //            bw(t->t.getData().after(since)).forEach(System.out::println);
-            bw(t -> t.getEmail().startsWith("j")).forEach(System.out::println);
-
-//            DateTimeFormatter fomr = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy");
-//            System.out.println(ZonedDateTime.now().format(fomr));
-            //RevWalk walk = new RevWalk(gitRepository.getRepository());
-//            String sinceDate = "Wed Apr 27 01:40:58 GMT-03:00 2016";
-//            String untilDate = "Sat Apr 23 14:36:52 GMT-03:00 2016";
-//                    
-//            String pattern = "EEE MMM HH:mm:ss dd yyyy";
-//            DateFormat df = new SimpleDateFormat(pattern);
-//            
-//            Date since = df.parse(sinceDate);
-//            Date until = df.parse(untilDate);
-//            
-//            RevFilter bt = CommitTimeRevFilter.between(since, until);
-            DIRECTORY_JOB.delete();
+//          DIRECTORY_JOB.delete();
+            
+           /*Mostrando o tipo e quais arquivos foram alterados*/
+            showDiffs(gitRepository);
+            
+           /*Mostrando que alterações foram feitas no(s) arquivo(s)*/ 
+            showFileDiffs(gitRepository);
+            
         } catch (GitAPIException ex) {
             Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            DIRECTORY_PRIS.delete();
         }
 
     }
@@ -126,5 +123,72 @@ public class Loader {
         return lista.stream()
                 .filter(predicado)
                 .collect(Collectors.toList());
+    }
+
+    public static void showDiffs(Git gitRepository) {
+        Repository repo = gitRepository.getRepository();
+
+        try {
+            ObjectId head = repo.resolve("HEAD^{tree}");
+            ObjectId previousHead = repo.resolve("HEAD~^{tree}");
+            ObjectReader reader = repo.newObjectReader();
+
+            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+            oldTreeIter.reset(reader, previousHead);
+            CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+            newTreeIter.reset(reader, head);
+
+            List<DiffEntry> listDiffs = gitRepository.diff().setOldTree(oldTreeIter).setNewTree(newTreeIter).call();
+
+            listDiffs.stream().forEach((DiffEntry diff) -> {
+                System.out.println(diff);
+            });
+        } catch (IOException | GitAPIException ex) {
+            Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void showFileDiffs(Git gitRepository) {
+        Repository repo = gitRepository.getRepository();
+
+        try {
+            ObjectId head = repo.resolve("HEAD^{tree}");
+            ObjectId previousHead = repo.resolve("HEAD~^{tree}");
+            ObjectReader reader = repo.newObjectReader();
+
+            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+            oldTreeIter.reset(reader, previousHead);
+            CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+            newTreeIter.reset(reader, head);
+
+            List<DiffEntry> listDiffs = gitRepository.diff().setOldTree(oldTreeIter).setNewTree(newTreeIter).call();
+
+            listDiffs.stream().forEach((DiffEntry diff) -> {
+                System.out.println(diff);
+                DiffFormatter formatter = new DiffFormatter(System.out);
+                formatter.setRepository(repo);
+                try {
+                    formatter.format(diff);
+                } catch (IOException ex) {
+                    Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+        } catch (IOException | GitAPIException ex) {
+            Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void showLog(Git gitRepository) {
+        LogCommand log = gitRepository.log();
+        try {
+            for (RevCommit t : log.call()) {
+//                Date commitDate = new Date(commit.getCommitTime() * 1000L);
+//                System.out.println("Autor: " + commit.getAuthorIdent() + "Data: " + commitDate);
+//                System.out.print(commit.getCommitterIdent().getWhen().equals(commitDate)?"":"false "+commit.getAuthorIdent().getWhen()+ " - "+commitDate+"\n");
+//                System.out.println(commit.getCommitterIdent().getWhen() + " - " + commitDate);
+            }
+        } catch (GitAPIException ex) {
+            Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
