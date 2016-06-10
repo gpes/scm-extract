@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.jgit;
+package br.edu.ifpb.github.api;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,7 +71,7 @@ public class Github implements IRepository {
      *
      * @param directory\
      * @return Git git
-     * @throws com.mycompany.jgit.ReferenceException
+     * @throws br.edu.ifpb.github.api.ReferenceException
      * @throws IOException Diretório não existe
      */
     @Override

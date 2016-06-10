@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.jgit;
+package br.edu.ifpb.github.api;
 
 /**
  *
- * @author jairanderson
+ * @author Anderson Souza
  */
-public class ReferenceException extends Exception {
+public abstract class AbstractFactory {
 
-    public ReferenceException(Exception e) {
-        super();
-    }
+    public abstract IRepository createGithub();
 
 }

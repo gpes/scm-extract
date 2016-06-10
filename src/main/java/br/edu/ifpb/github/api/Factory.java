@@ -3,12 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.jgit;
+package br.edu.ifpb.github.api;
 
 /**
  *
- * @author Pris
+ * @author Anderson Souza
  */
-class ChangedFiles {
+public class Factory extends AbstractFactory {
+
+    @Override
+    public IRepository createGithub() {
+        return new Github();
+    }
+
+    
     
 }

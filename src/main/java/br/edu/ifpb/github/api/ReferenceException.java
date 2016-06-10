@@ -3,12 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.jgit.newpackage;
+package br.edu.ifpb.github.api;
 
 /**
  *
  * @author jairanderson
  */
-public class SVN {
-    
+public class ReferenceException extends Exception {
+
+    public ReferenceException(Exception e) {
+        super();
+    }
+
 }
