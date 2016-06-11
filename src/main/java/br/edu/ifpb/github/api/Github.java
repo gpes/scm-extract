@@ -36,23 +36,23 @@ public class Github implements IRepository {
     }
 
     /**
-     * Realiza um clone
+     * Realiza um clone de um reposiório remoto
      *
-     * @param directory
-     * @param url
-     * @return
-     * @throws GitAPIException
-     * @throws CloneException
-     * @throws java.io.IOException
+     * @param directory Localização para o repositório local
+     * @param url Localização para o repositorio remoto
+     * @return Git Objeto Git
+     * @throws GitAPIException Exceção do API do JGIT
+     * @throws CloneException Exceção lançada quando a pasta não possui
+     * permissão de escrita
+     * @throws IOException Exceção lançada quando o diretório não é um
+     * repositório git local
      */
     @Override
     public Git clone(File directory, String url) throws GitAPIException, CloneException, IOException {
         try {
             if (!directory.exists() && !directory.isDirectory()) {
-                /* realiza um clone */
                 return Git.cloneRepository().setURI(url).setDirectory(directory).call();
             }
-            //se já existe pegue a referencia do diretorio
             return this.getRepository(directory);
         } catch (SecurityException e) {
             throw new CloneException("fatal: permissão de pasta", e);
@@ -69,17 +69,18 @@ public class Github implements IRepository {
     /**
      * Recupera um repositorio local
      *
-     * @param directory\
-     * @return Git git
-     * @throws br.edu.ifpb.github.api.ReferenceException
-     * @throws IOException Diretório não existe
+     * @param directory Localização para o repositório local
+     * @return Git Objeto Git
+     * @throws ReferenceException Exceção lançada quando o diretório local não é
+     * um repositorio git
      */
     @Override
     public Git getRepository(File directory) throws ReferenceException {
         try {
             return Git.open(directory);
         } catch (IOException e) {
-            throw new ReferenceException(e);
+            throw new ReferenceException(e);           
+
         }
     }
 
