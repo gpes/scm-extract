@@ -44,14 +44,11 @@ public class Loader {
         AbstractFactory factory = new Factory();
         try {
             /* Fazendo clone de um repositório */
-            Git gitRepository = factory.createGithub().clone(DIRECTORY_ANDERSON, REMOTE_URL);
+            Git gitRepository = factory.createGithub().clone(DIRECTORY_PRIS, REMOTE_URL);
 
             
             
-        } catch (Exception e) {
-            e.getMessage();
-            e.printStackTrace();
-        }
+        
 //          Git repository = factory.createGithub().clone(DIRECTORY, "/Users/job/Documents/dev/testes/exemplo-jcabi/dataTeste/v1");
 
         /*Fazendo checkout de uma revisão específica*/
@@ -80,13 +77,14 @@ public class Loader {
 //            showDiffs(gitRepository);
 //            
 //           /*Mostrando que alterações foram feitas no(s) arquivo(s)*/ 
-//            showFileDiffs(gitRepository);
+            showFileDiffs(gitRepository);
 //            
-//        } catch (GitAPIException ex) {
-//            Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
-//        } finally {
-//            DIRECTORY_PRIS.delete();
-//        }
+        } catch (GitAPIException ex) {
+            Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
     }
 
     // É um exemplo :)
@@ -155,8 +153,8 @@ public class Loader {
         Repository repo = gitRepository.getRepository();
 
         try {
-            ObjectId head = repo.resolve("HEAD^{tree}");
-            ObjectId previousHead = repo.resolve("HEAD~^{tree}");
+            ObjectId head = ObjectId.fromString("c24af304077e4a6d1925db7cd35d0cd1ed488d6a");
+            ObjectId previousHead = ObjectId.fromString("c16be41e77bb53a4b639cb864c9a6e4d0f8df7c2");
             ObjectReader reader = repo.newObjectReader();
 
             CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
