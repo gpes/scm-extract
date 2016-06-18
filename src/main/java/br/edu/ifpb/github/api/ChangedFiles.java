@@ -7,7 +7,7 @@ package br.edu.ifpb.github.api;
 
 /**
  *
- * @author Pris
+ * @author Priscila Gouveia
  */
 class ChangedFiles {
     

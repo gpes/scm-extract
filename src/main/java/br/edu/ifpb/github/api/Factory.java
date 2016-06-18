@@ -7,7 +7,7 @@ package br.edu.ifpb.github.api;
 
 /**
  *
- * @author Anderson Souza
+ * @author  Anderson Souza
  */
 public class Factory extends AbstractFactory {
 

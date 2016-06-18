@@ -28,7 +28,7 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 
 /**
  *
- * @author Anderson Souza
+ * @author  Anderson Souza
  */
 public class Loader {
 

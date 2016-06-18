@@ -13,7 +13,7 @@ import org.eclipse.jgit.lib.Ref;
 
 /**
  *
- * @author Anderson Souza
+ * @author  Anderson Souza
  */
 public interface IRepository {
 

@@ -11,7 +11,7 @@ import org.eclipse.jgit.diff.DiffEntry;
 
 /**
  *
- * @author Pris
+ * @author Priscila Gouveia
  */
 public class Version {
     private Date commitDate;

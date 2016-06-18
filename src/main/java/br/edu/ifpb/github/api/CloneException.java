@@ -7,7 +7,7 @@ package br.edu.ifpb.github.api;
 
 /**
  *
- * @author jairanderson
+ * @author  jairanderson
  */
 public class CloneException extends Exception {
 
