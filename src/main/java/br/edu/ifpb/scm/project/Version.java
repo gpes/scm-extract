@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.scm.api;
+package br.edu.ifpb.scm.project;
 
 import java.util.Date;
 import java.util.List;
-import org.eclipse.jgit.diff.DiffEntry;
 
 /**
  *

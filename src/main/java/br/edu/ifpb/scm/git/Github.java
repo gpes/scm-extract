@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.scm.api;
+package br.edu.ifpb.scm.git;
 
+import br.edu.ifpb.scm.api.AdapterRepository;
+import br.edu.ifpb.scm.api.CloneException;
+import br.edu.ifpb.scm.api.ReferenceException;
 import java.io.File;
 import java.io.IOException;
 import org.eclipse.jgit.api.CreateBranchCommand;
@@ -63,7 +66,7 @@ public class Github{
     }
 
     
-    public Repository connectRepository(String jass2125, String string) {
+    public AdapterRepository connectRepository(String jass2125, String string) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -5,6 +5,8 @@
  */
 package br.edu.ifpb.scm.api;
 
+import br.edu.ifpb.scm.project.Version;
+import br.edu.ifpb.scm.Repository;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,16 +14,16 @@ import java.util.List;
  *
  * @author  Anderson Souza
  */
-public abstract class Repository {
+public abstract class AdapterRepository implements Repository {
 
     private String remoteURL;
     private String localUrl;
     private List<Version> versions;
 
-    public Repository() {
+    public AdapterRepository() {
     }
     
-    public Repository(String remote_url, String local_url, List<Version> versions) {
+    public AdapterRepository(String remote_url, String local_url, List<Version> versions) {
         this.remoteURL = remote_url;
         this.localUrl = local_url;
         this.versions = versions;
@@ -46,19 +48,5 @@ public abstract class Repository {
     public List<Version> getVersions() {
         return Collections.unmodifiableList(versions);
     }
-    
-    /**
-     * Método para realizar o checkout do repositório 
-     * @param commit 
-     * @return 
-     */
-    public abstract Repository checkout(String commit);
-
-    /**
-     * Método para realizar o checkout de um commit específico no repositório
-     * @param hash código hash do commit
-     * @return Repository
-     */
-    public abstract Repository checkoutByCommit(String hash);
     
 }

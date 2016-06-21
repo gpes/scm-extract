@@ -16,3 +16,5 @@ hs_err_pid*
 Dockerfile-deploy
 nb-configuration.xml
 exec
+/target/
+.DS_Store

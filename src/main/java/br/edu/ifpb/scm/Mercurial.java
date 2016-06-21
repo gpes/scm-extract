@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.scm.api;
+package br.edu.ifpb.scm;
+
+import br.edu.ifpb.scm.api.AdapterRepository;
 
 /**
  *
@@ -11,7 +13,7 @@ package br.edu.ifpb.scm.api;
  */
 public interface Mercurial {
     
-    public Repository clone(String url);
+    public AdapterRepository clone(String url);
 
-    public Repository getRepository(String url);
+    public AdapterRepository getRepository(String url);
 }

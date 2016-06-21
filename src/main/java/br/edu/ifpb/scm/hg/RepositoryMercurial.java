@@ -3,21 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.scm.api;
+package br.edu.ifpb.scm.hg;
+
+import br.edu.ifpb.scm.api.AdapterRepository;
 
 /**
  *
  * @author Priscila Gouveia <priscilaggouveia@gmail.com>
  */
-public class RepositorySVN extends Repository{
+public class RepositoryMercurial extends AdapterRepository{
 
     @Override
-    public Repository checkout(String commit) {
+    public AdapterRepository checkout(String commit) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Repository checkoutByCommit(String hash) {
+    public AdapterRepository checkoutByCommit(String hash) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

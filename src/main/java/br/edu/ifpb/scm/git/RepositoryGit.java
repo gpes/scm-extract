@@ -3,13 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.scm.api;
+package br.edu.ifpb.scm.git;
+
+import br.edu.ifpb.scm.Repository;
+import br.edu.ifpb.scm.api.AdapterRepository;
 
 /**
  *
  * @author Priscila Gouveia <priscilaggouveia@gmail.com>
  */
-public class RepositoryGit extends Repository {
+public class RepositoryGit extends AdapterRepository {
 
     @Override
     public Repository checkout(String commit){

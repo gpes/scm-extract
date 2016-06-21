@@ -5,6 +5,10 @@
  */
 package br.edu.ifpb.scm.api;
 
+import br.edu.ifpb.scm.Git;
+import br.edu.ifpb.scm.Svn;
+import br.edu.ifpb.scm.Mercurial;
+
 /**
  *
  * @author Anderson Souza
