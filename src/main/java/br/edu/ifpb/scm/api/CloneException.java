@@ -3,16 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.github.api;
+package br.edu.ifpb.scm.api;
 
 /**
  *
  * @author  jairanderson
  */
-public class ReferenceException extends Exception {
+public class CloneException extends Exception {
 
-    public ReferenceException(Exception e) {
-        super();
+    public CloneException(String msn, Exception ex) {
     }
 
 }

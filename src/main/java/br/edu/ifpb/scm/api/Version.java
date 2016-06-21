@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.github.api;
+package br.edu.ifpb.scm.api;
 
 import java.util.Date;
 import java.util.List;
@@ -11,13 +11,13 @@ import org.eclipse.jgit.diff.DiffEntry;
 
 /**
  *
- * @author Priscila Gouveia
+ * @author Priscila Gouveia <priscilaggouveia@gmail.com>
  */
 public class Version {
     private Date commitDate;
     private String hashCode;
     private String message;
-    private List<DiffEntry> changes;
+    private List<ChangedFiles> changes;
 
     public Version() {
     }
@@ -52,7 +52,7 @@ public class Version {
         this.message = message;
     }
 
-    public List<DiffEntry> getChanges() {
+    public List<ChangedFiles> getChanges() {
         
         return changes;
     }

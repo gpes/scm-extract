@@ -3,15 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.github.api;
+package br.edu.ifpb.scm.api;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
  *
  * @author  Anderson Souza
  */
-public class Repository {
+public abstract class Repository {
 
     private String remoteURL;
     private String localUrl;
@@ -19,13 +20,13 @@ public class Repository {
 
     public Repository() {
     }
-
+    
     public Repository(String remote_url, String local_url, List<Version> versions) {
         this.remoteURL = remote_url;
         this.localUrl = local_url;
         this.versions = versions;
     }
-
+    
     public String getRemoteURL() {
         return remoteURL;
     }
@@ -43,10 +44,21 @@ public class Repository {
     }
 
     public List<Version> getVersions() {
-        return versions;
+        return Collections.unmodifiableList(versions);
     }
+    
+    /**
+     * Método para realizar o checkout do repositório 
+     * @param commit 
+     * @return 
+     */
+    public abstract Repository checkout(String commit);
 
-    public void setVersions(List<Version> versions) {
-        this.versions = versions;
-    }
+    /**
+     * Método para realizar o checkout de um commit específico no repositório
+     * @param hash código hash do commit
+     * @return Repository
+     */
+    public abstract Repository checkoutByCommit(String hash);
+    
 }

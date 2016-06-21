@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.github.api;
+package br.edu.ifpb.scm.api;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +16,10 @@ import org.eclipse.jgit.lib.Ref;
  *
  * @author  Anderson Souza
  */
-public class Github implements IRepository {
+@Deprecated
+public class Github{
 
-    @Override
+    
     public Ref checkoutBranch(Git repository, String branch) throws GitAPIException {
         return repository.checkout().setCreateBranch(true).setName(branch).
                 setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).
@@ -26,7 +27,7 @@ public class Github implements IRepository {
 
     }
 
-    @Override
+    
     public Ref checkout(Git git, String check) throws GitAPIException {
         return git.checkout().
                 setCreateBranch(true).
@@ -47,7 +48,7 @@ public class Github implements IRepository {
      * @throws IOException Exceção lançada quando o diretório não é um
      * repositório git local
      */
-    @Override
+    
     public Git clone(File directory, String url) throws GitAPIException, CloneException, IOException {
         try {
             if (!directory.exists() && !directory.isDirectory()) {
@@ -61,8 +62,8 @@ public class Github implements IRepository {
         }
     }
 
-    @Override
-    public IRepository connectRepository(String jass2125, String string) {
+    
+    public Repository connectRepository(String jass2125, String string) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -74,7 +75,7 @@ public class Github implements IRepository {
      * @throws ReferenceException Exceção lançada quando o diretório local não é
      * um repositorio git
      */
-    @Override
+    
     public Git getRepository(File directory) throws ReferenceException {
         try {
             return Git.open(directory);
@@ -84,7 +85,7 @@ public class Github implements IRepository {
         }
     }
 
-    @Override
+    
     public Ref checkoutByCommit(Git git, String check) throws GitAPIException {
 //        git.checkout().setName(check).
 //                setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).

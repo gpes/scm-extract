@@ -3,14 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.github.api;
+package br.edu.ifpb.scm.api;
 
 /**
  *
  * @author Anderson Souza
  */
-public abstract class AbstractFactory {
+public abstract class ScmAbstractFactory {
 
-    public abstract IRepository createGithub();
+    public abstract Git createGit();
+
+    public abstract Svn createSVN();
+    
+    public abstract Mercurial createMercurial();
 
 }

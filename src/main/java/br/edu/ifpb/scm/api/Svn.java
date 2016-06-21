@@ -3,19 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.github.api;
+package br.edu.ifpb.scm.api;
 
 /**
  *
- * @author  Anderson Souza
+ * @author Priscila Gouveia <priscilaggouveia@gmail.com>
  */
-public class Factory extends AbstractFactory {
-
-    @Override
-    public IRepository createGithub() {
-        return new Github();
-    }
-
+public interface Svn {
     
-    
+    public Repository clone(String url);
+
+    public Repository getRepository(String url);
 }

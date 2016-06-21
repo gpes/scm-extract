@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.github.api;
+package br.edu.ifpb.scm.api;
 
 /**
  *
- * @author Priscila Gouveia
+ * @author Priscila Gouveia <priscilaggouveia@gmail.com>
  */
-class ChangedFiles {
+public class ChangedFiles {
     
 }

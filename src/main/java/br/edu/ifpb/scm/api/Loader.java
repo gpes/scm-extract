@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.github.api;
+package br.edu.ifpb.scm.api;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,10 +41,10 @@ public class Loader {
 
     public static void main(String[] args) throws IOException, ParseException {
 
-        AbstractFactory factory = new Factory();
+        ScmAbstractFactory factory = new ScmFactory();
         try {
             /* Fazendo clone de um repositório */
-            Git gitRepository = factory.createGithub().clone(DIRECTORY_PRIS, REMOTE_URL);
+//            Git gitRepository = factory.createGit().clone(REMOTE_URL,DIRECTORY_PRIS);
 
             
             
@@ -77,10 +77,9 @@ public class Loader {
 //            showDiffs(gitRepository);
 //            
 //           /*Mostrando que alterações foram feitas no(s) arquivo(s)*/ 
-            showFileDiffs(gitRepository);
+//            showFileDiffs(gitRepository);
 //            
-        } catch (GitAPIException ex) {
-            Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
+        
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
