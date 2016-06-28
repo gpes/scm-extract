@@ -24,8 +24,8 @@ public class Loader3 {
     public static void main(String[] args) throws GitAPIException, IOException {
         Repository repository = ScmFactory.create("git").clone(URL, PATH);
 
-        System.out.println(repository.getLocalUrl() == null ? "Local Vazio" : repository.getLocalUrl());
-        System.out.println(repository.getRemoteURL() == null ? "Remoto Vazio" : repository.getRemoteURL());
+        System.out.println(repository.getLocalUrl() == null ? "url local" : repository.getLocalUrl());
+        System.out.println(repository.getRemoteURL() == null ? "Repositorio recuperado a partir da url remota" : repository.getRemoteURL());
         System.out.println(repository.getVersions());
 
     }

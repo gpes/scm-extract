@@ -29,12 +29,13 @@ public interface SCM {
 
     /**
      * Método para recuperar a referência para um repositório Git local
+     *
      * @param dir localização do repositório local
      * @return Repository
      * @throws java.io.IOException
      */
-    public Repository getRepository(File dir) throws IOException;
-    
+    public Repository getRepository(File dir) throws IOException, GitAPIException;
+
     /**
      * Método para realizar o checkout do repositório
      *
@@ -42,7 +43,7 @@ public interface SCM {
      * @return
      */
     public Repository checkout(String commit);
-    
+
     /**
      * Método para realizar o checkout de um commit específico no repositório
      *

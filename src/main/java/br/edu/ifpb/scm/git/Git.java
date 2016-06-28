@@ -56,10 +56,11 @@ public class Git implements SCM {
     }
 
     @Override
-    public Repository getRepository(File dir) throws IOException {
+    public Repository getRepository(File dir) throws IOException, GitAPIException {
         org.eclipse.jgit.api.Git git = org.eclipse.jgit.api.Git.open(dir);
         repo = new Repository();
         repo.setLocalUrl(dir.getCanonicalPath());
+        repo.setVersions(getVersoes(git));
         return repo;
     }
 
@@ -87,8 +88,8 @@ public class Git implements SCM {
         List<Version> lista = new ArrayList();
         LogCommand log = git.log();
         log.call().forEach(t -> {
-//                Date commitDate, String hashCode, String message
-            lista.add(new Version(t.getCommitterIdent().getWhen(), null, t.getShortMessage()));
+//                Date commitDate, String hashCode, String message 7 47
+            lista.add(new Version(t.getCommitterIdent().getWhen(), String.valueOf(t.getId()).substring(7, 47), t.getShortMessage()));
         });
         return lista;
     }
