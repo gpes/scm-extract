@@ -5,7 +5,7 @@
  */
 package br.edu.ifpb.scm.git;
 
-import br.edu.ifpb.scm.api.AdapterRepository;
+import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.CloneException;
 import br.edu.ifpb.scm.api.ReferenceException;
 import java.io.File;
@@ -39,18 +39,6 @@ public class Github{
                 setStartPoint("origin/" + check).call();
     }
 
-    /**
-     * Realiza um clone de um reposiório remoto
-     *
-     * @param directory Localização para o repositório local
-     * @param url Localização para o repositorio remoto
-     * @return Git Objeto Git
-     * @throws GitAPIException Exceção do API do JGIT
-     * @throws CloneException Exceção lançada quando a pasta não possui
-     * permissão de escrita
-     * @throws IOException Exceção lançada quando o diretório não é um
-     * repositório git local
-     */
     
     public Git clone(File directory, String url) throws GitAPIException, CloneException, IOException {
         try {
@@ -66,18 +54,10 @@ public class Github{
     }
 
     
-    public AdapterRepository connectRepository(String jass2125, String string) {
+    public Repository connectRepository(String jass2125, String string) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    /**
-     * Recupera um repositorio local
-     *
-     * @param directory Localização para o repositório local
-     * @return Git Objeto Git
-     * @throws ReferenceException Exceção lançada quando o diretório local não é
-     * um repositorio git
-     */
     
     public Git getRepository(File directory) throws ReferenceException {
         try {
