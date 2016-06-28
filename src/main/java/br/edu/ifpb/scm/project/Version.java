@@ -21,6 +21,11 @@ public class Version {
     public Version() {
     }
 
+    @Override
+    public String toString() {
+        return "Version{" + "commitDate=" + commitDate + ", hashCode=" + hashCode + ", message=" + message + '}' + "\n";
+    }
+
     public Version(Date commitDate, String hashCode, String message) {
         this.commitDate = commitDate;
         this.hashCode = hashCode;

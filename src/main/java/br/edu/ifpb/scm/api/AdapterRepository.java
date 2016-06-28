@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  *
- * @author  Anderson Souza
+ * @author Anderson Souza
  */
 public abstract class AdapterRepository implements Repository {
 
@@ -22,13 +22,17 @@ public abstract class AdapterRepository implements Repository {
 
     public AdapterRepository() {
     }
-    
+
     public AdapterRepository(String remote_url, String local_url, List<Version> versions) {
         this.remoteURL = remote_url;
         this.localUrl = local_url;
         this.versions = versions;
     }
-    
+
+    public void setVersions(List<Version> versions) {
+        this.versions = versions;
+    }
+
     public String getRemoteURL() {
         return remoteURL;
     }
@@ -48,5 +52,5 @@ public abstract class AdapterRepository implements Repository {
     public List<Version> getVersions() {
         return Collections.unmodifiableList(versions);
     }
-    
+
 }

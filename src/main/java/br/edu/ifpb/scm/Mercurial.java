@@ -5,15 +5,9 @@
  */
 package br.edu.ifpb.scm;
 
-import br.edu.ifpb.scm.api.AdapterRepository;
-
 /**
  *
  * @author Priscila Gouveia <priscilaggouveia@gmail.com>
  */
-public interface Mercurial {
-    
-    public AdapterRepository clone(String url);
-
-    public AdapterRepository getRepository(String url);
+public interface Mercurial extends SCM {
 }

@@ -18,7 +18,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 public class Loader3 {
 
     public static String URL = "https://github.com/EndenhariaDeSoftware/scm-extract";
-    public static File PATH = new File("C:/Users/Amanda/Documents/scm");
+    public static File PATH = new File("C:/Users/Anderson Sousa/Documents/scm");
 
     public static void main(String[] args) throws GitAPIException, IOException {
         AdapterRepository repository = (AdapterRepository) ScmFactory
@@ -26,6 +26,7 @@ public class Loader3 {
                 .clone(URL, PATH);
         System.out.println(repository.getLocalUrl() == null ? "Local Vazio" : repository.getLocalUrl());
         System.out.println(repository.getRemoteURL() == null ? "Remoto Vazio" : repository.getRemoteURL());
+        System.out.println(repository.getVersions());
     
 }
 }

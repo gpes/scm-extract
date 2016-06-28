@@ -6,7 +6,10 @@
 package br.edu.ifpb.scm.hg;
 
 import br.edu.ifpb.scm.Mercurial;
-import br.edu.ifpb.scm.api.AdapterRepository;
+import br.edu.ifpb.scm.Repository;
+import java.io.File;
+import java.io.IOException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 
 /**
  *
@@ -14,17 +17,14 @@ import br.edu.ifpb.scm.api.AdapterRepository;
  */
 public class MercurialImpl implements Mercurial {
 
-    public MercurialImpl() {
-    }
-
     @Override
-    public AdapterRepository clone(String url) {
+    public Repository clone(String url, File path) throws GitAPIException, IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public AdapterRepository getRepository(String url) {
+    public Repository getRepository(File dir) throws IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }
