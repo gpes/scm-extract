@@ -43,8 +43,8 @@
 //
 //    public static void main(String[] args) throws IOException, ParseException {
 //
-//        ScmAbstractFactory factory = new ScmFactory();
-//        try {
+////        ScmAbstractFactory factory = new ScmFactory();
+////        try {
 //            /* Fazendo clone de um repositório */
 ////            Git gitRepository = factory.createGit().clone(REMOTE_URL,DIRECTORY_PRIS);
 //

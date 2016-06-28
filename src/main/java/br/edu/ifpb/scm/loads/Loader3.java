@@ -9,6 +9,7 @@ import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.ScmFactory;
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 /**
@@ -18,10 +19,10 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 public class Loader3 {
 
     public static String URL = "https://github.com/EndenhariaDeSoftware/scm-extract";
-    public static File PATH = new File("C:/Users/Amanda/Documents/scm");
+    public static File PATH = new File("C:/Users/Anderson Sousa/Documents/scm");
     public static File PATH2 = new File("C:/Users/Pris/Desktop/scm");
 
-    public static void main(String[] args) throws GitAPIException, IOException {
+    public static void main(String[] args) throws GitAPIException, IOException, ParseException {
         Repository repository = ScmFactory.create("git").clone(URL, PATH);
 
         System.out.println(repository.getLocalUrl() == null ? "url local" : repository.getLocalUrl());

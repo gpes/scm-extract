@@ -7,10 +7,11 @@ package br.edu.ifpb.scm.git;
 
 import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.SCM;
-import static br.edu.ifpb.scm.loads.Loader3.main;
 import br.edu.ifpb.scm.project.Version;
 import java.io.File;
 import java.io.IOException;
+import static java.lang.Math.log;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,7 +32,7 @@ public class Git implements SCM {
     Repository repo;
 
     @Override
-    public Repository clone(String url, File dir) throws GitAPIException, IOException {
+    public Repository clone(String url, File dir) throws GitAPIException, IOException, ParseException {
         if (!dir.exists() && !dir.isDirectory()) {
             org.eclipse.jgit.api.Git git = org.eclipse.jgit.api.Git.cloneRepository().setURI(url).setDirectory(dir).call();
             //pegar os dados
@@ -56,7 +57,7 @@ public class Git implements SCM {
     }
 
     @Override
-    public Repository getRepository(File dir) throws IOException, GitAPIException {
+    public Repository getRepository(File dir) throws IOException, GitAPIException, ParseException {
         org.eclipse.jgit.api.Git git = org.eclipse.jgit.api.Git.open(dir);
         repo = new Repository();
         repo.setLocalUrl(dir.getCanonicalPath());
@@ -64,7 +65,7 @@ public class Git implements SCM {
         return repo;
     }
 
-    public List<Version> getVersoes(org.eclipse.jgit.api.Git git) throws IOException, GitAPIException {
+    public List<Version> getVersoes(org.eclipse.jgit.api.Git git) throws IOException, GitAPIException, ParseException {
         try (org.eclipse.jgit.lib.Repository repository = git.getRepository()) {
             Ref head = repository.exactRef("refs/heads/master");
 
@@ -80,17 +81,16 @@ public class Git implements SCM {
                     //System.out.println("Commit: " + rev);
                     count++;
                 }
-                System.out.println(count);
+                //System.out.println(count);
 
                 walk.dispose();
             }
         }
-        List<Version> lista = new ArrayList();
+        List<Version> lista = new ArrayList<>();
         LogCommand log = git.log();
-        log.call().forEach(t -> {
-//                Date commitDate, String hashCode, String message 7 47
-            lista.add(new Version(t.getCommitterIdent().getWhen(), String.valueOf(t.getId()).substring(7, 47), t.getShortMessage()));
-        });
+        for (RevCommit it : log.call()) {
+            lista.add(new Version(it.getCommitterIdent().getWhen(), String.valueOf(it.getId()).substring(7, 47), it.getShortMessage()));
+        }
         return lista;
     }
 

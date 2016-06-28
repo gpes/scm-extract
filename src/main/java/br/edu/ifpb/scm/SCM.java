@@ -8,6 +8,7 @@ package br.edu.ifpb.scm;
 import br.edu.ifpb.scm.api.Repository;
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 /**
@@ -25,7 +26,7 @@ public interface SCM {
      * @throws org.eclipse.jgit.api.errors.GitAPIException
      * @throws java.io.IOException
      */
-    public Repository clone(String url, File dir) throws GitAPIException, IOException;
+    public Repository clone(String url, File dir) throws GitAPIException, IOException, ParseException;
 
     /**
      * Método para recuperar a referência para um repositório Git local
@@ -34,7 +35,7 @@ public interface SCM {
      * @return Repository
      * @throws java.io.IOException
      */
-    public Repository getRepository(File dir) throws IOException, GitAPIException;
+    public Repository getRepository(File dir) throws IOException, GitAPIException, ParseException;
 
     /**
      * Método para realizar o checkout do repositório
