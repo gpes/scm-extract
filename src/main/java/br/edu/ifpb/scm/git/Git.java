@@ -5,9 +5,8 @@
  */
 package br.edu.ifpb.scm.git;
 
-import br.edu.ifpb.scm.Git;
-import br.edu.ifpb.scm.Repository;
-import br.edu.ifpb.scm.api.AdapterRepository;
+import br.edu.ifpb.scm.SCM;
+import br.edu.ifpb.scm.api.Repository;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
@@ -18,9 +17,9 @@ import org.eclipse.jgit.lib.Config;
  *
  * @author Priscila Gouveia <priscilaggouveia@gmail.com>
  */
-public class GitImpl implements Git {
-
-    private AdapterRepository repo;
+public class Git implements SCM {
+    
+    Repository  repo;
 
     @Override
     public Repository clone(String url, File dir) throws GitAPIException, IOException {
@@ -37,7 +36,7 @@ public class GitImpl implements Git {
                     remote = rem;
                 }
             }
-            repo = new RepositoryGit();
+            repo = new Repository();
             repo.setRemoteURL(remote);
             return repo;
         }
@@ -47,9 +46,42 @@ public class GitImpl implements Git {
     @Override
     public Repository getRepository(File dir) throws IOException {
         org.eclipse.jgit.api.Git git = org.eclipse.jgit.api.Git.open(dir);
-        repo = new RepositoryGit();
+        repo = new Repository();
         repo.setLocalUrl(dir.getCanonicalPath());
         return repo;
     }
 
+    @Override
+    public Repository checkout(String commit) {
+//        Git git; - Git.class da API JGit / Originalmente o método retorna um Ref.class da mesma API 
+//        return git.checkout().
+//                setCreateBranch(true).
+//                setName(check).
+//                setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).
+//                setStartPoint("origin/" + check).call();
+        return null;
+    }
+
+    @Override
+    public Repository checkoutByCommit(String hash) {
+        
+//        Git git; - Git.class da api JGit  / Originalmente o método retorna um Ref.class da mesma API 
+//         git.checkout().setName(check).
+//                setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).
+//                setStartPoint("origin/" + check).
+//                call();
+
+//        return git.checkout().setName(check).setName("master").call();
+//        git.checkout().setCreateBranch(true).setName("new-branch").setStartPoint(check).call();
+//                git.checkout().
+//                setCreateBranch(true).
+//                setName("master").
+//                setStartPoint(check).
+//                call();
+        return null;
+    }
+
+    
+
+    
 }

@@ -5,8 +5,8 @@
  */
 package br.edu.ifpb.scm.api;
 
+import br.edu.ifpb.scm.SCM;
 import br.edu.ifpb.scm.project.Version;
-import br.edu.ifpb.scm.Repository;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,16 +14,17 @@ import java.util.List;
  *
  * @author  Anderson Souza
  */
-public abstract class AdapterRepository implements Repository {
+public class Repository{
 
     private String remoteURL;
     private String localUrl;
     private List<Version> versions;
-
-    public AdapterRepository() {
+    private SCM scm;
+    
+    public Repository() {
     }
     
-    public AdapterRepository(String remote_url, String local_url, List<Version> versions) {
+    public Repository(String remote_url, String local_url, List<Version> versions) {
         this.remoteURL = remote_url;
         this.localUrl = local_url;
         this.versions = versions;
@@ -48,5 +49,9 @@ public abstract class AdapterRepository implements Repository {
     public List<Version> getVersions() {
         return Collections.unmodifiableList(versions);
     }
-    
+
+    public SCM Scm() {
+        return scm;
+    }
+
 }

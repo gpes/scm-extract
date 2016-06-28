@@ -5,7 +5,7 @@
  */
 package br.edu.ifpb.scm.loads;
 
-import br.edu.ifpb.scm.api.AdapterRepository;
+import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.ScmFactory;
 import java.io.File;
 import java.io.IOException;
@@ -19,13 +19,13 @@ public class Loader3 {
 
     public static String URL = "https://github.com/EndenhariaDeSoftware/scm-extract";
     public static File PATH = new File("C:/Users/Amanda/Documents/scm");
+    public static File PATH2 = new File("C:/Users/Pris/Desktop/scm");
 
     public static void main(String[] args) throws GitAPIException, IOException {
-        AdapterRepository repository = (AdapterRepository) ScmFactory
-                .create("git")
-                .clone(URL, PATH);
+        Repository repository = ScmFactory.create("git").clone(URL, PATH2);
+
         System.out.println(repository.getLocalUrl() == null ? "Local Vazio" : repository.getLocalUrl());
         System.out.println(repository.getRemoteURL() == null ? "Remoto Vazio" : repository.getRemoteURL());
-    
-}
+
+    }
 }
