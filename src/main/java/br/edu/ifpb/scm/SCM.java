@@ -5,15 +5,16 @@
  */
 package br.edu.ifpb.scm;
 
-import br.edu.ifpb.scm.api.AdapterRepository;
+import java.io.File;
+import org.eclipse.jgit.api.errors.GitAPIException;
 
 /**
  *
  * @author Priscila Gouveia <priscilaggouveia@gmail.com>
  */
-public interface Svn {
-    
-    public AdapterRepository clone(String url);
+public interface SCM {
 
-    public AdapterRepository getRepository(String url);
+    public Repository clone(String url, File path) throws GitAPIException;
+
+    public Repository getRepository(String url);
 }
