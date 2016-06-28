@@ -14,8 +14,13 @@ import br.edu.ifpb.scm.api.AdapterRepository;
  */
 public class RepositoryGit extends AdapterRepository {
 
+    private AdapterRepository repository;
+
+    public RepositoryGit() {
+    }
+
     @Override
-    public Repository checkout(String commit){
+    public Repository checkout(String commit) {
 //        Git git; - Git.class da API JGit / Originalmente o método retorna um Ref.class da mesma API 
 //        return git.checkout().
 //                setCreateBranch(true).
@@ -26,7 +31,7 @@ public class RepositoryGit extends AdapterRepository {
     }
 
     @Override
-    public Repository checkoutByCommit(String hash){
+    public Repository checkoutByCommit(String hash) {
 //        Git git; - Git.class da api JGit  / Originalmente o método retorna um Ref.class da mesma API 
 //         git.checkout().setName(check).
 //                setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).
@@ -42,4 +47,5 @@ public class RepositoryGit extends AdapterRepository {
 //                call();
         return null;
     }
+
 }

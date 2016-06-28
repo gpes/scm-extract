@@ -5,8 +5,11 @@
  */
 package br.edu.ifpb.scm.svn;
 
+import br.edu.ifpb.scm.Repository;
 import br.edu.ifpb.scm.Svn;
-import br.edu.ifpb.scm.api.AdapterRepository;
+import java.io.File;
+import java.io.IOException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 
 /**
  *
@@ -14,17 +17,14 @@ import br.edu.ifpb.scm.api.AdapterRepository;
  */
 public class SvnImpl implements Svn {
 
-    public SvnImpl() {
-    }
-
     @Override
-    public AdapterRepository clone(String url) {
+    public Repository clone(String url, File path) throws GitAPIException, IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public AdapterRepository getRepository(String url) {
+    public Repository getRepository(File dir) throws IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

@@ -5,17 +5,11 @@
  */
 package br.edu.ifpb.scm;
 
-import java.io.File;
-import java.io.IOException;
-import org.eclipse.jgit.api.errors.GitAPIException;
-
 /**
  *
  * @author Priscila Gouveia <priscilaggouveia@gmail.com>
  */
-public interface SCM {
+public interface Svn extends SCM{
 
-    public Repository clone(String url, File path) throws GitAPIException, IOException;
 
-    public Repository getRepository(File dir) throws IOException;
 }
