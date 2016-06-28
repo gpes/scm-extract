@@ -12,6 +12,7 @@ import br.edu.ifpb.scm.project.Version;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import org.eclipse.jgit.api.LogCommand;
@@ -39,7 +40,8 @@ public class Git implements SCM {
             Set<String> rems = config.getSubsections("remote");
             String remote = null;
             if (rems.size() <= 1) {
-                for (String name : rems) {
+                for (Iterator<String> it = rems.iterator(); it.hasNext();) {
+                    String name = it.next();
                     String rem = config.getString("remote", name, "url");
                     remote = rem;
                 }
