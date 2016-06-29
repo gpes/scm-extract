@@ -5,7 +5,7 @@
  */
 package br.edu.ifpb.scm.loads;
 
-import br.edu.ifpb.scm.api.Repository;
+import br.edu.ifpb.scm.Repository;
 import br.edu.ifpb.scm.api.ScmFactory;
 import java.io.File;
 import java.io.IOException;

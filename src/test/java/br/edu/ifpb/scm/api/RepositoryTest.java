@@ -1,5 +1,6 @@
 package br.edu.ifpb.scm.api;
 
+import br.edu.ifpb.scm.Repository;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,9 +28,9 @@ public class RepositoryTest {
             assertNotNull(repository);
             assertNotNull(repository.pathLocal());
             assertNotNull(repository.urlRemote());
-            assertNotNull(repository.getVersions());
+            assertNotNull(repository.versions());
             logger.log(Level.INFO, "local {0}, remote {1} e versions {2}",
-                    new Object[]{repository.pathLocal(), repository.urlRemote(), repository.getVersions().size()});
+                    new Object[]{repository.pathLocal(), repository.urlRemote(), repository.versions().size()});
         } catch (Exception ex) {
             logger.log(Level.FINE, "Problemas na execução do teste clonarRepositorioDaURL", ex);
         }
@@ -45,9 +46,9 @@ public class RepositoryTest {
             assertNotNull(repository);
             assertNotNull(repository.pathLocal());
             assertNotNull(repository.urlRemote());
-            assertNotNull(repository.getVersions());
+            assertNotNull(repository.versions());
             logger.log(Level.INFO, "local {0}, remote {1} e versions {2}",
-                    new Object[]{repository.pathLocal(), repository.urlRemote(), repository.getVersions().size()});
+                    new Object[]{repository.pathLocal(), repository.urlRemote(), repository.versions().size()});
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "Problemas na execução do teste clonarRepositorioDoFile", ex);
         }

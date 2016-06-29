@@ -1,6 +1,5 @@
 package br.edu.ifpb.scm;
 
-import br.edu.ifpb.scm.api.Repository;
 import java.io.File;
 //TODO: Usar apenas objetos de nossa API
 import java.io.IOException;
