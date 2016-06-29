@@ -1,11 +1,7 @@
 package br.edu.ifpb.scm.loads;
 
-import br.edu.ifpb.scm.Git;
-import br.edu.ifpb.scm.Repository;
-import br.edu.ifpb.scm.git.GitImpl;
 import java.util.Optional;
 import java.util.StringJoiner;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 

@@ -18,3 +18,4 @@ nb-configuration.xml
 exec
 /target/
 .DS_Store
+/nbproject/

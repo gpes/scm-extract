@@ -5,7 +5,7 @@
  */
 package br.edu.ifpb.scm.project;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -13,7 +13,7 @@ import java.util.List;
  * @author Priscila Gouveia <priscilaggouveia@gmail.com>
  */
 public class Version {
-    private Date commitDate;
+    private LocalDate commitDate;
     private String hashCode;
     private String message;
     private List<ChangedFiles> changes;
@@ -21,17 +21,22 @@ public class Version {
     public Version() {
     }
 
-    public Version(Date commitDate, String hashCode, String message) {
+    @Override
+    public String toString() {
+        return "Version{" + "commitDate=" + commitDate + ", hashCode=" + hashCode + ", message=" + message + '}' + "\n";
+    }
+
+    public Version(LocalDate commitDate, String hashCode, String message) {
         this.commitDate = commitDate;
         this.hashCode = hashCode;
         this.message = message;
     }
 
-    public Date getCommitDate() {
+    public LocalDate getCommitDate() {
         return commitDate;
     }
 
-    public void setCommitDate(Date commitDate) {
+    public void setCommitDate(LocalDate commitDate) {
         this.commitDate = commitDate;
     }
 

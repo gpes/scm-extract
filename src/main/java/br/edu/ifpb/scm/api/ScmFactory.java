@@ -5,32 +5,31 @@
  */
 package br.edu.ifpb.scm.api;
 
-import br.edu.ifpb.scm.Git;
-import br.edu.ifpb.scm.Svn;
-import br.edu.ifpb.scm.Mercurial;
-import br.edu.ifpb.scm.git.GitImpl;
-import br.edu.ifpb.scm.hg.MercurialImpl;
-import br.edu.ifpb.scm.svn.SvnImpl;
+import br.edu.ifpb.scm.SCM;
+import br.edu.ifpb.scm.git.Git;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Anderson Souza
  */
-public class ScmFactory extends ScmAbstractFactory {
+public class ScmFactory {
 
-    @Override
-    public Git createGit() {
-        return new GitImpl();
+//    public Git createGit() {
+//        return new GitImpl();
+//    }
+
+    private static final Map<String, SCM> map = new HashMap() {
+        {
+            put("git", new Git());
+            
+        }
+    };
+
+    public static SCM create(String scm) {
+        return map.get(scm);
+
     }
-
-    @Override
-    public Svn createSVN() {
-        return new SvnImpl();
-    }
-
-    @Override
-    public Mercurial createMercurial() {
-        return new MercurialImpl();
-    }
-
 }

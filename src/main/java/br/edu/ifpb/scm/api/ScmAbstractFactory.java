@@ -5,9 +5,8 @@
  */
 package br.edu.ifpb.scm.api;
 
-import br.edu.ifpb.scm.Git;
-import br.edu.ifpb.scm.Svn;
-import br.edu.ifpb.scm.Mercurial;
+import br.edu.ifpb.scm.git.Git;
+import br.edu.ifpb.scm.hg.Mercurial;
 
 /**
  *
@@ -17,7 +16,6 @@ public abstract class ScmAbstractFactory {
 
     public abstract Git createGit();
 
-    public abstract Svn createSVN();
     
     public abstract Mercurial createMercurial();
 
