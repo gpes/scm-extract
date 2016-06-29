@@ -25,18 +25,21 @@ public class Loader3 {
 
     public static String URL = "https://github.com/EndenhariaDeSoftware/scm-extract";
     public static File PATH = new File("C:/Users/Amanda/Documents/scm");
+    public static File PATH3 = new File("C:/Users/Amanda/Documents/scm2");
     public static File PATH2 = new File("C:/Users/Pris/Desktop/scm");
 //    public static File PATH3 = new File("/Users/job/Documents/dev/data/scm");
     public static File origin = new File("/Users/job/Documents/dev/data/scm");
     public static File dest = new File("/Users/job/Documents/dev/data/scm2");
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
-        Repository repository = ScmFactory.create("git").clone(origin.toPath().toUri().getPath(), dest);
+        Repository repository = ScmFactory.create("git").clone(URL, PATH);
+        print(repository);
+    }
 
-        System.out.println(repository.pathLocal() == null ? "Repositorio recuperado a partir da url remota" : repository.pathLocal());
-        System.out.println(repository.urlRemote() == null ? "Repositorio recuperado a partir da url local" : repository.urlRemote());
-        System.out.println(repository.getVersions());
-
+    public static void print(Repository repository) {
+        System.out.println("URL LOCAL: " + repository.pathLocal());
+        System.out.println("URL REMOTE: " + repository.urlRemote());
+//        System.out.println(repository.getVersions());
     }
 
     public static void main2(String[] args) throws ParseException {

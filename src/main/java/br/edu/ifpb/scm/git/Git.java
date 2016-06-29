@@ -32,26 +32,27 @@ public class Git implements SCM {
 
     Repository repo;
 
+    public String getUrlFromLocalRepository(org.eclipse.jgit.lib.Repository repository) {
+        Config config = repository.getConfig();
+        Set<String> rems = config.getSubsections("remote");
+        String remote = null;
+        if (rems.size() <= 1) {
+            for (String name : rems) {
+                String rem = config.getString("remote", name, "url");
+                remote = rem;
+            }
+        }
+        return remote;
+    }
+
     @Override
     public Repository clone(String url, File dir) throws GitAPIException, IOException, ParseException {
         if (!dir.exists() && !dir.isDirectory()) {
             org.eclipse.jgit.api.Git git = org.eclipse.jgit.api.Git.cloneRepository().setURI(url).setDirectory(dir).call();
-            //pegar os dados
             org.eclipse.jgit.lib.Repository repository = git.getRepository();
-            Config config = repository.getConfig();
-            Set<String> rems = config.getSubsections("remote");
-            String remote = null;
-            if (rems.size() <= 1) {
-                for (String name : rems) {
-                    String rem = config.getString("remote", name, "url");
-                    remote = rem;
-                }
-            }
-//            repo = new Repository();
-            repo = new Repository(dir.getCanonicalPath(), remote);
-//            repo.setRemoteURL(remote);
-//            repo.setLocalUrl(dir.getCanonicalPath());
-//            List<Version> lista = this.getVersoes(git);
+
+            repo = new Repository(dir.getCanonicalPath(), getUrlFromLocalRepository(repository));
+
             repo.AddAllVersions(getVersoes(git));
             return repo;
         }
@@ -61,34 +62,12 @@ public class Git implements SCM {
     @Override
     public Repository getRepository(File dir) throws IOException, GitAPIException, ParseException {
         org.eclipse.jgit.api.Git git = org.eclipse.jgit.api.Git.open(dir);
-//        repo = new Repository();
-        repo = new Repository(dir.getCanonicalPath(), "TODO: Recuperar url remote");
-//        repo.setLocalUrl(dir.getCanonicalPath());
+        repo = new Repository(dir.getCanonicalPath(), getUrlFromLocalRepository(git.getRepository()));
         repo.AddAllVersions(getVersoes(git));
         return repo;
     }
 
     public List<Version> getVersoes(org.eclipse.jgit.api.Git git) throws IOException, GitAPIException, ParseException {
-        try (org.eclipse.jgit.lib.Repository repository = git.getRepository()) {
-            Ref head = repository.exactRef("refs/heads/master");
-
-            // a RevWalk allows to walk over commits based on some filtering that is defined
-            try (RevWalk walk = new RevWalk(repository)) {
-                RevCommit commit = walk.parseCommit(head.getObjectId());
-                //System.out.println("Start-Commit: " + commit);
-
-                //System.out.println("Walking all commits starting at HEAD");
-                walk.markStart(commit);
-                int count = 0;
-                for (RevCommit rev : walk) {
-                    //System.out.println("Commit: " + rev);
-                    count++;
-                }
-                //System.out.println(count);
-
-                walk.dispose();
-            }
-        }
         List<Version> lista = new ArrayList();
         LogCommand log = git.log();
         for (RevCommit it : log.call()) {
