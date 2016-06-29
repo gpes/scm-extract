@@ -25,6 +25,7 @@ public interface SCM {
      * @return AdapterRepository
      * @throws org.eclipse.jgit.api.errors.GitAPIException
      * @throws java.io.IOException
+     * @throws java.text.ParseException
      */
     public Repository clone(String url, File dir) throws GitAPIException, IOException, ParseException;
 
@@ -34,6 +35,8 @@ public interface SCM {
      * @param dir localização do repositório local
      * @return Repository
      * @throws java.io.IOException
+     * @throws org.eclipse.jgit.api.errors.GitAPIException
+     * @throws java.text.ParseException
      */
     public Repository getRepository(File dir) throws IOException, GitAPIException, ParseException;
 

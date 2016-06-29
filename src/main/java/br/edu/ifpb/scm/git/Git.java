@@ -10,8 +10,10 @@ import br.edu.ifpb.scm.SCM;
 import br.edu.ifpb.scm.project.Version;
 import java.io.File;
 import java.io.IOException;
-import static java.lang.Math.log;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -86,10 +88,14 @@ public class Git implements SCM {
                 walk.dispose();
             }
         }
-        List<Version> lista = new ArrayList<>();
+        List<Version> lista = new ArrayList();
         LogCommand log = git.log();
         for (RevCommit it : log.call()) {
-            lista.add(new Version(it.getCommitterIdent().getWhen(), String.valueOf(it.getId()).substring(7, 47), it.getShortMessage()));
+            String day = it.getCommitterIdent().getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate dat = LocalDate.parse(day, formatter);
+            
+            lista.add(new Version(it.getCommitterIdent().getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), String.valueOf(it.getId()).substring(7, 47), it.getShortMessage()));
         }
         return lista;
     }
