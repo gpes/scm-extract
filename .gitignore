@@ -19,3 +19,4 @@ exec
 /target/
 .DS_Store
 /nbproject/
+/cods/
