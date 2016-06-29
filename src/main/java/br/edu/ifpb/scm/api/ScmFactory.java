@@ -14,11 +14,11 @@ import br.edu.ifpb.scm.svn.SvnImpl;
 
 /**
  *
- * @author  Anderson Souza
+ * @author Anderson Souza
  */
 public class ScmFactory extends ScmAbstractFactory {
 
-  @Override
+    @Override
     public Git createGit() {
         return new GitImpl();
     }
@@ -33,5 +33,4 @@ public class ScmFactory extends ScmAbstractFactory {
         return new MercurialImpl();
     }
 
-    
 }
