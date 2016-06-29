@@ -23,6 +23,7 @@ public interface SCM {
      * @throws java.text.ParseException
      */
     public Repository clone(String url, File dir) throws GitAPIException, IOException, ParseException;
+    
 
     /**
      * Método para recuperar a referência para um repositório Git local
