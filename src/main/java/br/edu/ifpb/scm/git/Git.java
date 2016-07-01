@@ -92,23 +92,10 @@ public class Git implements SCM {
 
     private String getUrlFromLocalRepository(org.eclipse.jgit.lib.Repository repository) {
         Config config = repository.getConfig();
-        //TODO: Pode ter mais de uma subSection 'remote' ?
-        Set<String> rems = config.getSubsections("remote");
-        String remote = null;
-        if (rems.size() <= 1) {
-            for (String name : rems) {
-                String rem = config.getString("remote", name, "url");
-                remote = rem;
-            }
-        }
-        return remote;
+        return config.getString("remote", "origin", "url");
     }
 
     private static Version createVersion(RevCommit it) {
-        //TODO: este código está sendo utilizado?
-        String day = it.getCommitterIdent().getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate dat = LocalDate.parse(day, formatter);
         return new Version(it.getCommitterIdent().getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), String.valueOf(it.getId()).substring(7, 47), it.getShortMessage());
     }
 
