@@ -20,10 +20,11 @@ import java.util.logging.Logger;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
-import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
@@ -43,14 +44,17 @@ public class Git implements SCM {
             org.eclipse.jgit.lib.Repository repository = git.getRepository();
             repo = createRepository(dir, repository);
             repo.AddAllVersions(versions(git));
-
-            for (Version v : repo.getVersions()) {
-                List<ChangedFiles> changedFiles = getChangedFiles(repository, v.getHashCode());
-                v.setChanges(changedFiles);
-            }
+            findChangedFiles(git);
             return repo;
         }
         return this.getRepository(dir);
+    }
+
+    private void findChangedFiles(org.eclipse.jgit.api.Git git) throws IOException, GitAPIException {
+        for (Version v : repo.getVersions()) {
+            List<ChangedFiles> changedFiles = getChangedFilesFromSpecifiedVersion(git.getRepository(), v.getHashCode());
+            v.setChanges(changedFiles);
+        }
     }
 
     @Override
@@ -59,6 +63,7 @@ public class Git implements SCM {
 //        repo = new Repository(dir.getCanonicalPath(), getUrlFromLocalRepository(git.getRepository()));
         repo = createRepository(dir, git.getRepository());
         repo.AddAllVersions(versions(git));
+        findChangedFiles(git);
         return repo;
     }
 
@@ -69,9 +74,7 @@ public class Git implements SCM {
         log.call().forEach(rc -> {
             try {
                 lista.add(createVersion(rc));
-            } catch (IOException ex) {
-                Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (GitAPIException ex) {
+            } catch (IOException | GitAPIException ex) {
                 Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
@@ -113,92 +116,64 @@ public class Git implements SCM {
     }
 
     private static Version createVersion(RevCommit it) throws IOException, GitAPIException {
-
         return new Version(it.getCommitterIdent().getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                 String.valueOf(it.getId()).substring(7, 47),
                 it.getShortMessage());
-//        List<ChangedFiles> lista = createChangedFiles(version);
-//        version.setChanges(lista);
-//        return version;
     }
 
     private Repository createRepository(File dir, org.eclipse.jgit.lib.Repository repository) throws IOException {
         return new Repository(dir.getCanonicalPath(), getUrlFromLocalRepository(repository));
     }
 
-    private static List<ChangedFiles> getChangedFiles(org.eclipse.jgit.lib.Repository repository, String commit) throws IOException, GitAPIException {
-        
-        
-        RevWalk revWalk1 = new RevWalk(repository);
-        revWalk1.reset();
-        
+    private static RevCommit convertCommitToRevCommit(org.eclipse.jgit.lib.Repository repository, String commit) throws IncorrectObjectTypeException, RevisionSyntaxException, IOException {
+        RevWalk rev = new RevWalk(repository);
+        rev.reset();
+
         //Transformando o hash commit em um Objeto RevCommit
         ObjectId obj = repository.resolve(commit);
-        RevCommit revCommit1 = revWalk1.parseCommit(obj);
+        return rev.parseCommit(obj);
+    }
+
+    private static List<ChangedFiles> searchDiff(org.eclipse.jgit.lib.Repository repository, RevCommit rev1, RevCommit rev2) throws IncorrectObjectTypeException, RevisionSyntaxException, IOException, GitAPIException {
 
         List<ChangedFiles> lista = new ArrayList<>();
-        
-        //Fluxo alternativo quando chegar no primeiro commit
-        if (revCommit1.getParentCount() <= 0) {
-
-            ObjectId oldHead = repository.resolve(revCommit1.getTree().getName());
-            ObjectId head = repository.resolve(revCommit1.getTree().getName());
-
-            try (ObjectReader reader = repository.newObjectReader()) {
-                CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
-                oldTreeIter.reset(reader, oldHead);
-                CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
-                newTreeIter.reset(reader, head);
-
-                // finally get the list of changed files
-                try (org.eclipse.jgit.api.Git g = new org.eclipse.jgit.api.Git(repository)) {
-                    List<DiffEntry> diffs = g.diff()
-                            .setNewTree(newTreeIter)
-                            .setOldTree(oldTreeIter)
-                            .call();
-                    diffs.stream().forEach((entry) -> {
-                        //System.out.println("Entry: " + entry);
-                        ChangedFiles changed = new ChangedFiles(entry, entry.getChangeType());
-                        lista.add(changed);
-                    });
-                }
-            }
-            //System.out.println("Done");
-            return lista;
-        }
-//
-        RevCommit[] array = revCommit1.getParents();
-        ObjectId obj2 = ObjectId.fromString(array[0].getName());
-        RevWalk walk2 = new RevWalk(repository);
-        RevCommit revCommit2 = walk2.parseCommit(obj2);
-
-        ObjectId oldHead = repository.resolve(revCommit2.getTree().getName());
-        ObjectId head = repository.resolve(revCommit1.getTree().getName());
-
-        //Pegando o codigo de cada commit pra arvore
-        //System.out.println("Printing diff between tree: " + oldHead.getName() + " and " + head.getName());
-        // prepare the two iterators to compute the diff between
+        ObjectId oldHead = repository.resolve(rev2.getTree().getName());
+        ObjectId head = repository.resolve(rev1.getTree().getName());
         try (ObjectReader reader = repository.newObjectReader()) {
             CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
             oldTreeIter.reset(reader, oldHead);
             CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
             newTreeIter.reset(reader, head);
 
-            // finally get the list of changed files
             try (org.eclipse.jgit.api.Git g = new org.eclipse.jgit.api.Git(repository)) {
                 List<DiffEntry> diffs = g.diff()
                         .setNewTree(newTreeIter)
                         .setOldTree(oldTreeIter)
                         .call();
-                diffs.stream().forEach((entry) -> {
-                    //System.out.println("Entry: " + entry);
-                    ChangedFiles changed = new ChangedFiles(entry, entry.getChangeType());
+
+                diffs.iterator().forEachRemaining(entry -> {
+                    ChangedFiles changed = new ChangedFiles(entry, entry.getChangeType().name());
                     lista.add(changed);
+//                    /System.out.println(entry.getNewPath());
                 });
+//                stream().forEach((entry) -> {
+//                    ChangedFiles changed = new ChangedFiles(entry, entry.getChangeType());
+//                    lista.add(changed);
+//                });
             }
         }
-        //System.out.println("Done");
         return lista;
+    }
+
+    private static List<ChangedFiles> getChangedFilesFromSpecifiedVersion(org.eclipse.jgit.lib.Repository repository, String commit) throws IOException, GitAPIException {
+        RevCommit revCommit1 = convertCommitToRevCommit(repository, commit);
+        //Fluxo alternativo quando chegar no primeiro commit
+        if (revCommit1.getParentCount() <= 0) {
+            return searchDiff(repository, revCommit1, revCommit1);
+        }
+        //trocado pela chamada de metodos
+        RevCommit revCommit2 = convertCommitToRevCommit(repository, revCommit1.getParents()[0].getName());
+        return searchDiff(repository, revCommit1, revCommit2);
     }
 
 }

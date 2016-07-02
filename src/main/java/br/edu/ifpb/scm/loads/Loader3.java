@@ -19,6 +19,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 public class Loader3 {
 
     public static String URL = "https://github.com/jass2125/LocaGames";
+    public static String URL2 = "https://github.com/jass2125/LocaGames";
     public static File PATH3 = new File("C:/Users/Anderson Sousa/Documents/scm");
 
     public static File PATH = new File("C:/Users/Amanda/Documents/scm");
@@ -28,8 +29,8 @@ public class Loader3 {
     public static File dest = new File("/Users/job/Documents/dev/data/scm2");
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
-        Repository repository = ScmFactory.create("git").clone(URL, PATH);
-        print(repository);
+        Repository repository = ScmFactory.create("git").clone(URL, PATH3);
+       print(repository);
     }
 
     public static void print(Repository repository) {

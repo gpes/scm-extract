@@ -1,12 +1,11 @@
 /*
  * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template fileName, choose Tools | Templates
  * and open the template in the editor.
  */
 package br.edu.ifpb.scm.project;
 
 import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
 /**
  *
@@ -14,38 +13,36 @@ import org.eclipse.jgit.diff.DiffEntry.ChangeType;
  */
 public class ChangedFiles {
 
-    private DiffEntry files;
-    private ChangeType name;
+    private DiffEntry fileName;
+    private String changedType;
 
     public ChangedFiles() {
     }
 
-    public ChangedFiles(DiffEntry entry, ChangeType name) {
-        this.files = entry;
-        this.name = name;
-    }
-
-    public ChangeType getName() {
-        return name;
-    }
-
-    public void setName(ChangeType name) {
-        this.name = name;
-    }
-
     @Override
     public String toString() {
-        return "ChangedFiles{" + "files=" + files + ", name=" + name.name() + '}' + "\n";
+        return "ChangedFiles{" + "fileName=" + fileName + ", changedType=" + changedType + '}' + "\n";
     }
 
-    
-
-    public void setFiles(DiffEntry files) {
-        this.files = files;
+    public ChangedFiles(DiffEntry fileName, String changedType) {
+        this.fileName = fileName;
+        this.changedType = changedType;
     }
 
-    public DiffEntry getFiles() {
-        return files;
+    public String getChangedType() {
+        return changedType;
+    }
+
+    public void setChangedType(String changedType) {
+        this.changedType = changedType;
+    }
+
+    public void setFileName(DiffEntry fileName) {
+        this.fileName = fileName;
+    }
+
+    public DiffEntry getFileName() {
+        return fileName;
     }
 
 }
