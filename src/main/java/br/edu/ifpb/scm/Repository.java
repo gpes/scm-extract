@@ -5,8 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * //job: a ideia é termos imutabilidade. Outra url, outro repositório.
- * Talvez usarmos <http://immutables.github.io/>, depois faço um teste...
+ * //job: a ideia é termos imutabilidade. Outra url, outro repositório. Talvez
+ * usarmos <http://immutables.github.io/>, depois faço um teste...
+ *
  * @author Anderson Souza
  */
 public class Repository {
@@ -16,7 +17,10 @@ public class Repository {
     private List<Version> versions;
     private SCM scm;
 
-    
+    public List<Version> getVersions() {
+        return versions;
+    }
+
     public Repository(String pathLocal, String urlRemote) {
         this.remoteURL = urlRemote;
         this.localUrl = pathLocal;

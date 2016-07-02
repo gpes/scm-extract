@@ -10,11 +10,6 @@ import br.edu.ifpb.scm.api.ScmFactory;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 /**
@@ -23,8 +18,8 @@ import org.eclipse.jgit.api.errors.GitAPIException;
  */
 public class Loader3 {
 
-    public static String URL = "https://github.com/EndenhariaDeSoftware/scm-extract";
-    public static File PATH = new File("C:/Users/Anderson Sousa/Documents/scm");
+    public static String URL = "https://github.com/jass2125/LocaGames";
+    public static File PATH = new File("C:/Users/Amanda/Documents/scm");
 
     public static File PATH3 = new File("C:/Users/Amanda/Documents/scm2");
     public static File PATH2 = new File("C:/Users/Pris/Desktop/scm");
@@ -40,7 +35,12 @@ public class Loader3 {
     public static void print(Repository repository) {
         System.out.println("URL LOCAL: " + repository.pathLocal());
         System.out.println("URL REMOTE: " + repository.urlRemote());
-//        System.out.println(repository.getVersions());
+        System.out.println(repository.versions());
+
+        repository.getVersions().forEach(t -> {
+            System.out.println(t.getChanges());
+        });
+
     }
 
 }

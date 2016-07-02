@@ -13,6 +13,7 @@ import java.util.List;
  * @author Priscila Gouveia <priscilaggouveia@gmail.com>
  */
 public class Version {
+
     private LocalDate commitDate;
     private String hashCode;
     private String message;
@@ -30,6 +31,10 @@ public class Version {
         this.commitDate = commitDate;
         this.hashCode = hashCode;
         this.message = message;
+    }
+
+    public void setChanges(List<ChangedFiles> changes) {
+        this.changes = changes;
     }
 
     public LocalDate getCommitDate() {
@@ -57,15 +62,7 @@ public class Version {
     }
 
     public List<ChangedFiles> getChanges() {
-        
         return changes;
     }
 
-    
-
-    
-
-    
-    
-    
 }

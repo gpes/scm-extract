@@ -7,20 +7,25 @@ package br.edu.ifpb.scm.git;
 
 import br.edu.ifpb.scm.Repository;
 import br.edu.ifpb.scm.SCM;
+import br.edu.ifpb.scm.project.ChangedFiles;
 import br.edu.ifpb.scm.project.Version;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.Config;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 
 /**
  *
@@ -37,6 +42,7 @@ public class Git implements SCM {
             org.eclipse.jgit.lib.Repository repository = git.getRepository();
             repo = createRepository(dir, repository);
             repo.AddAllVersions(versions(git));
+            //getChangedFiles(repository);
             return repo;
         }
         return this.getRepository(dir);
@@ -54,10 +60,16 @@ public class Git implements SCM {
     private List<Version> versions(org.eclipse.jgit.api.Git git) throws IOException, GitAPIException, ParseException {
         List<Version> lista = new ArrayList();
         LogCommand log = git.log();
-//        for (RevCommit it : log.call()) {
-//            lista.add(createVersion(it));
-//        }
-        log.call().forEach(rc -> lista.add(createVersion(rc)));
+
+        log.call().forEach(rc -> {
+            try {
+                lista.add(createVersion(rc));
+            } catch (IOException ex) {
+                Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (GitAPIException ex) {
+                Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         return lista;
     }
 
@@ -95,11 +107,67 @@ public class Git implements SCM {
         return config.getString("remote", "origin", "url");
     }
 
-    private static Version createVersion(RevCommit it) {
-        return new Version(it.getCommitterIdent().getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), String.valueOf(it.getId()).substring(7, 47), it.getShortMessage());
+    private static Version createVersion(RevCommit it) throws IOException, GitAPIException {
+
+        return new Version(it.getCommitterIdent().getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                String.valueOf(it.getId()).substring(7, 47),
+                it.getShortMessage());
+//        List<ChangedFiles> lista = createChangedFiles(version);
+//        version.setChanges(lista);
+//        return version;
     }
 
     private Repository createRepository(File dir, org.eclipse.jgit.lib.Repository repository) throws IOException {
         return new Repository(dir.getCanonicalPath(), getUrlFromLocalRepository(repository));
     }
+
+    private static List<ChangedFiles> getChangedFiles(org.eclipse.jgit.lib.Repository repository) throws IOException, GitAPIException {
+
+        List<ChangedFiles> lista = new ArrayList<>();
+        // The {tree} will return the underlying tree-id instead of the commit-id itself!
+        // For a description of what the carets do see e.g. http://www.paulboxley.com/blog/2011/06/git-caret-and-tilde
+        // This means we are selecting the parent of the parent of the parent of the parent of current HEAD and
+        // take the tree-ish of it
+        //id da tree
+        // a RevWalk allows to walk over commits based on some filtering that is defined
+        ObjectId obj = ObjectId.fromString("97ea305e9746047bac2182a62c984f8b2e169c8c");
+        RevWalk walk = new RevWalk(repository);
+        RevCommit revCommit = walk.parseCommit(obj);
+
+        RevCommit[] arra = revCommit.getParents();
+
+        ObjectId obj2 = ObjectId.fromString(arra[0].getName());
+        RevWalk walk2 = new RevWalk(repository);
+        RevCommit revCommit2 = walk2.parseCommit(obj2);
+
+        ObjectId oldHead = repository.resolve(revCommit2.getTree().getName());
+        ObjectId head = repository.resolve(revCommit.getTree().getName());
+
+        //Pegando o codigo de cada commit pra arvore
+        //System.out.println("Printing diff between tree: " + oldHead.getName() + " and " + head.getName());
+
+        // prepare the two iterators to compute the diff between
+        try (ObjectReader reader = repository.newObjectReader()) {
+            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+            oldTreeIter.reset(reader, oldHead);
+            CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+            newTreeIter.reset(reader, head);
+
+            // finally get the list of changed files
+            try (org.eclipse.jgit.api.Git g = new org.eclipse.jgit.api.Git(repository)) {
+                List<DiffEntry> diffs = g.diff()
+                        .setNewTree(newTreeIter)
+                        .setOldTree(oldTreeIter)
+                        .call();
+                diffs.stream().forEach((entry) -> {
+                    //System.out.println("Entry: " + entry);
+                    ChangedFiles changed = new ChangedFiles(entry);
+                    lista.add(changed);
+                });
+            }
+        }
+        //System.out.println("Done");
+        return lista;
+    }
+
 }
