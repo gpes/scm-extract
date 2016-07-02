@@ -6,6 +6,7 @@
 package br.edu.ifpb.scm.project;
 
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
 /**
  *
@@ -14,18 +15,30 @@ import org.eclipse.jgit.diff.DiffEntry;
 public class ChangedFiles {
 
     private DiffEntry files;
+    private ChangeType name;
 
     public ChangedFiles() {
     }
 
-    public ChangedFiles(DiffEntry entry) {
+    public ChangedFiles(DiffEntry entry, ChangeType name) {
         this.files = entry;
+        this.name = name;
+    }
+
+    public ChangeType getName() {
+        return name;
+    }
+
+    public void setName(ChangeType name) {
+        this.name = name;
     }
 
     @Override
     public String toString() {
-        return "ChangedFiles{" + "files=" + files.getNewPath() + '}' + "\n";
+        return "ChangedFiles{" + "files=" + files + ", name=" + name.name() + '}' + "\n";
     }
+
+    
 
     public void setFiles(DiffEntry files) {
         this.files = files;

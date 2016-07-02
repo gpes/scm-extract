@@ -127,34 +127,18 @@ public class Git implements SCM {
     }
 
     private static List<ChangedFiles> getChangedFiles(org.eclipse.jgit.lib.Repository repository, String commit) throws IOException, GitAPIException {
-
-//        ObjectId obj = ObjectId.fromString(commit);
-//        RevWalk walk = new RevWalk(repository);
-//        RevCommit revCommit = walk.parseCommit(obj);
-        //como pegar a referencia desse commit        
-        Ref ref = repository.exactRef("ref/heads/master");
+        
+        
         RevWalk revWalk1 = new RevWalk(repository);
         revWalk1.reset();
-
+        
+        //Transformando o hash commit em um Objeto RevCommit
         ObjectId obj = repository.resolve(commit);
         RevCommit revCommit1 = revWalk1.parseCommit(obj);
 
-//        System.out.println("Commit: " + commit);
-//
-//        // a commit points to a tree
-//        RevTree tree = walk.parseTree(commit.getTree().getId());
-//        System.out.println("FOUND TREE: " + tree.getName());
         List<ChangedFiles> lista = new ArrayList<>();
-        // The {tree} will return the underlying tree-id instead of the commit-id itself!
-        // For a description of what the carets do see e.g. http://www.paulboxley.com/blog/2011/06/git-caret-and-tilde
-        // This means we are selecting the parent of the parent of the parent of the parent of current HEAD and
-        // take the tree-ish of it
-        //id da tree
-        // a RevWalk allows to walk over commits based on some filtering that is defined
-
-        //ObjectId obj = ObjectId.fromString(commit);
-        //RevWalk walk = new RevWalk(repository);
-        //RevCommit revCommit = walk.parseCommit(obj);
+        
+        //Fluxo alternativo quando chegar no primeiro commit
         if (revCommit1.getParentCount() <= 0) {
 
             ObjectId oldHead = repository.resolve(revCommit1.getTree().getName());
@@ -174,7 +158,7 @@ public class Git implements SCM {
                             .call();
                     diffs.stream().forEach((entry) -> {
                         //System.out.println("Entry: " + entry);
-                        ChangedFiles changed = new ChangedFiles(entry);
+                        ChangedFiles changed = new ChangedFiles(entry, entry.getChangeType());
                         lista.add(changed);
                     });
                 }
@@ -208,7 +192,7 @@ public class Git implements SCM {
                         .call();
                 diffs.stream().forEach((entry) -> {
                     //System.out.println("Entry: " + entry);
-                    ChangedFiles changed = new ChangedFiles(entry);
+                    ChangedFiles changed = new ChangedFiles(entry, entry.getChangeType());
                     lista.add(changed);
                 });
             }
