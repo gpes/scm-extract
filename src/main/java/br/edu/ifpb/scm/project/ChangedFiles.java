@@ -15,13 +15,16 @@ public class ChangedFiles {
 
     private DiffEntry files;
 
+    public ChangedFiles() {
+    }
+
     public ChangedFiles(DiffEntry entry) {
         this.files = entry;
     }
 
     @Override
     public String toString() {
-        return "ChangedFiles{" + "files=" + files.getNewPath() + '}';
+        return "ChangedFiles{" + "files=" + files.getNewPath() + '}' + "\n";
     }
 
     public void setFiles(DiffEntry files) {

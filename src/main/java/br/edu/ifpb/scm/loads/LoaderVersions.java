@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.util.List;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.lib.AnyObjectId;
-import static org.eclipse.jgit.lib.ObjectChecker.tree;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Ref;

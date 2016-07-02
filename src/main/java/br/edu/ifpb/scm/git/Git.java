@@ -23,6 +23,7 @@ import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
@@ -42,7 +43,11 @@ public class Git implements SCM {
             org.eclipse.jgit.lib.Repository repository = git.getRepository();
             repo = createRepository(dir, repository);
             repo.AddAllVersions(versions(git));
-            //getChangedFiles(repository);
+
+            for (Version v : repo.getVersions()) {
+                List<ChangedFiles> changedFiles = getChangedFiles(repository, v.getHashCode());
+                v.setChanges(changedFiles);
+            }
             return repo;
         }
         return this.getRepository(dir);
@@ -121,8 +126,24 @@ public class Git implements SCM {
         return new Repository(dir.getCanonicalPath(), getUrlFromLocalRepository(repository));
     }
 
-    private static List<ChangedFiles> getChangedFiles(org.eclipse.jgit.lib.Repository repository) throws IOException, GitAPIException {
+    private static List<ChangedFiles> getChangedFiles(org.eclipse.jgit.lib.Repository repository, String commit) throws IOException, GitAPIException {
 
+//        ObjectId obj = ObjectId.fromString(commit);
+//        RevWalk walk = new RevWalk(repository);
+//        RevCommit revCommit = walk.parseCommit(obj);
+        //como pegar a referencia desse commit        
+        Ref ref = repository.exactRef("ref/heads/master");
+        RevWalk revWalk1 = new RevWalk(repository);
+        revWalk1.reset();
+
+        ObjectId obj = repository.resolve(commit);
+        RevCommit revCommit1 = revWalk1.parseCommit(obj);
+
+//        System.out.println("Commit: " + commit);
+//
+//        // a commit points to a tree
+//        RevTree tree = walk.parseTree(commit.getTree().getId());
+//        System.out.println("FOUND TREE: " + tree.getName());
         List<ChangedFiles> lista = new ArrayList<>();
         // The {tree} will return the underlying tree-id instead of the commit-id itself!
         // For a description of what the carets do see e.g. http://www.paulboxley.com/blog/2011/06/git-caret-and-tilde
@@ -130,22 +151,48 @@ public class Git implements SCM {
         // take the tree-ish of it
         //id da tree
         // a RevWalk allows to walk over commits based on some filtering that is defined
-        ObjectId obj = ObjectId.fromString("97ea305e9746047bac2182a62c984f8b2e169c8c");
-        RevWalk walk = new RevWalk(repository);
-        RevCommit revCommit = walk.parseCommit(obj);
 
-        RevCommit[] arra = revCommit.getParents();
+        //ObjectId obj = ObjectId.fromString(commit);
+        //RevWalk walk = new RevWalk(repository);
+        //RevCommit revCommit = walk.parseCommit(obj);
+        if (revCommit1.getParentCount() <= 0) {
 
-        ObjectId obj2 = ObjectId.fromString(arra[0].getName());
+            ObjectId oldHead = repository.resolve(revCommit1.getTree().getName());
+            ObjectId head = repository.resolve(revCommit1.getTree().getName());
+
+            try (ObjectReader reader = repository.newObjectReader()) {
+                CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+                oldTreeIter.reset(reader, oldHead);
+                CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+                newTreeIter.reset(reader, head);
+
+                // finally get the list of changed files
+                try (org.eclipse.jgit.api.Git g = new org.eclipse.jgit.api.Git(repository)) {
+                    List<DiffEntry> diffs = g.diff()
+                            .setNewTree(newTreeIter)
+                            .setOldTree(oldTreeIter)
+                            .call();
+                    diffs.stream().forEach((entry) -> {
+                        //System.out.println("Entry: " + entry);
+                        ChangedFiles changed = new ChangedFiles(entry);
+                        lista.add(changed);
+                    });
+                }
+            }
+            //System.out.println("Done");
+            return lista;
+        }
+//
+        RevCommit[] array = revCommit1.getParents();
+        ObjectId obj2 = ObjectId.fromString(array[0].getName());
         RevWalk walk2 = new RevWalk(repository);
         RevCommit revCommit2 = walk2.parseCommit(obj2);
 
         ObjectId oldHead = repository.resolve(revCommit2.getTree().getName());
-        ObjectId head = repository.resolve(revCommit.getTree().getName());
+        ObjectId head = repository.resolve(revCommit1.getTree().getName());
 
         //Pegando o codigo de cada commit pra arvore
         //System.out.println("Printing diff between tree: " + oldHead.getName() + " and " + head.getName());
-
         // prepare the two iterators to compute the diff between
         try (ObjectReader reader = repository.newObjectReader()) {
             CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();

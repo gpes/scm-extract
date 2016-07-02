@@ -6,6 +6,7 @@
 package br.edu.ifpb.scm.project;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +21,7 @@ public class Version {
     private List<ChangedFiles> changes;
 
     public Version() {
+        changes = new ArrayList<>();
     }
 
     @Override
