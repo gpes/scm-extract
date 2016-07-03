@@ -35,8 +35,9 @@ public class Version {
         this.message = message;
     }
 
-    public void setChanges(List<ChangedFiles> changes) {
+    public Version setChanges(List<ChangedFiles> changes) {
         this.changes = changes;
+        return this;
     }
 
     public LocalDate getCommitDate() {

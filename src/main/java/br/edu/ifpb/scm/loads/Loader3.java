@@ -29,7 +29,7 @@ public class Loader3 {
     public static File dest = new File("/Users/job/Documents/dev/data/scm2");
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
-        Repository repository = ScmFactory.create("git").clone(URL, PATH3);
+        Repository repository = ScmFactory.create("git").clone(URL, PATH);
        print(repository);
     }
 

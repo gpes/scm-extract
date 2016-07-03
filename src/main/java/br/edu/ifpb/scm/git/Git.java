@@ -44,18 +44,17 @@ public class Git implements SCM {
             org.eclipse.jgit.lib.Repository repository = git.getRepository();
             repo = createRepository(dir, repository);
             repo.AddAllVersions(versions(git));
-            findChangedFiles(git);
             return repo;
         }
         return this.getRepository(dir);
     }
-
-    private void findChangedFiles(org.eclipse.jgit.api.Git git) throws IOException, GitAPIException {
-        for (Version v : repo.getVersions()) {
-            List<ChangedFiles> changedFiles = getChangedFilesFromSpecifiedVersion(git.getRepository(), v.getHashCode());
-            v.setChanges(changedFiles);
-        }
-    }
+//Esse metodo não está mais sendo usado mais, mas deixei, caso voltemos a precisar dele
+//    private void findChangedFiles(org.eclipse.jgit.api.Git git) throws IOException, GitAPIException {
+//        for (Version v : repo.getVersions()) {
+//            List<ChangedFiles> changedFiles = getChangedFilesFromSpecifiedVersion(git.getRepository(), v.getHashCode());
+//            v.setChanges(changedFiles);
+//        }
+//    }
 
     @Override
     public Repository getRepository(File dir) throws IOException, GitAPIException, ParseException {
@@ -63,7 +62,6 @@ public class Git implements SCM {
 //        repo = new Repository(dir.getCanonicalPath(), getUrlFromLocalRepository(git.getRepository()));
         repo = createRepository(dir, git.getRepository());
         repo.AddAllVersions(versions(git));
-        findChangedFiles(git);
         return repo;
     }
 
@@ -73,7 +71,7 @@ public class Git implements SCM {
 
         log.call().forEach(rc -> {
             try {
-                lista.add(createVersion(rc));
+                lista.add(createVersion(git.getRepository(), rc));
             } catch (IOException | GitAPIException ex) {
                 Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -115,10 +113,13 @@ public class Git implements SCM {
         return config.getString("remote", "origin", "url");
     }
 
-    private static Version createVersion(RevCommit it) throws IOException, GitAPIException {
+    private static Version createVersion(org.eclipse.jgit.lib.Repository repo, RevCommit it) throws IOException, GitAPIException {
+        List<ChangedFiles> changedFiles = getChangedFilesFromSpecifiedVersion(repo, String.valueOf(it.getId()).substring(7, 47));
+
         return new Version(it.getCommitterIdent().getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                 String.valueOf(it.getId()).substring(7, 47),
-                it.getShortMessage());
+                it.getShortMessage())
+                .setChanges(changedFiles);
     }
 
     private Repository createRepository(File dir, org.eclipse.jgit.lib.Repository repository) throws IOException {
