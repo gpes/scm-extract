@@ -7,8 +7,8 @@ package br.edu.ifpb.scm.loads;
 
 import br.edu.ifpb.scm.Repository;
 import br.edu.ifpb.scm.SCM;
+import br.edu.ifpb.scm.api.ScmType;
 import br.edu.ifpb.scm.git.Git;
-import br.edu.ifpb.scm.svn.Svn;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -40,12 +40,14 @@ public class ScmBuilder {
         return null;
     }
     //aqui cabe um strategy com enumeration
-    public ScmBuilder create(String scm) {
-        if (scm.equals("git")) {
-            this.scm = new Git();
-        }
-        this.scm = new Svn();
+    public ScmBuilder create(ScmType type) {
+        this.scm = type.get();
         return this;
+//        if (scm.equals("git")) {
+//            this.scm = new Git();
+//        }
+//        this.scm = new Svn();
+//        return this;
     }
     
     public ScmBuilder clone(){

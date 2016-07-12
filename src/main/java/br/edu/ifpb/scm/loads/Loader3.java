@@ -7,6 +7,7 @@ package br.edu.ifpb.scm.loads;
 
 import br.edu.ifpb.scm.Repository;
 import br.edu.ifpb.scm.api.ScmFactory;
+import br.edu.ifpb.scm.api.ScmType;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -33,7 +34,7 @@ public class Loader3 {
 //       print(repository);
 
 //        Repository repository = 
-        Repository repository = new ScmBuilder().url(URL).dir(PATH3).create("git").clone().repository();
+        Repository repository = new ScmBuilder().url(URL).dir(PATH3).create(ScmType.GIT).clone().repository();
         print(repository);
     }
 
