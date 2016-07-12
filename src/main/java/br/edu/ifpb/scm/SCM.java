@@ -15,8 +15,8 @@ public interface SCM {
     /**
      * Método para clonar um repositório remoto Git
      *
-     * @param url localização do repositório remoto
-     * @param dir localização de onde deve ficar o repositório local
+     * @param url
+     * @param dir
      * @return AdapterRepository
      * @throws org.eclipse.jgit.api.errors.GitAPIException
      * @throws java.io.IOException

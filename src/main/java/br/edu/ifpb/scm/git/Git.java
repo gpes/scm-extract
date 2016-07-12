@@ -36,9 +36,18 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 public class Git implements SCM {
 
     private Repository repo;
+    private String url;
+    private File dir;
 
-    @Override
-    public Repository clone(String url, File dir) throws GitAPIException, IOException, ParseException {
+    public Git(String url, File dir) {
+        this.url = url;
+        this.dir = dir;
+    }
+
+    public Git() {
+    }
+
+    public Repository clon() throws GitAPIException, IOException, ParseException {
         if (!dir.exists() && !dir.isDirectory()) {
             org.eclipse.jgit.api.Git git = org.eclipse.jgit.api.Git.cloneRepository().setURI(url).setDirectory(dir).call();
             org.eclipse.jgit.lib.Repository repository = git.getRepository();
@@ -175,6 +184,11 @@ public class Git implements SCM {
         //trocado pela chamada de metodos
         RevCommit revCommit2 = convertCommitToRevCommit(repository, revCommit1.getParents()[0].getName());
         return searchDiff(repository, revCommit1, revCommit2);
+    }
+
+    @Override
+    public Repository clone(String url, File dir) throws GitAPIException, IOException, ParseException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

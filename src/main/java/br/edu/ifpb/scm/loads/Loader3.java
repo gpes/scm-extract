@@ -29,8 +29,16 @@ public class Loader3 {
     public static File dest = new File("/Users/job/Documents/dev/data/scm2");
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
-        Repository repository = ScmFactory.create("git").clone(URL, PATH);
-       print(repository);
+//        Repository repository = ScmFactory.create("git").clon();
+//       print(repository);
+
+//        Repository repository = 
+        Repository repository = new ScmBuilder().url(URL).dir(PATH3).create("git").clone().repository();
+        print(repository);
+    }
+
+    public void call() {
+
     }
 
     public static void print(Repository repository) {
@@ -39,7 +47,7 @@ public class Loader3 {
         System.out.println("URL LOCAL: " + repository.pathLocal());
         System.out.println("URL REMOTE: " + repository.urlRemote());
         System.out.println(repository.versions());
-        
+
         repository.getVersions().forEach(t -> {
             System.out.println(t.getChanges());
         });

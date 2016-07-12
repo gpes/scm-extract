@@ -18,7 +18,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 public class Mercurial implements SCM{
 
     @Override
-    public Repository clone(String url, File path) throws GitAPIException, IOException {
+    public Repository clone(String url, File dir) throws GitAPIException, IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
