@@ -26,7 +26,7 @@ public class ScmFactory {
 
     private static final Map<String, SCM> map = new HashMap() {
         {
-            put("git", new Git(null, null));
+            put("git", new Git());
             put("svn", new Svn());
             
         }

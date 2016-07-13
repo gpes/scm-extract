@@ -9,6 +9,7 @@ import br.edu.ifpb.scm.SCM;
 import br.edu.ifpb.scm.Repository;
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -48,7 +49,6 @@ public class Svn implements SCM {
 
     }
 
-    @Override
     public Repository clone(String url, File path) throws GitAPIException, IOException {
         try {
             location = SVNURL.parseURIEncoded(url);
@@ -63,7 +63,6 @@ public class Svn implements SCM {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
     public Repository getRepository(File dir) throws IOException {
 
         try {
@@ -110,6 +109,31 @@ public class Svn implements SCM {
         } catch (SVNException ex) {
             Logger.getLogger(Svn.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public Repository cloneRepository() throws GitAPIException, IOException, ParseException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Repository getRepository() throws IOException, GitAPIException, ParseException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public SCM setUrl(String url) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public SCM setDir(String dir) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Repository get() throws IOException, GitAPIException, ParseException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

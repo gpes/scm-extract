@@ -25,7 +25,7 @@ public class SvnTest {
     private final File origin = new File("/Users/job/Documents/dev/data/origin");
     private final File dest = new File("/Users/job/Documents/dev/data/scm");
 
-    @Test
+    //@Test
     public void testClone() {
         try {
             logger.log(Level.INFO, "iniciando teste do clone do File");

@@ -39,15 +39,11 @@ public class Git implements SCM {
     private String url;
     private File dir;
 
-    public Git(String url, File dir) {
-        this.url = url;
-        this.dir = dir;
-    }
-
     public Git() {
     }
 
-    public Repository clon() throws GitAPIException, IOException, ParseException {
+    //se renomear como clone dá erro, por causa de Object, por isso tá CLON
+    public Repository cloneRepository() throws GitAPIException, IOException, ParseException {
         if (!dir.exists() && !dir.isDirectory()) {
             org.eclipse.jgit.api.Git git = org.eclipse.jgit.api.Git.cloneRepository().setURI(url).setDirectory(dir).call();
             org.eclipse.jgit.lib.Repository repository = git.getRepository();
@@ -55,7 +51,7 @@ public class Git implements SCM {
             repo.AddAllVersions(versions(git));
             return repo;
         }
-        return this.getRepository(dir);
+        return this.getRepository();
     }
 //Esse metodo não está mais sendo usado mais, mas deixei, caso voltemos a precisar dele
 //    private void findChangedFiles(org.eclipse.jgit.api.Git git) throws IOException, GitAPIException {
@@ -66,7 +62,7 @@ public class Git implements SCM {
 //    }
 
     @Override
-    public Repository getRepository(File dir) throws IOException, GitAPIException, ParseException {
+    public Repository getRepository() throws IOException, GitAPIException, ParseException {
         org.eclipse.jgit.api.Git git = org.eclipse.jgit.api.Git.open(dir);
 //        repo = new Repository(dir.getCanonicalPath(), getUrlFromLocalRepository(git.getRepository()));
         repo = createRepository(dir, git.getRepository());
@@ -186,9 +182,22 @@ public class Git implements SCM {
         return searchDiff(repository, revCommit1, revCommit2);
     }
 
+
     @Override
-    public Repository clone(String url, File dir) throws GitAPIException, IOException, ParseException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public SCM setUrl(String url) {
+        this.url = url;
+        return this;
+    }
+
+    @Override
+    public SCM setDir(String dir) {
+        this.dir = new File(dir);
+        return this;
+    }
+
+    @Override
+    public Repository get() throws IOException, GitAPIException, ParseException {
+        return this.cloneRepository();
     }
 
 }

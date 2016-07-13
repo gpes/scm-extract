@@ -16,7 +16,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 
 /**
  * ScmFactory .url("url") .dir("") .create("git") .clone() .repository()
- * .checkout("123")
+ * .checkout("123") Interface Fluent
  *
  * @author Anderson Souza
  */
@@ -24,33 +24,34 @@ public class ScmBuilder {
 
     private SCM scm;
     private String url;
-    private File dir;
+    private String dir;
 
     public ScmBuilder url(String url) {
         this.url = url;
         return this;
     }
 
-    public ScmBuilder dir(File dir) {
+    public ScmBuilder dir(String dir) {
         this.dir = dir;
         return this;
-    }
-
-    public Repository build() {
-        return null;
     }
 
     public ScmBuilder create(ScmType type) {
         this.scm = type.get();
         return this;
     }
-
-    public Repository clon() throws GitAPIException, IOException, ParseException{
-        return new Git(url, dir).clon();
+    
+    public Repository buildClone() throws GitAPIException, IOException, ParseException {
+        return this.scm
+                .setUrl(url)
+                .setDir(dir)
+                .get();
     }
-
-    public Repository repository() throws GitAPIException, IOException, ParseException {
-        return new Git(url, dir).clon();
+    
+    //dá pra usar apenas um metodo na classe Git, que caso seja apenas pra pegar a referencia e ele passa a url null
+    public Repository buildRepository() throws GitAPIException, IOException, ParseException {
+        return this.scm
+                .setDir(dir)
+                .get();
     }
-
 }

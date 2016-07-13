@@ -1,6 +1,5 @@
 package br.edu.ifpb.scm;
 
-import java.io.File;
 //TODO: Usar apenas objetos de nossa API
 import java.io.IOException;
 import java.text.ParseException;
@@ -22,8 +21,7 @@ public interface SCM {
      * @throws java.io.IOException
      * @throws java.text.ParseException
      */
-    public Repository clone(String url, File dir) throws GitAPIException, IOException, ParseException;
-    
+    public Repository cloneRepository() throws GitAPIException, IOException, ParseException;
 
     /**
      * Método para recuperar a referência para um repositório Git local
@@ -34,7 +32,7 @@ public interface SCM {
      * @throws org.eclipse.jgit.api.errors.GitAPIException
      * @throws java.text.ParseException
      */
-    public Repository getRepository(File dir) throws IOException, GitAPIException, ParseException;
+    public Repository getRepository() throws IOException, GitAPIException, ParseException;
 
     /**
      * Método para realizar o checkout do repositório
@@ -51,4 +49,10 @@ public interface SCM {
      * @return AdapterRepository
      */
     public Repository checkoutByCommit(String hash);
+
+    public SCM setUrl(String url);
+
+    public SCM setDir(String dir);
+
+    public Repository get() throws IOException, GitAPIException, ParseException;
 }
