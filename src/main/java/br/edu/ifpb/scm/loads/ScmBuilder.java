@@ -8,8 +8,6 @@ package br.edu.ifpb.scm.loads;
 import br.edu.ifpb.scm.Repository;
 import br.edu.ifpb.scm.SCM;
 import br.edu.ifpb.scm.api.ScmType;
-import br.edu.ifpb.scm.git.Git;
-import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import org.eclipse.jgit.api.errors.GitAPIException;

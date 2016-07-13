@@ -33,6 +33,8 @@ public class Svn implements SCM {
     private SvnOperationFactory operationFactory;
     private SVNURL location;
     private File dir;
+    private String url;
+    private File path;
 
     public Svn() {
     }
@@ -49,7 +51,8 @@ public class Svn implements SCM {
 
     }
 
-    public Repository clone(String url, File path) throws GitAPIException, IOException {
+    @Override
+    public Repository cloneRepository() throws GitAPIException, IOException {
         try {
             location = SVNURL.parseURIEncoded(url);
             operationFactory = new SvnOperationFactory();
@@ -57,6 +60,7 @@ public class Svn implements SCM {
             Logger.getLogger(Svn.class.getName()).log(Level.INFO, "Iniciando o checkout da vers\u00e3o: {0} no dir {1}", new Object[]{"HEAD", dir});
             return checkout("-1");
         } catch (SVNException ex) {
+            ex.printStackTrace();
             Logger.getLogger(Svn.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -111,10 +115,7 @@ public class Svn implements SCM {
         }
     }
 
-    @Override
-    public Repository cloneRepository() throws GitAPIException, IOException, ParseException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
 
     @Override
     public Repository getRepository() throws IOException, GitAPIException, ParseException {
@@ -123,18 +124,22 @@ public class Svn implements SCM {
 
     @Override
     public SCM setUrl(String url) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.url = url;
+        return this;
     }
 
     @Override
     public SCM setDir(String dir) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.path = new File(dir);
+        return this;
     }
 
     @Override
     public Repository get() throws IOException, GitAPIException, ParseException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.cloneRepository();
     }
+
+    
 
 }
 
