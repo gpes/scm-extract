@@ -34,13 +34,11 @@ public class Loader3 {
 //       print(repository);
 
 //        Repository repository = 
-        Repository repository = new ScmBuilder().url(URL).dir(PATH3).create(ScmType.GIT).clone().repository();
+        Repository repository = new ScmBuilder().url(URL).dir(PATH3).create(ScmType.GIT).clon();
         print(repository);
     }
 
-    public void call() {
-
-    }
+   
 
     public static void print(Repository repository) {
 //        System.out.println(repository.);

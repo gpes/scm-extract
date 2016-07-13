@@ -39,28 +39,18 @@ public class ScmBuilder {
     public Repository build() {
         return null;
     }
-    //aqui cabe um strategy com enumeration
+
     public ScmBuilder create(ScmType type) {
         this.scm = type.get();
         return this;
-//        if (scm.equals("git")) {
-//            this.scm = new Git();
-//        }
-//        this.scm = new Svn();
-//        return this;
     }
-    
-    public ScmBuilder clone(){
-        return this;
-    }
-    
-    public Repository repository() throws GitAPIException, IOException, ParseException{
+
+    public Repository clon() throws GitAPIException, IOException, ParseException{
         return new Git(url, dir).clon();
     }
-    
-    
-    
-    
-    
+
+    public Repository repository() throws GitAPIException, IOException, ParseException {
+        return new Git(url, dir).clon();
+    }
 
 }
