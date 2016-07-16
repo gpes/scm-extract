@@ -7,12 +7,14 @@ package br.edu.ifpb.scm.svn;
 
 import br.edu.ifpb.scm.Repository;
 import br.edu.ifpb.scm.api.RepositoryTest;
+import br.edu.ifpb.scm.api.ScmType;
+import br.edu.ifpb.scm.loads.ScmBuilder;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  *
@@ -21,21 +23,23 @@ import static org.junit.Assert.*;
 public class SvnTest {
 
     private static final Logger logger = Logger.getLogger(RepositoryTest.class.getName());
-    private final String url = "https://github.com/EndenhariaDeSoftware/scm-extract";
+    private final String url = "http://svn.code.sf.net/p/xmlunit/code/trunk";
     private final File origin = new File("/Users/job/Documents/dev/data/origin");
     private final File dest = new File("/Users/job/Documents/dev/data/scm");
+    private final File EJ = new File("/home/jairanderson/Área de Trabalho/svn");
 
-    //@Test
+    @Test
     public void testClone() {
         try {
             logger.log(Level.INFO, "iniciando teste do clone do File");
             String url = "";
             File path = null;
-            Svn instance = new Svn(dest, url);
+            Svn instance = new Svn(EJ, url);
             Repository expResult = null;
-            Repository result = instance.clone(url, path);
+            Repository result = new ScmBuilder().url(this.url).dir(EJ.getCanonicalPath()).create(ScmType.SVN).buildClone();
             assertEquals(expResult, result);
         } catch (Exception ex) {
+            ex.printStackTrace();
              logger.log(Level.SEVERE, "Problemas na execução do teste clonar SVN: ", ex);
         }
     }

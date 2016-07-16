@@ -8,8 +8,6 @@ package br.edu.ifpb.scm.loads;
 import br.edu.ifpb.scm.Repository;
 import br.edu.ifpb.scm.SCM;
 import br.edu.ifpb.scm.api.ScmType;
-import br.edu.ifpb.scm.git.Git;
-import br.edu.ifpb.scm.hg.Mercurial;
 import java.io.IOException;
 import java.text.ParseException;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -55,22 +53,4 @@ public final class ScmBuilder {
                 .get();
     }
 
-    public static enum ScmType {
-        GIT {
-            @Override
-            public SCM getScmType() {
-                return new Git();
-            }
-
-        },
-        MERCURIAL {
-            @Override
-            public SCM getScmType() {
-                return new Mercurial();
-            }
-        };
-
-        public abstract SCM getScmType();
-
-    }
 }

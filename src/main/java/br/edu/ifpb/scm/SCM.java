@@ -26,7 +26,6 @@ public interface SCM {
     /**
      * Método para recuperar a referência para um repositório Git local
      *
-     * @param dir localização do repositório local
      * @return Repository
      * @throws java.io.IOException
      * @throws org.eclipse.jgit.api.errors.GitAPIException

@@ -32,7 +32,7 @@ public class Loader3 {
 //       print(repository);
 
 //        Repository repository = 
-        Repository repository = new ScmBuilder().url(URL).dir(PATH.getCanonicalPath()).create(ScmBuilder.ScmType.GIT).buildClone();
+        Repository repository = new ScmBuilder().url(URL).dir(PATH3.getCanonicalPath()).create(ScmType.GIT).buildClone();
         print(repository);
     }
 
