@@ -16,17 +16,17 @@ import br.edu.ifpb.scm.hg.Mercurial;
 public enum ScmType {
     GIT{
         @Override
-        public SCM get() {
+        public SCM getScmType() {
             return new Git();
         }
         
     }, 
     MERCURIAL{
         @Override
-        public SCM get() {
+        public SCM getScmType() {
             return new Mercurial();
         }
     };
-    public abstract SCM get();
+    public abstract SCM getScmType();
 
 }

@@ -9,7 +9,7 @@ import br.edu.ifpb.scm.Repository;
 import br.edu.ifpb.scm.SCM;
 import br.edu.ifpb.scm.api.ScmType;
 import br.edu.ifpb.scm.git.Git;
-import java.io.File;
+import br.edu.ifpb.scm.hg.Mercurial;
 import java.io.IOException;
 import java.text.ParseException;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -20,7 +20,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
  *
  * @author Anderson Souza
  */
-public class ScmBuilder {
+public final class ScmBuilder {
 
     private SCM scm;
     private String url;
@@ -37,21 +37,40 @@ public class ScmBuilder {
     }
 
     public ScmBuilder create(ScmType type) {
-        this.scm = type.get();
+        this.scm = type.getScmType();
         return this;
     }
-    
+
     public Repository buildClone() throws GitAPIException, IOException, ParseException {
         return this.scm
                 .setUrl(url)
                 .setDir(dir)
                 .get();
     }
-    
+
     //dá pra usar apenas um metodo na classe Git, que caso seja apenas pra pegar a referencia e ele passa a url null
     public Repository buildRepository() throws GitAPIException, IOException, ParseException {
         return this.scm
                 .setDir(dir)
                 .get();
+    }
+
+    public static enum ScmType {
+        GIT {
+            @Override
+            public SCM getScmType() {
+                return new Git();
+            }
+
+        },
+        MERCURIAL {
+            @Override
+            public SCM getScmType() {
+                return new Mercurial();
+            }
+        };
+
+        public abstract SCM getScmType();
+
     }
 }
