@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.lib.Config;
@@ -38,6 +39,7 @@ public class Git implements SCM {
     private Repository repo;
     private String url;
     private File dir;
+    
 
     public Git() {
     }
@@ -160,6 +162,8 @@ public class Git implements SCM {
                 diffs.iterator().forEachRemaining(entry -> {
                     ChangedFiles changed = new ChangedFiles(entry, entry.getChangeType().name());
                     lista.add(changed);
+                    showFileDiffs(repository, entry);
+
 //                    /System.out.println(entry.getNewPath());
                 });
 //                stream().forEach((entry) -> {
@@ -171,17 +175,30 @@ public class Git implements SCM {
         return lista;
     }
 
+    public static void showFileDiffs(org.eclipse.jgit.lib.Repository repository, DiffEntry diff){
+        System.out.println(diff);
+        DiffFormatter formatter = new DiffFormatter(System.out);
+        formatter.setRepository(repository);
+        try {
+            formatter.format(diff);
+        } catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     private static List<ChangedFiles> getChangedFilesFromSpecifiedVersion(org.eclipse.jgit.lib.Repository repository, String commit) throws IOException, GitAPIException {
         RevCommit revCommit1 = convertCommitToRevCommit(repository, commit);
+
         //Fluxo alternativo quando chegar no primeiro commit
         if (revCommit1.getParentCount() <= 0) {
+            //return searchDiff(repository, revCommit1, revCommit1);
             return searchDiff(repository, revCommit1, revCommit1);
         }
         //trocado pela chamada de metodos
         RevCommit revCommit2 = convertCommitToRevCommit(repository, revCommit1.getParents()[0].getName());
+        //return searchDiff(repository, revCommit1, revCommit2);
         return searchDiff(repository, revCommit1, revCommit2);
     }
-
 
     @Override
     public SCM setUrl(String url) {
