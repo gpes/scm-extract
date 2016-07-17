@@ -12,6 +12,7 @@ import br.edu.ifpb.scm.hg.Mercurial;
  *
  * @author Anderson Souza
  */
+@Deprecated
 public abstract class ScmAbstractFactory {
 
     public abstract Git createGit();

@@ -35,7 +35,8 @@ public class Loader3 {
 
 //        Repository repository = 
         Builder builder = new ScmBuilder();
-        Repository repository = builder.url(URL).dir(PATH3.getCanonicalPath()).create(ScmType.GIT).buildClone();
+        //Repository repository = builder.url(URL).dir(PATH3.getCanonicalPath()).create(ScmType.GIT).buildClone();
+        Repository repository = new ScmBuilder().url(URL).dir(PATH3.getCanonicalPath()).create(ScmType.GIT).buildClone();
         print(repository);
     }
 
