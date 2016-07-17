@@ -12,11 +12,9 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 public interface SCM {
 
     /**
-     * Método para clonar um repositório remoto Git
+     * Realiza um clone de um repositório remoto de um controle de versão
      *
-     * @param url
-     * @param dir
-     * @return AdapterRepository
+     * @return {@link Repository} Repositório
      * @throws org.eclipse.jgit.api.errors.GitAPIException
      * @throws java.io.IOException
      * @throws java.text.ParseException
@@ -24,9 +22,9 @@ public interface SCM {
     public Repository cloneRepository() throws GitAPIException, IOException, ParseException;
 
     /**
-     * Método para recuperar a referência para um repositório Git local
+     * Recupera a referência para um repositório local
      *
-     * @return Repository
+     * @return {@link Repository} Reposiório
      * @throws java.io.IOException
      * @throws org.eclipse.jgit.api.errors.GitAPIException
      * @throws java.text.ParseException
@@ -34,10 +32,10 @@ public interface SCM {
     public Repository getRepository() throws IOException, GitAPIException, ParseException;
 
     /**
-     * Método para realizar o checkout do repositório
+     * Realizar um checkout entre versões de um repositório
      *
-     * @param commit
-     * @return
+     * @param commit HashCode do commit
+     * @return {@link Repository} Repositório
      */
     public Repository checkout(String commit);
 
@@ -47,10 +45,23 @@ public interface SCM {
      * @param hash código hash do commit
      * @return AdapterRepository
      */
+    @Deprecated
     public Repository checkoutByCommit(String hash);
 
+    /**
+     * Altera a url remota do repositório
+     *
+     * @param url Caminho do repositório remoto
+     * @return Este objeto
+     */
     public SCM setUrl(String url);
 
+    /**
+     * Altera o diretório local do repositório
+     *
+     * @param dir Caminho do diretório
+     * @return Este objeto
+     */
     public SCM setDir(String dir);
 
 }

@@ -6,7 +6,9 @@
 package br.edu.ifpb.scm.loads;
 
 import br.edu.ifpb.scm.Repository;
+import br.edu.ifpb.scm.SCM;
 import br.edu.ifpb.scm.api.ScmType;
+import br.edu.ifpb.scm.git.Git;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -19,7 +21,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 public class Loader3 {
 
     public static String URL = "https://github.com/jass2125/LocaGames";
-    public static File PATH3 = new File("C:/Users/Anderson Sousa/Documents/scm");
+    public static File PATH3 = new File("/home/des02/Desktop/scm");
 
     public static File PATH = new File("C:/Users/Amanda/Documents/scm");
     public static File PATH2 = new File("C:/Users/Pris/Desktop/scm");
@@ -33,7 +35,6 @@ public class Loader3 {
 
 //        Repository repository = 
         Builder builder = new ScmBuilder();
-
         Repository repository = builder.url(URL).dir(PATH3.getCanonicalPath()).create(ScmType.GIT).buildClone();
         print(repository);
     }

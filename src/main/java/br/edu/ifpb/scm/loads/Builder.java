@@ -23,7 +23,7 @@ public interface Builder {
      * @param url Url local
      * @return ScmBuilder Este objeto
      */
-    public ScmBuilder url(String url);
+    public Builder url(String url);
 
     /**
      * Altera o diretório local do repositório
@@ -43,8 +43,7 @@ public interface Builder {
 
     /**
      * Contrói uma instância de um objeto {@link Repository}
-     *
-     * @return
+     * @return {@link Repository} Repositório
      * @throws GitAPIException
      * @throws IOException
      * @throws ParseException
@@ -52,8 +51,9 @@ public interface Builder {
     public Repository buildClone() throws GitAPIException, IOException, ParseException;
 
     /**
-     *
-     * @return @throws GitAPIException
+     * Recupera a instância de um repositório já existente
+     * @return {@link Repository} Repositório
+     * @throws org.eclipse.jgit.api.errors.GitAPIException
      * @throws IOException
      * @throws ParseException
      */

@@ -134,7 +134,6 @@ public class Svn implements SCM {
         return this;
     }
 
-    @Override
     public Repository get() throws IOException, GitAPIException, ParseException {
         return this.cloneRepository();
     }

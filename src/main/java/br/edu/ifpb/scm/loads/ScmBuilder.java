@@ -25,19 +25,19 @@ public final class ScmBuilder implements Builder {
     private String dir;
 
     @Override
-    public ScmBuilder url(String url) {
+    public Builder url(String url) {
         this.url = url;
         return this;
     }
 
     @Override
-    public ScmBuilder dir(String dir) {
+    public Builder dir(String dir) {
         this.dir = dir;
         return this;
     }
 
     @Override
-    public ScmBuilder create(ScmType type) {
+    public Builder create(ScmType type) {
         this.scm = type.getScmType();
         return this;
     }
