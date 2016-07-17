@@ -42,9 +42,9 @@ public class Loader3 {
     public static void print(Repository repository) {
 //        System.out.println(repository.);
 //        System.out.println(repository);
-        System.out.println("URL LOCAL: " + repository.pathLocal());
-        System.out.println("URL REMOTE: " + repository.urlRemote());
-        System.out.println(repository.versions());
+        System.out.println("URL LOCAL: " + repository.getPathLocal());
+        System.out.println("URL REMOTE: " + repository.getUrlRemote());
+        System.out.println(repository.getVersions());
 
         repository.getVersions().forEach(t -> {
             System.out.println(t.getChanges());

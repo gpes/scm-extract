@@ -35,6 +35,10 @@ public class Version {
         this.message = message;
     }
 
+    public List<ChangedFiles> getChanges() {
+        return changes;
+    }
+
     public Version setChanges(List<ChangedFiles> changes) {
         this.changes = changes;
         return this;
@@ -62,10 +66,6 @@ public class Version {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public List<ChangedFiles> getChanges() {
-        return changes;
     }
 
 }

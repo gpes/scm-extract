@@ -39,7 +39,12 @@ public class Svn implements SCM {
     public Svn() {
     }
 
-    //TODO: Conseguir configurar isso na interface SCM
+    /**
+     * TODO: Conseguir configurar isso na interface SCM
+     *
+     * @param dir
+     * @param url
+     */
     public Svn(File dir, String url) {
         try {
             this.dir = dir;
@@ -67,7 +72,8 @@ public class Svn implements SCM {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public Repository getRepository(File dir) throws IOException {
+    @Override
+    public Repository getRepository() throws IOException, GitAPIException, ParseException {
 
         try {
             location = SVNURL.fromFile(dir);//parseURIEncoded(url);
@@ -115,13 +121,6 @@ public class Svn implements SCM {
         }
     }
 
-    
-
-    @Override
-    public Repository getRepository() throws IOException, GitAPIException, ParseException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     @Override
     public SCM setUrl(String url) {
         this.url = url;
@@ -133,12 +132,6 @@ public class Svn implements SCM {
         this.path = new File(dir);
         return this;
     }
-
-    public Repository get() throws IOException, GitAPIException, ParseException {
-        return this.cloneRepository();
-    }
-
-    
 
 }
 

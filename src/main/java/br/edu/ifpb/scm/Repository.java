@@ -17,8 +17,7 @@ public class Repository {
     private List<Version> versions;
     private SCM scm;
 
-    public List<Version> getVersions() {
-        return versions;
+    public Repository() {
     }
 
     public Repository(String pathLocal, String urlRemote) {
@@ -30,15 +29,15 @@ public class Repository {
         this.versions = versions;
     }
 
-    public String urlRemote() {
+    public String getUrlRemote() {
         return remoteURL;
     }
 
-    public String pathLocal() {
+    public String getPathLocal() {
         return localUrl;
     }
 
-    public List<Version> versions() {
+    public List<Version> getVersions() {
         return Collections.unmodifiableList(versions);
     }
 

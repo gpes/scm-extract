@@ -29,11 +29,11 @@ public class RepositoryTest {
             
             Repository repository = new ScmBuilder().url(url).dir(EJ.getCanonicalPath()).create(ScmType.GIT).buildClone();
             assertNotNull(repository);
-            assertNotNull(repository.pathLocal());
-            assertNotNull(repository.urlRemote());
-            assertNotNull(repository.versions());
+            assertNotNull(repository.getPathLocal());
+            assertNotNull(repository.getUrlRemote());
+            assertNotNull(repository.getVersions());
             logger.log(Level.INFO, "local {0}, remote {1} e versions {2}",
-                    new Object[]{repository.pathLocal(), repository.urlRemote(), repository.versions().size()});
+                    new Object[]{repository.getPathLocal(), repository.getUrlRemote(), repository.getVersions().size()});
         } catch (Exception ex) {
             logger.log(Level.FINE, "Problemas na execução do teste clonarRepositorioDaURL", ex);
         }
@@ -45,11 +45,11 @@ public class RepositoryTest {
             logger.log(Level.INFO, "iniciando teste do clone do File");
             Repository repository = new ScmBuilder().url(url).dir(EJ.getCanonicalPath()).create(ScmType.GIT).buildClone(); 
             assertNotNull(repository);
-            assertNotNull(repository.pathLocal());
-            assertNotNull(repository.urlRemote());
-            assertNotNull(repository.versions());
+            assertNotNull(repository.getPathLocal());
+            assertNotNull(repository.getUrlRemote());
+            assertNotNull(repository.getVersions());
             logger.log(Level.INFO, "local {0}, remote {1} e versions {2}",
-                    new Object[]{repository.pathLocal(), repository.urlRemote(), repository.versions().size()});
+                    new Object[]{repository.getPathLocal(), repository.getUrlRemote(), repository.getVersions().size()});
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "Problemas na execução do teste clonarRepositorioDoFile", ex);
         }
