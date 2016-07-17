@@ -20,7 +20,6 @@ public enum ScmType {
         public SCM getScmType() {
             return new Git();
         }
-
     },
     MERCURIAL {
         @Override

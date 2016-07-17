@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
-/** 
+/**
  *
  * @author Anderson Souza
  */
@@ -32,11 +32,11 @@ public class Loader3 {
 //       print(repository);
 
 //        Repository repository = 
-        Repository repository = new ScmBuilder().url(URL).dir(PATH3.getCanonicalPath()).create(ScmType.GIT).buildClone();
+        Builder builder = new ScmBuilder();
+
+        Repository repository = builder.url(URL).dir(PATH3.getCanonicalPath()).create(ScmType.GIT).buildClone();
         print(repository);
     }
-
-   
 
     public static void print(Repository repository) {
 //        System.out.println(repository.);

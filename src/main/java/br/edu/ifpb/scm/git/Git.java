@@ -182,7 +182,6 @@ public class Git implements SCM {
         return searchDiff(repository, revCommit1, revCommit2);
     }
 
-
     @Override
     public SCM setUrl(String url) {
         this.url = url;
@@ -193,11 +192,6 @@ public class Git implements SCM {
     public SCM setDir(String dir) {
         this.dir = new File(dir);
         return this;
-    }
-
-    @Override
-    public Repository get() throws IOException, GitAPIException, ParseException {
-        return this.cloneRepository();
     }
 
 }

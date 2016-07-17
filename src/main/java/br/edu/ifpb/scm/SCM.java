@@ -53,5 +53,4 @@ public interface SCM {
 
     public SCM setDir(String dir);
 
-    public Repository get() throws IOException, GitAPIException, ParseException;
 }

@@ -18,39 +18,43 @@ import org.eclipse.jgit.api.errors.GitAPIException;
  *
  * @author Anderson Souza
  */
-public final class ScmBuilder {
+public final class ScmBuilder implements Builder {
 
     private SCM scm;
     private String url;
     private String dir;
 
+    @Override
     public ScmBuilder url(String url) {
         this.url = url;
         return this;
     }
 
+    @Override
     public ScmBuilder dir(String dir) {
         this.dir = dir;
         return this;
     }
 
+    @Override
     public ScmBuilder create(ScmType type) {
         this.scm = type.getScmType();
         return this;
     }
 
+    @Override
     public Repository buildClone() throws GitAPIException, IOException, ParseException {
         return this.scm
                 .setUrl(url)
                 .setDir(dir)
-                .get();
+                .cloneRepository();
     }
 
-    //dá pra usar apenas um metodo na classe Git, que caso seja apenas pra pegar a referencia e ele passa a url null
+    @Override
     public Repository buildRepository() throws GitAPIException, IOException, ParseException {
         return this.scm
                 .setDir(dir)
-                .get();
+                .getRepository();
     }
 
 }
