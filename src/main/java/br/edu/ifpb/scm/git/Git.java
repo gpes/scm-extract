@@ -42,7 +42,7 @@ public class Git implements SCM {
     public Git() {
     }
 
-    //se renomear como clone dá erro, por causa de Object, por isso tá CLON
+    @Override
     public Repository cloneRepository() throws GitAPIException, IOException, ParseException {
         if (!dir.exists() && !dir.isDirectory()) {
             org.eclipse.jgit.api.Git git = org.eclipse.jgit.api.Git.cloneRepository().setURI(url).setDirectory(dir).call();
@@ -118,7 +118,7 @@ public class Git implements SCM {
         return config.getString("remote", "origin", "url");
     }
 
-    private static Version createVersion(org.eclipse.jgit.lib.Repository repo, RevCommit it) throws IOException, GitAPIException {
+    private Version createVersion(org.eclipse.jgit.lib.Repository repo, RevCommit it) throws IOException, GitAPIException {
         List<ChangedFiles> changedFiles = getChangedFilesFromSpecifiedVersion(repo, String.valueOf(it.getId()).substring(7, 47));
 
         return new Version(it.getCommitterIdent().getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
@@ -131,7 +131,7 @@ public class Git implements SCM {
         return new Repository(dir.getCanonicalPath(), getUrlFromLocalRepository(repository));
     }
 
-    private static RevCommit convertCommitToRevCommit(org.eclipse.jgit.lib.Repository repository, String commit) throws IncorrectObjectTypeException, RevisionSyntaxException, IOException {
+    private RevCommit convertStringToRevCommit(org.eclipse.jgit.lib.Repository repository, String commit) throws IncorrectObjectTypeException, RevisionSyntaxException, IOException {
         RevWalk rev = new RevWalk(repository);
         rev.reset();
 
@@ -140,7 +140,7 @@ public class Git implements SCM {
         return rev.parseCommit(obj);
     }
 
-    private static List<ChangedFiles> searchDiff(org.eclipse.jgit.lib.Repository repository, RevCommit rev1, RevCommit rev2) throws IncorrectObjectTypeException, RevisionSyntaxException, IOException, GitAPIException {
+    private List<ChangedFiles> searchDiff(org.eclipse.jgit.lib.Repository repository, RevCommit rev1, RevCommit rev2) throws IncorrectObjectTypeException, RevisionSyntaxException, IOException, GitAPIException {
 
         List<ChangedFiles> lista = new ArrayList<>();
         ObjectId oldHead = repository.resolve(rev2.getTree().getName());
@@ -171,14 +171,14 @@ public class Git implements SCM {
         return lista;
     }
 
-    private static List<ChangedFiles> getChangedFilesFromSpecifiedVersion(org.eclipse.jgit.lib.Repository repository, String commit) throws IOException, GitAPIException {
-        RevCommit revCommit1 = convertCommitToRevCommit(repository, commit);
+    private List<ChangedFiles> getChangedFilesFromSpecifiedVersion(org.eclipse.jgit.lib.Repository repository, String commit) throws IOException, GitAPIException {
+        RevCommit revCommit1 = convertStringToRevCommit(repository, commit);
         //Fluxo alternativo quando chegar no primeiro commit
         if (revCommit1.getParentCount() <= 0) {
             return searchDiff(repository, revCommit1, revCommit1);
         }
         //trocado pela chamada de metodos
-        RevCommit revCommit2 = convertCommitToRevCommit(repository, revCommit1.getParents()[0].getName());
+        RevCommit revCommit2 = convertStringToRevCommit(repository, revCommit1.getParents()[0].getName());
         return searchDiff(repository, revCommit1, revCommit2);
     }
 
