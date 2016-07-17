@@ -174,7 +174,7 @@ public class Git implements SCM {
         return lista;
     }
 
-    public static void showFileDiffs(org.eclipse.jgit.lib.Repository repository, DiffEntry diff) {
+    private void showFileDiffs(org.eclipse.jgit.lib.Repository repository, DiffEntry diff) {
         System.out.println(diff);
         DiffFormatter formatter = new DiffFormatter(System.out);
         formatter.setRepository(repository);
