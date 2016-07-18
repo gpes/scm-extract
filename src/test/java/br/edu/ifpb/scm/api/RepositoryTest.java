@@ -1,8 +1,5 @@
 package br.edu.ifpb.scm.api;
 
-import br.edu.ifpb.scm.Repository;
-import br.edu.ifpb.scm.loads.Builder;
-import br.edu.ifpb.scm.loads.ScmBuilder;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;

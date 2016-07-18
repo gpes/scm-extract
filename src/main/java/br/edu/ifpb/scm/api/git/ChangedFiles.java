@@ -3,7 +3,7 @@
  * To change this template fileName, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.scm.project;
+package br.edu.ifpb.scm.api.git;
 
 import org.eclipse.jgit.diff.DiffEntry;
 

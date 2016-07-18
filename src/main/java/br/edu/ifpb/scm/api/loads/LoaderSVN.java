@@ -1,8 +1,9 @@
-package br.edu.ifpb.scm.loads;
+package br.edu.ifpb.scm.api.loads;
 
-import br.edu.ifpb.scm.Repository;
+import br.edu.ifpb.scm.api.ScmBuilder;
+import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.ScmType;
-import br.edu.ifpb.scm.svn.Svn;
+import br.edu.ifpb.scm.api.svn.Svn;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;

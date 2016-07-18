@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.scm.git;
+package br.edu.ifpb.scm.api.git;
 
-import br.edu.ifpb.scm.Repository;
-import br.edu.ifpb.scm.api.CloneException;
-import br.edu.ifpb.scm.api.ReferenceException;
+import br.edu.ifpb.scm.api.Repository;
+import br.edu.ifpb.scm.api.exception.ReferenceException;
 import java.io.File;
 import java.io.IOException;
 import org.eclipse.jgit.api.CreateBranchCommand;
@@ -40,14 +39,12 @@ public class Github{
     }
 
     
-    public Git clone(File directory, String url) throws GitAPIException, CloneException, IOException {
+    public Git clone(File directory, String url) throws GitAPIException, IOException {
         try {
             if (!directory.exists() && !directory.isDirectory()) {
                 return Git.cloneRepository().setURI(url).setDirectory(directory).call();
             }
             return this.getRepository(directory);
-        } catch (SecurityException e) {
-            throw new CloneException("fatal: permissão de pasta", e);
         } catch (ReferenceException e) {
             throw new IOException("fatal: Not a repository git.");
         }

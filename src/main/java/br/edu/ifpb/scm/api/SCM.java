@@ -1,4 +1,4 @@
-package br.edu.ifpb.scm;
+package br.edu.ifpb.scm.api;
 
 //TODO: Usar apenas objetos de nossa API
 /**

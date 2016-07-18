@@ -5,9 +5,9 @@
  */
 package br.edu.ifpb.scm.api;
 
-import br.edu.ifpb.scm.SCM;
-import br.edu.ifpb.scm.git.Git;
-import br.edu.ifpb.scm.svn.Svn;
+import br.edu.ifpb.scm.api.SCM;
+import br.edu.ifpb.scm.api.git.Git;
+import br.edu.ifpb.scm.api.svn.Svn;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +22,7 @@ import java.util.Map;
         .checkout("123")
  * @author Anderson Souza
  */
+@Deprecated
 public class ScmFactory {
 
     private static final Map<String, SCM> map = new HashMap() {

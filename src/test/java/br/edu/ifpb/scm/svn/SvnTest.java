@@ -5,10 +5,11 @@
  */
 package br.edu.ifpb.scm.svn;
 
-import br.edu.ifpb.scm.Repository;
+import br.edu.ifpb.scm.api.svn.Svn;
+import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.RepositoryTest;
 import br.edu.ifpb.scm.api.ScmType;
-import br.edu.ifpb.scm.loads.ScmBuilder;
+import br.edu.ifpb.scm.api.ScmBuilder;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;

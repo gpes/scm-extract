@@ -5,8 +5,8 @@
  */
 package br.edu.ifpb.scm.api;
 
-import br.edu.ifpb.scm.git.Git;
-import br.edu.ifpb.scm.hg.Mercurial;
+import br.edu.ifpb.scm.api.git.Git;
+import br.edu.ifpb.scm.api.hg.Mercurial;
 
 /**
  *

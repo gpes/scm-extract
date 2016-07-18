@@ -1,6 +1,6 @@
-package br.edu.ifpb.scm;
+package br.edu.ifpb.scm.api;
 
-import br.edu.ifpb.scm.project.Version;
+import br.edu.ifpb.scm.api.git.Version;
 import java.util.Collections;
 import java.util.List;
 

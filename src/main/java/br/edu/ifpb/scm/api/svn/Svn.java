@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.scm.svn;
+package br.edu.ifpb.scm.api.svn;
 
-import br.edu.ifpb.scm.SCM;
-import br.edu.ifpb.scm.Repository;
+import br.edu.ifpb.scm.api.SCM;
+import br.edu.ifpb.scm.api.Repository;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;

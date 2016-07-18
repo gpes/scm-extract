@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.scm.loads;
+package br.edu.ifpb.scm.api.loads;
 
-import br.edu.ifpb.scm.Repository;
+import br.edu.ifpb.scm.api.ScmBuilder;
+import br.edu.ifpb.scm.api.Builder;
+import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.ScmType;
 import java.io.File;
 import java.io.IOException;

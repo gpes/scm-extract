@@ -1,4 +1,4 @@
-package br.edu.ifpb.scm.loads;
+package br.edu.ifpb.scm.api.loads;
 
 import java.util.Optional;
 import java.util.StringJoiner;

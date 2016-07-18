@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.scm.git;
+package br.edu.ifpb.scm.api.git;
 
-import br.edu.ifpb.scm.Repository;
-import br.edu.ifpb.scm.SCM;
-import br.edu.ifpb.scm.project.ChangedFiles;
-import br.edu.ifpb.scm.project.Version;
+import br.edu.ifpb.scm.api.exception.DiffException;
+import br.edu.ifpb.scm.api.exception.SCMException;
+import br.edu.ifpb.scm.api.exception.ConvertionException;
+import br.edu.ifpb.scm.api.exception.AuthorizationException;
+import br.edu.ifpb.scm.api.Repository;
+import br.edu.ifpb.scm.api.SCM;
+import br.edu.ifpb.scm.api.exception.ReferenceException;
 import java.io.File;
 import java.io.IOException;
 import java.time.ZoneId;
@@ -76,7 +79,7 @@ public class Git implements SCM {
             repo.AddAllVersions(versions(git));
             return repo;
         } catch (IOException e) {
-            throw new SCMException("Erro ao recuperar referencia do repo", e);
+            throw new SCMException("Erro ao recuperar referencia do repositório.", e);
         }
     }
 
@@ -93,8 +96,8 @@ public class Git implements SCM {
             log.call().forEach(rc -> {
                 list.add(createVersion(git.getRepository(), rc));
             });
-        } catch (GitAPIException ex) {
-
+        } catch (GitAPIException e) {
+            throw new SCMException("Não foi ppossível recuperar as versões", e);
         }
 
         return list;
@@ -162,21 +165,22 @@ public class Git implements SCM {
      * @param repository Repositório JGit
      * @return {@link Repository} Repositorio
      * @throws AuthorizationException
-     * @throws TesteException
+     * @throws DirectoryException
      */
-    private Repository createRepository(File dir, org.eclipse.jgit.lib.Repository repository) throws AuthorizationException, TesteException {
+    private Repository createRepository(File dir, org.eclipse.jgit.lib.Repository repository) {
         try {
             return new Repository(dir.getCanonicalPath(), getUrlFromLocalRepository(repository));
         } catch (SecurityException e) {
             throw new AuthorizationException("Verifique as permissões de acesso a pastas de seu computador.", e);
         } catch (IOException e) {
-            throw new TesteException("Ocorreu um erro, tente novamente mais tarde", e);
+            throw new ReferenceException("Ocorreu um erro, tente novamente mais tarde", e);
         }
     }
 
     /**
-     * 
-     * @param repository {@link org.eclipse.jgit.lib.Repository} Repositorio JGit
+     *
+     * @param repository {@link org.eclipse.jgit.lib.Repository} Repositorio
+     * JGit
      * @param commit String hashCode do commit
      * @return {@link RevCommit} RevCommit
      */
@@ -197,8 +201,8 @@ public class Git implements SCM {
     /**
      * Recupera a difereça entre as versões
      *
-     * @param repository {@link org.eclipse.jgit.lib.Repository} Repositorio JGit
-     * JGit
+     * @param repository {@link org.eclipse.jgit.lib.Repository} Repositorio
+     * JGit JGit
      * @param rev1 {@link RevCommit} RevCommit
      * @param rev2 {@link RevCommit} RevCommit
      * @return {@link List} List de {@link Version}
