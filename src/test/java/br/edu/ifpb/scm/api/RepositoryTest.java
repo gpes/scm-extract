@@ -1,6 +1,7 @@
 package br.edu.ifpb.scm.api;
 
 import br.edu.ifpb.scm.Repository;
+import br.edu.ifpb.scm.loads.Builder;
 import br.edu.ifpb.scm.loads.ScmBuilder;
 import java.io.File;
 import java.util.logging.Level;
@@ -19,15 +20,17 @@ public class RepositoryTest {
     private final String url = "https://github.com/EndenhariaDeSoftware/scm-extract";
     private final File origin = new File("/Users/job/Documents/dev/data/origin");
     private final File dest = new File("/Users/job/Documents/dev/data/scm");
-    private final File EJ = new File("/home/jairanderson/Área de Trabalho/git");
+    private final File EJ = new File("/home/des02/Desktop/scm");
+    private Builder builder;
 
     @Test
     public void clonarRepositorioDaUrl() {
 
         try {
             logger.log(Level.INFO, "iniciando teste do clone da URL");
-            
-            Repository repository = new ScmBuilder().url(url).dir(EJ.getCanonicalPath()).create(ScmType.GIT).buildClone();
+            builder = new ScmBuilder();
+
+            Repository repository = builder.url(url).dir(EJ.getCanonicalPath()).create(ScmType.GIT).buildClone();
             assertNotNull(repository);
             assertNotNull(repository.getPathLocal());
             assertNotNull(repository.getUrlRemote());
@@ -43,7 +46,7 @@ public class RepositoryTest {
     public void clonarRepositorioDoFile() {
         try {
             logger.log(Level.INFO, "iniciando teste do clone do File");
-            Repository repository = new ScmBuilder().url(url).dir(EJ.getCanonicalPath()).create(ScmType.GIT).buildClone(); 
+            Repository repository = new ScmBuilder().url(url).dir(EJ.getCanonicalPath()).create(ScmType.GIT).buildClone();
             assertNotNull(repository);
             assertNotNull(repository.getPathLocal());
             assertNotNull(repository.getUrlRemote());

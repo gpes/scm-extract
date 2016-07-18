@@ -57,7 +57,7 @@ public class Svn implements SCM {
     }
 
     @Override
-    public Repository cloneRepository() throws GitAPIException, IOException {
+    public Repository cloneRepository() {
         try {
             location = SVNURL.parseURIEncoded(url);
             operationFactory = new SvnOperationFactory();
@@ -73,7 +73,7 @@ public class Svn implements SCM {
     }
 
     @Override
-    public Repository getRepository() throws IOException, GitAPIException, ParseException {
+    public Repository getRepository() {
 
         try {
             location = SVNURL.fromFile(dir);//parseURIEncoded(url);

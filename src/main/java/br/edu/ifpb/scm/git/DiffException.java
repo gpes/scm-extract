@@ -3,15 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.scm.api;
+package br.edu.ifpb.scm.git;
 
 /**
  *
- * @author Anderson Souza
+ * @author des02
  */
-public class CloneException extends Exception {
+public class DiffException extends RuntimeException {
 
-    public CloneException(String fatal_permissão_de_pasta, SecurityException e) {
+    public DiffException(String string, Exception e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public DiffException(Exception e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

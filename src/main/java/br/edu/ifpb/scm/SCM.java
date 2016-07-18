@@ -1,10 +1,6 @@
 package br.edu.ifpb.scm;
 
 //TODO: Usar apenas objetos de nossa API
-import java.io.IOException;
-import java.text.ParseException;
-import org.eclipse.jgit.api.errors.GitAPIException;
-
 /**
  *
  * @author Priscila Gouveia <priscilaggouveia@gmail.com>
@@ -15,21 +11,15 @@ public interface SCM {
      * Realiza um clone de um repositório remoto de um controle de versão
      *
      * @return {@link Repository} Repositório
-     * @throws org.eclipse.jgit.api.errors.GitAPIException
-     * @throws java.io.IOException
-     * @throws java.text.ParseException
      */
-    public Repository cloneRepository() throws GitAPIException, IOException, ParseException;
+    public Repository cloneRepository();
 
     /**
      * Recupera a referência para um repositório local
      *
      * @return {@link Repository} Reposiório
-     * @throws java.io.IOException
-     * @throws org.eclipse.jgit.api.errors.GitAPIException
-     * @throws java.text.ParseException
      */
-    public Repository getRepository() throws IOException, GitAPIException, ParseException;
+    public Repository getRepository();
 
     /**
      * Realizar um checkout entre versões de um repositório
