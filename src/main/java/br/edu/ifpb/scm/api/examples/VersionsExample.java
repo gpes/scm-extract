@@ -16,15 +16,20 @@ import org.eclipse.jgit.api.errors.GitAPIException;
  *
  * @author Anderson Souza
  */
-public class ReferenceRepositoryExample {
+public class VersionsExample {
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
         Repository repository = new ScmBuilder()
                 .dir("C:/Users/Anderson Sousa/Desktop/Apostilas/scm")
-                .url("https://github.com/EndenhariaDeSoftware/scm-extract")
                 .create(ScmType.GIT).buildRepository();
 
-        System.out.println("Local URL: " + repository.getPathLocal());
-        System.out.println("Remote URL: " + repository.getUrlRemote());
+        repository.getVersions().forEach(version -> {
+            System.out.println("\n ---- Informações sobre os Commits ---- ");
+            System.out.println("Data do Commit: " + version.getCommitDate());
+            System.out.println("HashCode do Commit: " + version.getHashCode());
+            System.out.println("Mensagem:" + version.getMessage());
+            System.out.println("\n");
+        });
+
     }
 }
