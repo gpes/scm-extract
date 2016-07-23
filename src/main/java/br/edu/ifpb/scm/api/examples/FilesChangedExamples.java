@@ -17,23 +17,26 @@ import org.eclipse.jgit.api.errors.GitAPIException;
  *
  * @author Anderson Souza
  */
-public class VersionsExample {
+public class FilesChangedExamples {
 
     static String DIR = "C:/Users/Anderson Sousa/Desktop/gpes/clone-example";
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
         Builder builder = new ScmBuilder();
-        
+
         Repository repository = builder
                 .dir(DIR)
                 .create(ScmType.GIT)
                 .buildRepository();
 
         repository.getVersions().forEach(version -> {
-            System.out.println("\n ---- Informações sobre os Commits ---- ");
             System.out.println("Data do Commit: " + version.getCommitDate());
             System.out.println("HashCode do Commit: " + version.getHashCode());
-            System.out.println("Mensagem:" + version.getMessage());
+            System.out.println("Mensagem: " + version.getMessage());
+            version.getChanges().forEach(changedFile -> {
+                System.out.println("Tipo de mudança: " + changedFile.getChangedType());
+                System.out.println("Nome do arquivo: " + changedFile.getFileName());
+            });
             System.out.println("\n");
         });
 
