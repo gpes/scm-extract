@@ -18,11 +18,13 @@ import org.eclipse.jgit.api.errors.GitAPIException;
  */
 public class ReferenceRepositoryExample {
 
+    static String DIR = "C:/Users/Anderson Sousa/Desktop/gpes/clone-example";
+
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
         Repository repository = new ScmBuilder()
-                .dir("C:/Users/Anderson Sousa/Desktop/Apostilas/scm")
-                .url("https://github.com/EndenhariaDeSoftware/scm-extract")
-                .create(ScmType.GIT).buildRepository();
+                .dir(DIR)
+                .create(ScmType.GIT)
+                .buildRepository();
 
         System.out.println("Local URL: " + repository.getPathLocal());
         System.out.println("Remote URL: " + repository.getUrlRemote());

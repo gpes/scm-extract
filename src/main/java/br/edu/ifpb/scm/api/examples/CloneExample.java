@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package br.edu.ifpb.scm.api.examples;
 
+import br.edu.ifpb.scm.api.Builder;
 import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.ScmBuilder;
 import br.edu.ifpb.scm.api.ScmType;
@@ -18,11 +18,18 @@ import org.eclipse.jgit.api.errors.GitAPIException;
  * @author Anderson Souza
  */
 public class CloneExample {
+
+    static String DIR = "C:/Users/Anderson Sousa/Desktop/gpes/clone-example";
+    static String URL = "https://github.com/gpes/scm-extract";
+
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
-        Repository repository = new ScmBuilder()
-                .dir("C:/Users/Anderson Sousa/Desktop/Apostilas/scm")
-                .url("https://github.com/EndenhariaDeSoftware/scm-extract")
-                .create(ScmType.GIT).buildRepository();
+        Builder builder = new ScmBuilder();
+        
+        Repository repository = builder
+                .dir(DIR)
+                .url(URL)
+                .create(ScmType.GIT)
+                .buildClone();
 
         System.out.println("Local URL: " + repository.getPathLocal());
         System.out.println("Remote URL: " + repository.getUrlRemote());

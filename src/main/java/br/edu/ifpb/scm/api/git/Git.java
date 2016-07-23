@@ -17,8 +17,6 @@ import java.io.IOException;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -38,11 +36,12 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
  */
 public class Git implements SCM {
 
-    private Repository repo;
+    private Repository repository;
     private String url;
     private File dir;
 
     public Git() {
+        repository = new Repository();
     }
 
     @Override
@@ -51,14 +50,14 @@ public class Git implements SCM {
             org.eclipse.jgit.api.Git git = null;
             try {
                 git = org.eclipse.jgit.api.Git.cloneRepository().setURI(url).setDirectory(dir).call();
-                repo.AddAllVersions(versions(git));
+                repository.AddAllVersions(versions(git));
             } catch (GitAPIException e) {
                 throw new SCMException("Não foi possível realizar um clone do repositório.", e);
             }
-            org.eclipse.jgit.lib.Repository repository = git.getRepository();
-            repo = createRepository(dir, repository);
+            org.eclipse.jgit.lib.Repository repo = git.getRepository();
+            repository = createRepository(dir, repo);
 
-            return repo;
+            return repository;
         }
         return this.getRepository();
     }
@@ -75,9 +74,9 @@ public class Git implements SCM {
         try {
             org.eclipse.jgit.api.Git git = org.eclipse.jgit.api.Git.open(dir);
 //        repo = new Repository(dir.getCanonicalPath(), getUrlFromLocalRepository(git.getRepository()));
-            repo = createRepository(dir, git.getRepository());
-            repo.AddAllVersions(versions(git));
-            return repo;
+            repository = createRepository(dir, git.getRepository());
+            repository.AddAllVersions(versions(git));
+            return repository;
         } catch (IOException e) {
             throw new SCMException("Erro ao recuperar referencia do repositório.", e);
         }
@@ -96,7 +95,8 @@ public class Git implements SCM {
             log.call().forEach(rc -> {
                 list.add(createVersion(git.getRepository(), rc));
             });
-        } catch (GitAPIException e) {
+        } catch (GitAPIException | NullPointerException e) {
+            e.printStackTrace();
             throw new SCMException("Não foi ppossível recuperar as versões", e);
         }
 
