@@ -47,7 +47,7 @@ public interface Builder {
      * @throws IOException
      * @throws ParseException
      */
-    public Repository buildClone() throws GitAPIException, IOException, ParseException;
+    public Repository buildClone();
 
     /**
      * Recupera a instância de um repositório já existente
@@ -56,5 +56,5 @@ public interface Builder {
      * @throws IOException
      * @throws ParseException
      */
-    public Repository buildRepository() throws GitAPIException, IOException, ParseException;
+    public Repository buildRepository();
 }

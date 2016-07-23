@@ -26,7 +26,7 @@ public class Version {
 
     @Override
     public String toString() {
-        return "Version{" + "commitDate=" + commitDate + ", hashCode=" + hashCode + ", message=" + message + '}' + "\n";
+        return "Version{" + "commitDate=" + commitDate + ", hashCode=" + hashCode + ", message=" + message + ", changes=" + changes + '}';
     }
 
     public Version(LocalDate commitDate, String hashCode, String message) {
