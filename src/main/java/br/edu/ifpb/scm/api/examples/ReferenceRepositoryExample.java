@@ -5,6 +5,7 @@
  */
 package br.edu.ifpb.scm.api.examples;
 
+import br.edu.ifpb.scm.api.Builder;
 import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.ScmBuilder;
 import br.edu.ifpb.scm.api.ScmType;
@@ -21,7 +22,8 @@ public class ReferenceRepositoryExample {
     static String DIR = "C:/Users/Anderson Sousa/Desktop/gpes/clone-example";
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
-        Repository repository = new ScmBuilder()
+        Builder builder = new ScmBuilder();
+        Repository repository = builder
                 .dir(DIR)
                 .create(ScmType.GIT)
                 .buildRepository();
