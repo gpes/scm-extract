@@ -10,7 +10,9 @@ import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.RepositoryTest;
 import br.edu.ifpb.scm.api.ScmType;
 import br.edu.ifpb.scm.api.ScmBuilder;
+import br.edu.ifpb.scm.api.util.FileHelper;
 import java.io.File;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
@@ -24,46 +26,55 @@ import org.junit.Test;
 public class SvnTest {
 
     private static final Logger logger = Logger.getLogger(RepositoryTest.class.getName());
-    private final String url = "http://svn.code.sf.net/p/xmlunit/code/trunk";
-    private final File origin = new File("/Users/job/Documents/dev/data/origin");
-    private final File dest = new File("/Users/job/Documents/dev/data/scm");
-    private final File EJ = new File("/home/jairanderson/Área de Trabalho/svn");
+//    private final String url = "http://svn.code.sf.net/p/xmlunit/code/trunk";
+//    private final File origin = new File("/Users/job/Documents/dev/data/origin");
+//    private final File dest = new File("/Users/job/Documents/dev/data/scm");
+//    private final File EJ = new File("/home/jairanderson/Área de Trabalho/svn");
+
+    ResourceBundle bundle = ResourceBundle.getBundle("scm");
 
     @Test
     public void testClone() {
+        String url = bundle.getString("url.svn");
+        String dir = bundle.getString("dir.local");
+//        dir.local = /Users/job/Documents/dev/gpes/data/local
+//dir.repo = /Users/job/Documents/dev/gpes/data/repo
+
         try {
             logger.log(Level.INFO, "iniciando teste do clone do File");
-            String url = "";
+//            String url = "";
             File path = null;
-            Svn instance = new Svn(EJ, url);
+            Svn instance = new Svn(new File(dir), url);
             Repository expResult = null;
-            Repository result = new ScmBuilder().url(this.url).dir(EJ.getCanonicalPath()).create(ScmType.SVN).buildClone();
+            Repository result = new ScmBuilder().url(url).dir(dir).create(ScmType.SVN).buildClone();
             assertEquals(expResult, result);
         } catch (Exception ex) {
             ex.printStackTrace();
-             logger.log(Level.SEVERE, "Problemas na execução do teste clonar SVN: ", ex);
+            logger.log(Level.SEVERE, "Problemas na execução do teste clonar SVN: ", ex);
         }
     }
 
     @After
     public void deleteTempFile() {
-        deleteTempFile(dest);
+//        deleteTempFile(dest);
+        String dir = bundle.getString("dir.local");
+        new FileHelper(dir).apagar();
     }
 
-    private void deleteTempFile(File file) {
-        try {
-            if (file.isDirectory()) {
-                File[] entries = file.listFiles();
-                for (File currentFile : entries) {
-                    deleteTempFile(currentFile);
-                }
-                file.delete();
-            } else {
-                file.delete();
-            }
-        } catch (Throwable t) {
-            logger.log(Level.SEVERE, "Não foi possível deletar o arquivo: " + file.getPath(), t);
-        }
-    }
+//    private void deleteTempFile(File file) {
+//        try {
+//            if (file.isDirectory()) {
+//                File[] entries = file.listFiles();
+//                for (File currentFile : entries) {
+//                    deleteTempFile(currentFile);
+//                }
+//                file.delete();
+//            } else {
+//                file.delete();
+//            }
+//        } catch (Throwable t) {
+//            logger.log(Level.SEVERE, "Não foi possível deletar o arquivo: " + file.getPath(), t);
+//        }
+//    }
 
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.edu.ifpb.scm.api.examples;
 
 import br.edu.ifpb.scm.api.Repository;
@@ -10,6 +5,7 @@ import br.edu.ifpb.scm.api.ScmBuilder;
 import br.edu.ifpb.scm.api.ScmType;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ResourceBundle;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 /**
@@ -19,8 +15,11 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 public class VersionsExample {
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
+        ResourceBundle banco = ResourceBundle.getBundle("scm");
+        String dirRepo = banco.getString("dir.repo");
+
         Repository repository = new ScmBuilder()
-                .dir("C:/Users/Anderson Sousa/Desktop/Apostilas/scm")
+                .dir(dirRepo)
                 .create(ScmType.GIT).buildRepository();
 
         repository.getVersions().forEach(version -> {

@@ -10,6 +10,7 @@ import br.edu.ifpb.scm.api.ScmBuilder;
 import br.edu.ifpb.scm.api.ScmType;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ResourceBundle;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 /**
@@ -18,11 +19,12 @@ import org.eclipse.jgit.api.errors.GitAPIException;
  */
 public class ReferenceRepositoryExample {
 
-    static String DIR = "C:/Users/Anderson Sousa/Desktop/gpes/clone-example";
-
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
+        ResourceBundle banco = ResourceBundle.getBundle("scm");
+        String dir = banco.getString("dir.local");
+
         Repository repository = new ScmBuilder()
-                .dir(DIR)
+                .dir(dir)
                 .create(ScmType.GIT)
                 .buildRepository();
 
