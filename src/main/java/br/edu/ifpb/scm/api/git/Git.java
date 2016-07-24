@@ -12,15 +12,24 @@ import br.edu.ifpb.scm.api.exception.AuthorizationException;
 import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.SCM;
 import br.edu.ifpb.scm.api.exception.ReferenceException;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.text.MessageFormat;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.Edit;
+import org.eclipse.jgit.diff.EditList;
+import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.lib.Config;
@@ -29,6 +38,7 @@ import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.eclipse.jgit.util.io.DisabledOutputStream;
 
 /**
  * @author Priscila Gouveia <priscilaggouveia@gmail.com>
@@ -245,14 +255,39 @@ public class Git implements SCM {
      * @param diff {@link DiffEntry} Objeto Diff
      */
     private void showFileDiffs(org.eclipse.jgit.lib.Repository repository, DiffEntry diff) {
-//        System.out.println(diff);
-        DiffFormatter formatter = new DiffFormatter(System.out);
-        formatter.setRepository(repository);
         try {
-            formatter.format(diff);
+            //        System.out.println(diff);
+
+            OutputStream out = new ByteArrayOutputStream();
+
+            DiffFormatter formatter = new DiffFormatter(out);
+//            DiffFormatter formatter = new DiffFormatter(DisabledOutputStream.INSTANCE);
+
+            formatter.setRepository(repository);
+            formatter.setDiffComparator(RawTextComparator.DEFAULT);
+            formatter.setDetectRenames(true);
+            //Filtrando apenas as modificações para efeito de testes
+            if (DiffEntry.ChangeType.MODIFY.equals(diff.getChangeType())) {
+                System.out.println(MessageFormat.format("[ {0} {1} {2} ]", diff.getChangeType().name(), diff.getNewMode().getBits(), diff.getNewPath()));
+//                Listando as informações do arquivo
+//                System.out.println(new String(formatter.toFileHeader(diff).getBuffer()));
+                EditList toEditList = formatter.toFileHeader(diff).toEditList();
+                toEditList.stream().forEach(new Consumer<Edit>() {
+                    @Override
+                    public void accept(Edit t) {
+                        System.out.println(MessageFormat.format("\tinfo sobre: {0}", t));
+                    }
+                });
+                formatter.format(diff);
+//                System.out.println(diff);
+                System.out.println(out);
+                System.out.println("\n\n\r");
+            }
+
+            
 
         } catch (IOException ex) {
-            throw new DiffException("Não foi possível mostrar a diferença entre os arquivos alterados.", ex);
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
