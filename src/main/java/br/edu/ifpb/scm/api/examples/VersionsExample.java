@@ -16,19 +16,21 @@ public class VersionsExample {
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
         ResourceBundle banco = ResourceBundle.getBundle("scm");
-        String dirRepo = banco.getString("dir.repo");
-
-        Repository repository = new ScmBuilder()
-                .dir(dirRepo)
-                .create(ScmType.GIT).buildRepository();
-
-        repository.getVersions().forEach(version -> {
+        String dirRepo = banco.getString("dir.local");
+        try {
+            Repository repository = new ScmBuilder()
+                    .dir(dirRepo)
+                    .create(ScmType.GIT).buildRepository();
             System.out.println("\n ---- Informações sobre os Commits ---- ");
-            System.out.println("Data do Commit: " + version.getCommitDate());
-            System.out.println("HashCode do Commit: " + version.getHashCode());
-            System.out.println("Mensagem:" + version.getMessage());
-            System.out.println("\n");
-        });
+            repository.getVersions().forEach(version -> {
+                System.out.println("Data do Commit: " + version.getCommitDate());
+                System.out.println("HashCode do Commit: " + version.getHashCode());
+                System.out.println("Mensagem:" + version.getMessage());
+                System.out.println("\n");
+            });
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
 
     }
 }

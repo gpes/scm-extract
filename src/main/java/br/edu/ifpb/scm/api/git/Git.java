@@ -78,6 +78,7 @@ public class Git implements SCM {
             repository.AddAllVersions(versions(git));
             return repository;
         } catch (IOException e) {
+            e.printStackTrace();
             throw new SCMException("Erro ao recuperar referencia do repositório.", e);
         }
     }
@@ -244,7 +245,7 @@ public class Git implements SCM {
      * @param diff {@link DiffEntry} Objeto Diff
      */
     private void showFileDiffs(org.eclipse.jgit.lib.Repository repository, DiffEntry diff) {
-        System.out.println(diff);
+//        System.out.println(diff);
         DiffFormatter formatter = new DiffFormatter(System.out);
         formatter.setRepository(repository);
         try {

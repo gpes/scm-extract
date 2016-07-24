@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.edu.ifpb.scm.svn;
 
+import br.edu.ifpb.scm.api.Builder;
 import br.edu.ifpb.scm.api.svn.Svn;
 import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.RepositoryTest;
@@ -26,23 +22,15 @@ import org.junit.Test;
 public class SvnTest {
 
     private static final Logger logger = Logger.getLogger(RepositoryTest.class.getName());
-//    private final String url = "http://svn.code.sf.net/p/xmlunit/code/trunk";
-//    private final File origin = new File("/Users/job/Documents/dev/data/origin");
-//    private final File dest = new File("/Users/job/Documents/dev/data/scm");
-//    private final File EJ = new File("/home/jairanderson/Área de Trabalho/svn");
-
-    ResourceBundle bundle = ResourceBundle.getBundle("scm");
+    private ResourceBundle bundle = ResourceBundle.getBundle("scm");
+    private final String url = bundle.getString("url.svn");
+    private final String dir = bundle.getString("dir.local");
 
     @Test
     public void testClone() {
-        String url = bundle.getString("url.svn");
-        String dir = bundle.getString("dir.local");
-//        dir.local = /Users/job/Documents/dev/gpes/data/local
-//dir.repo = /Users/job/Documents/dev/gpes/data/repo
 
         try {
             logger.log(Level.INFO, "iniciando teste do clone do File");
-//            String url = "";
             File path = null;
             Svn instance = new Svn(new File(dir), url);
             Repository expResult = null;
@@ -56,25 +44,7 @@ public class SvnTest {
 
     @After
     public void deleteTempFile() {
-//        deleteTempFile(dest);
-        String dir = bundle.getString("dir.local");
         new FileHelper(dir).apagar();
     }
-
-//    private void deleteTempFile(File file) {
-//        try {
-//            if (file.isDirectory()) {
-//                File[] entries = file.listFiles();
-//                for (File currentFile : entries) {
-//                    deleteTempFile(currentFile);
-//                }
-//                file.delete();
-//            } else {
-//                file.delete();
-//            }
-//        } catch (Throwable t) {
-//            logger.log(Level.SEVERE, "Não foi possível deletar o arquivo: " + file.getPath(), t);
-//        }
-//    }
 
 }
