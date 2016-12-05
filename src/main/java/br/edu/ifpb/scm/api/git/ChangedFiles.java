@@ -5,6 +5,7 @@
  */
 package br.edu.ifpb.scm.api.git;
 
+import java.util.List;
 import org.eclipse.jgit.diff.DiffEntry;
 
 /**
@@ -13,10 +14,16 @@ import org.eclipse.jgit.diff.DiffEntry;
  */
 public class ChangedFiles {
 
-    private DiffEntry fileName;
+    private String fileName;
     private String changedType;
+    private List<DiffEntry> changes;
 
     public ChangedFiles() {
+    }
+
+    public ChangedFiles(String fileName, String changedType) {
+        this.fileName = fileName;
+        this.changedType = changedType;
     }
 
     @Override
@@ -24,9 +31,18 @@ public class ChangedFiles {
         return "ChangedFiles{" + "fileName=" + fileName + ", changedType=" + changedType + '}' + "\n";
     }
 
-    public ChangedFiles(DiffEntry fileName, String changedType) {
+    public ChangedFiles(String fileName, String changedType, List<DiffEntry> changes) {
         this.fileName = fileName;
         this.changedType = changedType;
+        this.changes = changes;
+    }
+
+    public List<DiffEntry> getChanges() {
+        return changes;
+    }
+
+    public void setChanges(List<DiffEntry> changes) {
+        this.changes = changes;
     }
 
     public String getChangedType() {
@@ -37,11 +53,11 @@ public class ChangedFiles {
         this.changedType = changedType;
     }
 
-    public void setFileName(DiffEntry fileName) {
+    public void setFileName(String fileName) {
         this.fileName = fileName;
     }
 
-    public DiffEntry getFileName() {
+    public String getFileName() {
         return fileName;
     }
 

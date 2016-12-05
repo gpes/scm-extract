@@ -37,8 +37,9 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.eclipse.jgit.util.io.DisabledOutputStream;
+import org.eclipse.jgit.treewalk.filter.PathFilter;
 
 /**
  * @author Priscila Gouveia <priscilaggouveia@gmail.com>
@@ -49,6 +50,7 @@ public class Git implements SCM {
     private Repository repository;
     private String url;
     private File dir;
+    private org.eclipse.jgit.api.Git git;
 
     public Git() {
         repository = new Repository();
@@ -57,7 +59,7 @@ public class Git implements SCM {
     @Override
     public Repository cloneRepository() {
         if (!dir.exists() && !dir.isDirectory()) {
-            org.eclipse.jgit.api.Git git = null;
+            git = null;
             try {
                 git = org.eclipse.jgit.api.Git.cloneRepository().setURI(url).setDirectory(dir).call();
                 repository.AddAllVersions(versions(git));
@@ -82,7 +84,7 @@ public class Git implements SCM {
     @Override
     public Repository getRepository() throws SCMException {
         try {
-            org.eclipse.jgit.api.Git git = org.eclipse.jgit.api.Git.open(dir);
+            git = org.eclipse.jgit.api.Git.open(dir);
 //        repo = new Repository(dir.getCanonicalPath(), getUrlFromLocalRepository(git.getRepository()));
             repository = createRepository(dir, git.getRepository());
             repository.AddAllVersions(versions(git));
@@ -223,13 +225,11 @@ public class Git implements SCM {
         try {
             ObjectId oldHead = repository.resolve(rev2.getTree().getName());
             ObjectId head = repository.resolve(rev1.getTree().getName());
-
             ObjectReader reader = repository.newObjectReader();
             CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
             oldTreeIter.reset(reader, oldHead);
             CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
             newTreeIter.reset(reader, head);
-
             org.eclipse.jgit.api.Git g = new org.eclipse.jgit.api.Git(repository);
             List<DiffEntry> diffs = g.diff()
                     .setNewTree(newTreeIter)
@@ -237,13 +237,21 @@ public class Git implements SCM {
                     .call();
 
             diffs.iterator().forEachRemaining(entry -> {
-                ChangedFiles changed = new ChangedFiles(entry, entry.getChangeType().name());
+                ChangedFiles changed = new ChangedFiles(entry.getNewPath(), entry.getChangeType().name());
                 listaOfChangedFiles.add(changed);
                 showFileDiffs(repository, entry);
+//                try {
+//                    showFileDiffs2(entry.getNewPath(), oldTreeIter, newTreeIter);
+//                } catch (GitAPIException ex) {
+//                    Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (IOException ex) {
+//                    Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+//                }
             });
         } catch (RevisionSyntaxException | IOException | GitAPIException e) {
             throw new DiffException(e);
         }
+
         return listaOfChangedFiles;
     }
 
@@ -288,6 +296,23 @@ public class Git implements SCM {
 
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void showFileDiffs2(String file, AbstractTreeIterator oldTreeParser, AbstractTreeIterator newTreeParser) throws GitAPIException, IOException {
+        List<DiffEntry> diff = git.diff().
+                setOldTree(oldTreeParser).
+                setNewTree(newTreeParser).
+                setPathFilter(PathFilter.create(file)).
+                call();
+        for (DiffEntry entry : diff) {
+            System.out.println("Entry: " + entry + ", from: " + entry.getOldId() + ", to: " + entry.getNewId());
+            try (DiffFormatter formatter = new DiffFormatter(System.out)) {
+                formatter.setRepository(git.getRepository());
+                formatter.format(entry);
+                System.out.println("New Prefix: " + formatter.getNewPrefix());
+                System.out.println("Old Prefix: " + formatter.getOldPrefix());
+            }
         }
     }
 

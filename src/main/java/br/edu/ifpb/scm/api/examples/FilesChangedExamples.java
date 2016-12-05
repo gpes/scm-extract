@@ -18,18 +18,27 @@ import org.eclipse.jgit.api.errors.GitAPIException;
  *
  * @author Anderson Souza
  */
-public class ReferenceRepositoryExample {
+public class FilesChangedExamples {
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
         ResourceBundle resource = ResourceBundle.getBundle("scm");
-        String PATH = resource.getString("dir.local.jair");
+        String dir = resource.getString("dir.local.jair");
         Builder builder = new ScmBuilder();
         Repository repository = builder
-                .dir(PATH)
+                .dir(dir)
                 .create(ScmType.GIT)
                 .buildRepository();
 
-        System.out.println("Local URL: " + repository.getPathLocal());
-        System.out.println("Remote URL: " + repository.getUrlRemote());
+        repository.getVersions().forEach(version -> {
+            System.out.println("Data do Commit: " + version.getCommitDate());
+            System.out.println("HashCode do Commit: " + version.getHashCode());
+            System.out.println("Mensagem: " + version.getMessage());
+            version.getChanges().forEach(changedFile -> {
+                System.out.println("Tipo de mudança: " + changedFile.getChangedType());
+                System.out.println("Nome do arquivo: " + changedFile.getFileName());
+            });
+            System.out.println("\n");
+        });
+
     }
 }

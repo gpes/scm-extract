@@ -21,7 +21,7 @@ public class CloneExample {
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
         ResourceBundle banco = ResourceBundle.getBundle("scm");
         String url = banco.getString("url.repo");
-        String dir = banco.getString("dir.local");
+        String dir = banco.getString("dir.local.jair");
         
         Builder builder = new ScmBuilder();
 

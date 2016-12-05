@@ -5,7 +5,6 @@
  */
 package br.edu.ifpb.scm.api;
 
-import br.edu.ifpb.scm.api.Repository;
 import java.io.IOException;
 import java.text.ParseException;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -47,7 +46,7 @@ public interface Builder {
      * @throws IOException
      * @throws ParseException
      */
-    public Repository buildClone() throws GitAPIException, IOException, ParseException;
+    public Repository buildClone() throws GitAPIException, IOException, ParseException ;
 
     /**
      * Recupera a instância de um repositório já existente
@@ -56,5 +55,5 @@ public interface Builder {
      * @throws IOException
      * @throws ParseException
      */
-    public Repository buildRepository() throws GitAPIException, IOException, ParseException;
+    public Repository buildRepository() throws GitAPIException, IOException, ParseException ;
 }

@@ -5,9 +5,6 @@
  */
 package br.edu.ifpb.scm.api;
 
-import br.edu.ifpb.scm.api.Builder;
-import br.edu.ifpb.scm.api.Repository;
-import br.edu.ifpb.scm.api.SCM;
 import java.io.IOException;
 import java.text.ParseException;
 import org.eclipse.jgit.api.errors.GitAPIException;
