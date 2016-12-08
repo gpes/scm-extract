@@ -26,7 +26,7 @@ public class SvnTest {
     private final String url = bundle.getString("url.svn");
     private final String dir = bundle.getString("dir.local");
 
-    @Test
+//    @Test
     public void testClone() {
 
         try {
@@ -42,7 +42,7 @@ public class SvnTest {
         }
     }
 
-    @After
+//    @After
     public void deleteTempFile() {
         new FileHelper(dir).apagar();
     }

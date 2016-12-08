@@ -23,19 +23,27 @@ public class FilesChangedExamples {
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
         ResourceBundle resource = ResourceBundle.getBundle("scm");
         String dir = resource.getString("dir.local.jair");
+        String url = resource.getString("url.repo");
         Builder builder = new ScmBuilder();
         Repository repository = builder
                 .dir(dir)
+                .url(url)
                 .create(ScmType.GIT)
-                .buildRepository();
+                .buildClone();
 
         repository.getVersions().forEach(version -> {
             System.out.println("Data do Commit: " + version.getCommitDate());
             System.out.println("HashCode do Commit: " + version.getHashCode());
             System.out.println("Mensagem: " + version.getMessage());
+            version.getDiffs().stream().forEach(ds -> {
+                System.out.println(ds.getChangeType());
+            });
+            
             version.getChanges().forEach(changedFile -> {
                 System.out.println("Tipo de mudança: " + changedFile.getChangedType());
-                System.out.println("Nome do arquivo: " + changedFile.getFileName());
+                System.out.println("Nome antigo do arquivo: " + changedFile.getOldFileName());
+                System.out.println("Nome novo do arquivo: " + changedFile.getNewFileName());
+//                System.out.println("Nome novo do arquivo: " + changedFile.getDiffs());
             });
             System.out.println("\n");
         });

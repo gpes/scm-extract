@@ -16,7 +16,6 @@ import org.eclipse.jgit.api.errors.GitAPIException;
  */
 public class CloneExample {
 
-    private static final Logger logger = Logger.getLogger(CloneExample.class.getName());
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
         ResourceBundle banco = ResourceBundle.getBundle("scm");

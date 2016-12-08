@@ -3,9 +3,9 @@ package br.edu.ifpb.scm.api.examples;
 import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.ScmBuilder;
 import br.edu.ifpb.scm.api.ScmType;
-import br.edu.ifpb.scm.api.git.ChangedFiles;
+import br.edu.ifpb.scm.api.git.Version;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 
 /**
  * @author Ricardo Job
@@ -16,27 +16,24 @@ public class DiffVersionsExample {
 
     public static void main(String[] args) throws Exception {
         ResourceBundle banco = ResourceBundle.getBundle("scm");
-        String dir = banco.getString("dir.local");
+        String dir = banco.getString("dir.local.jair");
         Repository repository = new ScmBuilder()
                 .dir(dir)
                 .create(ScmType.GIT)
                 .buildRepository();
         System.out.println("Local URL: " + repository.getPathLocal());
         System.out.println("Remote URL: " + repository.getUrlRemote());
-        repository.getVersions().forEach(v -> {
-            v.getChanges().forEach(new Consumer<ChangedFiles>() {
-                @Override
-                public void accept(ChangedFiles file) {
-//                        DiffEntry diff = file.getFileName();
 
-//                        System.out.println("old = " + diff.getOldPath());
-//                        System.out.println("new = " + diff.getNewPath());
-//                        System.out.println("id = " + diff.getNewId());
-//                        System.out.println("old mode = " + diff.getOldMode());
-//                        System.out.println("new mode = " + diff.getNewMode());
-//                        System.out.println("tostring = " + diff.toString());
-                }
+        List<Version> versions = repository.getVersions();
+
+        versions.stream().forEach(v -> {
+            v.getChanges().stream().forEach(c -> {
+                System.out.println(c.getChangedType());
+//                System.out.println(c.getFileName());
+//                c.getChanges().stream().forEach(s -> {
+//                    System.out.println(s.);
+                });
             });
-        });
+//        });
     }
 }

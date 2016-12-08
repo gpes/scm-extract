@@ -8,6 +8,7 @@ package br.edu.ifpb.scm.api.git;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.jgit.diff.DiffEntry;
 
 /**
  *
@@ -19,6 +20,7 @@ public class Version {
     private String hashCode;
     private String message;
     private List<ChangedFiles> changes;
+    private List<DiffEntry> diffs;
 
     public Version() {
         changes = new ArrayList<>();
@@ -29,10 +31,11 @@ public class Version {
         return "Version{" + "commitDate=" + commitDate + ", hashCode=" + hashCode + ", message=" + message + ", changes=" + changes + '}';
     }
 
-    public Version(LocalDate commitDate, String hashCode, String message) {
+    public Version(LocalDate commitDate, String hashCode, String message, List<DiffEntry> diffs) {
         this.commitDate = commitDate;
         this.hashCode = hashCode;
         this.message = message;
+        this.diffs = diffs;
     }
 
     public List<ChangedFiles> getChanges() {
@@ -66,6 +69,14 @@ public class Version {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public void setDiffs(List<DiffEntry> diffs) {
+        this.diffs = diffs;
+    }
+
+    public List<DiffEntry> getDiffs() {
+        return diffs;
     }
 
 }

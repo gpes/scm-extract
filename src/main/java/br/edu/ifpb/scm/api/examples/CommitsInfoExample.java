@@ -1,6 +1,5 @@
 package br.edu.ifpb.scm.api.examples;
 
-import br.edu.ifpb.scm.api.Builder;
 import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.ScmBuilder;
 import br.edu.ifpb.scm.api.ScmType;
