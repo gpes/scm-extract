@@ -54,4 +54,8 @@ public interface SCM {
      */
     public SCM setDir(String dir);
 
+    public SCM setScm(SCM scm);
+
+    public org.eclipse.jgit.lib.Repository getScmJGit();
+
 }

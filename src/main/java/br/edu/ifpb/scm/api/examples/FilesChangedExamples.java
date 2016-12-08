@@ -9,10 +9,15 @@ import br.edu.ifpb.scm.api.Builder;
 import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.ScmBuilder;
 import br.edu.ifpb.scm.api.ScmType;
+import br.edu.ifpb.scm.api.git.ChangedFiles;
+import br.edu.ifpb.scm.api.git.Version;
 import java.io.IOException;
-import java.text.ParseException;
+import java.util.List;
 import java.util.ResourceBundle;
-import org.eclipse.jgit.api.errors.GitAPIException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
 
 /**
  *
@@ -20,7 +25,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
  */
 public class FilesChangedExamples {
 
-    public static void main(String[] args) throws GitAPIException, IOException, ParseException {
+    public static void main(String[] args) throws Exception {
         ResourceBundle resource = ResourceBundle.getBundle("scm");
         String dir = resource.getString("dir.local.jair");
         String url = resource.getString("url.repo");
@@ -31,19 +36,38 @@ public class FilesChangedExamples {
                 .create(ScmType.GIT)
                 .buildClone();
 
-        repository.getVersions().forEach(version -> {
+        repository.getVersions().forEach((Version version) -> {
             System.out.println("Data do Commit: " + version.getCommitDate());
             System.out.println("HashCode do Commit: " + version.getHashCode());
             System.out.println("Mensagem: " + version.getMessage());
-            version.getDiffs().stream().forEach(ds -> {
-                System.out.println(ds.getChangeType());
-            });
-            
-            version.getChanges().forEach(changedFile -> {
+            List<DiffEntry> diffs = version.getDiffs();
+            DiffFormatter format = new DiffFormatter(System.out);
+            format.setRepository(builder.getScm().getScmJGit());
+            for (DiffEntry diffEntry : diffs) {
+                try {
+                    format.format(diffEntry);
+                } catch (IOException ex) {
+                    Logger.getLogger(FilesChangedExamples.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+//            .stream().forEach(ds -> {
+//                System.out.println(ds.get);
+//            });
+
+            version.getChanges().forEach((ChangedFiles changedFile) -> {
                 System.out.println("Tipo de mudança: " + changedFile.getChangedType());
                 System.out.println("Nome antigo do arquivo: " + changedFile.getOldFileName());
                 System.out.println("Nome novo do arquivo: " + changedFile.getNewFileName());
-//                System.out.println("Nome novo do arquivo: " + changedFile.getDiffs());
+//                List<DiffEntry> diffs = changedFile.getDiffs();
+//                DiffFormatter format = new DiffFormatter(System.out);
+//                format.setRepository(builder.getScm().getScmJGit());
+//                for (DiffEntry diffEntry : diffs) {
+//                    try {
+//                        format.format(diffEntry);
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(FilesChangedExamples.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }
             });
             System.out.println("\n");
         });

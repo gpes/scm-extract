@@ -79,7 +79,7 @@ public class Git implements SCM {
         oldTreeIter.reset(reader, oldTree);
         ObjectId newTree = null;
         CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
-        
+
         if (flag) {
             newTree = git.getRepository().resolve(commit + "^{tree}"); // equals oldCommit.getTree()
         } else {
@@ -91,11 +91,11 @@ public class Git implements SCM {
         formatter.setRepository(git.getRepository());
 
         List<DiffEntry> scan = formatter.scan(oldTree, newTree);
-
+        DiffEntry e = null;
         for (DiffEntry entry : scan) {
-            System.out.println("Entry: " + entry + ", from: " + entry.getOldId() + ", to: " + entry.getNewId());
             formatter.format(entry);
         }
+
         return scan;
     }
 
@@ -193,6 +193,12 @@ public class Git implements SCM {
             diff = getDiff(String.valueOf(it.getId()).substring(7, 47), flag);
         }
         diff = getDiff(String.valueOf(it.getId()).substring(7, 47), flag);
+
+        DiffFormatter format = new DiffFormatter(System.out);
+
+        for (DiffEntry diffEntry : diff) {
+//            format.format(diffEntry);
+        }
         return new Version(it.getCommitterIdent().getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                 String.valueOf(it.getId()).substring(7, 47),
                 it.getShortMessage(), diff)
@@ -378,6 +384,16 @@ public class Git implements SCM {
     public SCM setDir(String dir) {
         this.dir = new File(dir);
         return this;
+    }
+
+    @Override
+    public SCM setScm(SCM scm) {
+        return scm.getRepository().scm();
+    }
+
+    @Override
+    public org.eclipse.jgit.lib.Repository getScmJGit() {
+        return this.git.getRepository();
     }
 
 }

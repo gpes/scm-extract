@@ -23,7 +23,7 @@ public class Mercurial implements SCM {
     }
 
     @Override
-    public Repository getRepository()  {
+    public Repository getRepository() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -48,6 +48,16 @@ public class Mercurial implements SCM {
     }
 
     public Repository get() throws IOException, GitAPIException, ParseException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public SCM setScm(SCM scm) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public org.eclipse.jgit.lib.Repository getScmJGit() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

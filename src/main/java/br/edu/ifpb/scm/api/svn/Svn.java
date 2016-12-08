@@ -8,11 +8,8 @@ package br.edu.ifpb.scm.api.svn;
 import br.edu.ifpb.scm.api.SCM;
 import br.edu.ifpb.scm.api.Repository;
 import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.wc.SVNRevision;
@@ -131,6 +128,16 @@ public class Svn implements SCM {
     public SCM setDir(String dir) {
         this.path = new File(dir);
         return this;
+    }
+
+    @Override
+    public SCM setScm(SCM scm) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public org.eclipse.jgit.lib.Repository getScmJGit() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

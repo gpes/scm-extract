@@ -54,4 +54,9 @@ public final class ScmBuilder implements Builder {
                 .getRepository();
     }
 
+    @Override
+    public SCM getScm() {
+        return scm;
+    }
+
 }
