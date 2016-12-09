@@ -45,7 +45,7 @@ public class Git implements SCM {
     private String url;
     private File dir;
     private org.eclipse.jgit.api.Git git;
-    private org.eclipse.jgit.lib.Repository repo;
+    private org.eclipse.jgit.lib.Repository repoJGit;
 
     public Git() {
         this.repository = new Repository();
@@ -56,15 +56,15 @@ public class Git implements SCM {
     public Repository buildRepository() {
         if (!dir.exists() && !dir.isDirectory()) {
             try {
-                 repo = cloneRepository();
+                repoJGit = cloneRepository();
             } catch (CloneNotSupportedException | GitAPIException ex) {
                 Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            repo = this.getReferenceRepository();
+            repoJGit = this.getReferenceRepository();
         }
         repository.AddAllVersions(versions());
-        repository = createRepository(dir, repo);
+        repository = createRepository(dir, repoJGit);
         return repository;
     }
 
@@ -81,6 +81,57 @@ public class Git implements SCM {
     private org.eclipse.jgit.lib.Repository cloneRepository() throws CloneNotSupportedException, GitAPIException {
         this.git = org.eclipse.jgit.api.Git.cloneRepository().setURI(url).setDirectory(dir).call();
         return this.git.getRepository();
+    }
+
+    /**
+     * Recupera a lista de versões
+     *
+     * @param git Git JGit
+     * @return List {@link List} de {@link Version}
+     */
+    private List<Version> versions() {
+        List<Version> listOfVersions = new ArrayList();
+        LogCommand log = git.log();
+        try {
+            log.call().forEach(rc -> {
+                try {
+                    listOfVersions.add(createVersion(rc));
+                } catch (IOException ex) {
+                    Logger.getLogger(Git.class
+                            .getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+        } catch (GitAPIException | NullPointerException e) {
+            e.printStackTrace();
+            throw new SCMException("Não foi ppossível recuperar as versões", e);
+        }
+        return listOfVersions;
+    }
+
+    /**
+     * Cria um objeto versão
+     *
+     * @param repo {@link org.eclipse.jgit.lib.Repository} JGit
+     * @param it RevCommit JGit
+     * @return {@link Version} Versão
+     */
+    private Version createVersion(RevCommit it) throws IOException {
+        List<ChangedFiles> listOfChangedFiles = getChangedFilesFromSpecifiedVersion(repoJGit, extractHashFromCommit(it));
+        List<DiffEntry> listOfDiffs = Collections.EMPTY_LIST;
+        boolean flag = false;
+        if (it.getParentCount() <= 0) {
+            flag = true;
+            listOfDiffs = getDiff(extractHashFromCommit(it), flag);
+        }
+        listOfDiffs = getDiff(extractHashFromCommit(it), flag);
+        return new Version(it.getCommitterIdent().getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                String.valueOf(it.getId()).substring(7, 47),
+                it.getShortMessage(), listOfDiffs)
+                .setChanges(listOfChangedFiles);
+    }
+
+    private String extractHashFromCommit(RevCommit it) {
+        return String.valueOf(it.getId()).substring(7, 47);
     }
 
     public List<DiffEntry> getDiff(String commit, boolean flag) throws IOException {
@@ -108,33 +159,6 @@ public class Git implements SCM {
 //        }
 
         return scan;
-    }
-
-    /**
-     * Recupera a lista de versões
-     *
-     * @param git Git JGit
-     * @return List {@link List} de {@link Version}
-     */
-    private List<Version> versions() {
-        List<Version> list = new ArrayList();
-        LogCommand log = git.log();
-        try {
-            log.call().forEach(rc -> {
-                try {
-                    list.add(createVersion(git.getRepository(), rc));
-
-                } catch (IOException ex) {
-                    Logger.getLogger(Git.class
-                            .getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-        } catch (GitAPIException | NullPointerException e) {
-            e.printStackTrace();
-            throw new SCMException("Não foi ppossível recuperar as versões", e);
-        }
-
-        return list;
     }
 
     @Override
@@ -175,33 +199,6 @@ public class Git implements SCM {
     private String getUrlFromLocalRepository(org.eclipse.jgit.lib.Repository repository) {
         Config config = repository.getConfig();
         return config.getString("remote", "origin", "url");
-    }
-
-    /**
-     * Cria um objeto versão
-     *
-     * @param repo {@link org.eclipse.jgit.lib.Repository} JGit
-     * @param it RevCommit JGit
-     * @return {@link Version} Versão
-     */
-    private Version createVersion(org.eclipse.jgit.lib.Repository repo, RevCommit it) throws IOException {
-        List<ChangedFiles> changedFiles = getChangedFilesFromSpecifiedVersion(repo, String.valueOf(it.getId()).substring(7, 47));
-        List<DiffEntry> diff = Collections.EMPTY_LIST;
-        boolean flag = false;
-        if (it.getParentCount() <= 0) {
-            flag = true;
-            diff = getDiff(String.valueOf(it.getId()).substring(7, 47), flag);
-        }
-        diff = getDiff(String.valueOf(it.getId()).substring(7, 47), flag);
-
-//        DiffFormatter format = new DiffFormatter(System.out);
-//        for (DiffEntry diffEntry : diff) {
-//            format.format(diffEntry);
-//        }
-        return new Version(it.getCommitterIdent().getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                String.valueOf(it.getId()).substring(7, 47),
-                it.getShortMessage(), diff)
-                .setChanges(changedFiles);
     }
 
     /**

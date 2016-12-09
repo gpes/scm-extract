@@ -1,7 +1,6 @@
 package br.edu.ifpb.scm.api;
 
 //TODO: Usar apenas objetos de nossa API
-import org.eclipse.jgit.api.errors.GitAPIException;
 
 /**
  *
