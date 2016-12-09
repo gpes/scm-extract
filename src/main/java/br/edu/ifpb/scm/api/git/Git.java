@@ -14,6 +14,7 @@ import br.edu.ifpb.scm.api.SCM;
 import br.edu.ifpb.scm.api.exception.ReferenceException;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,8 +64,8 @@ public class Git implements SCM {
         } else {
             repoJGit = this.getReferenceRepository();
         }
-        repository.AddAllVersions(versions());
         repository = createRepository(dir, repoJGit);
+        repository.AddAllVersions(versions());
         return repository;
     }
 
@@ -116,7 +117,7 @@ public class Git implements SCM {
      * @return {@link Version} Versão
      */
     private Version createVersion(RevCommit it) throws IOException {
-        List<ChangedFiles> listOfChangedFiles = getChangedFilesFromSpecifiedVersion(repoJGit, extractHashFromCommit(it));
+        List<ChangedFiles> listOfChangedFiles = getChangedFilesFromSpecifiedVersion(extractHashFromCommit(it));
         List<DiffEntry> listOfDiffs = Collections.EMPTY_LIST;
         boolean flag = false;
         if (it.getParentCount() <= 0) {
@@ -124,14 +125,57 @@ public class Git implements SCM {
             listOfDiffs = getDiff(extractHashFromCommit(it), flag);
         }
         listOfDiffs = getDiff(extractHashFromCommit(it), flag);
-        return new Version(it.getCommitterIdent().getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                String.valueOf(it.getId()).substring(7, 47),
+        return new Version(extractLocalDateFromCommit(it),
+                extractHashFromCommit(it),
                 it.getShortMessage(), listOfDiffs)
                 .setChanges(listOfChangedFiles);
     }
 
-    private String extractHashFromCommit(RevCommit it) {
-        return String.valueOf(it.getId()).substring(7, 47);
+    /**
+     * Recupera a referencia do RevCommit
+     * @param repoJGit {@link org.eclipse.jgit.lib.Repository} Repositorio
+     * JGit
+     * @param commit String
+     * @return List {@link List} de de {@link ChangedFiles}
+     */
+    private List<ChangedFiles> getChangedFilesFromSpecifiedVersion(String commit) {
+        RevCommit revCommit1 = convertStringToRevCommit(commit);
+        //Fluxo alternativo quando chegar no primeiro commit do repositório
+        if (revCommit1.getParentCount() <= 0) {
+            return searchDiff(repoJGit, revCommit1, revCommit1);
+        }
+        //trocado pela chamada de metodos
+        RevCommit revCommit2 = convertStringToRevCommit(revCommit1.getParents()[0].getName());
+        return searchDiff(repoJGit, revCommit1, revCommit2);
+    }
+
+    private String extractHashFromCommit(RevCommit commit) {
+        return String.valueOf(commit.getId()).substring(7, 47);
+    }
+
+    private LocalDate extractLocalDateFromCommit(RevCommit commit) {
+        return commit.getCommitterIdent().getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    /**
+     *
+     * @param repoJGit {@link org.eclipse.jgit.lib.Repository} Repositorio
+     * JGit
+     * @param commit String hashCode do commit
+     * @return {@link RevCommit} RevCommit
+     */
+    private RevCommit convertStringToRevCommit(String commit) {
+        RevWalk rev = new RevWalk(repoJGit);
+        rev.reset();
+        //Transformando o hash commit em um Objeto RevCommit
+        try {
+            ObjectId obj = repoJGit.resolve(commit);
+            return rev.parseCommit(obj);
+        } catch (IncorrectObjectTypeException e) {
+            throw new ConvertionException("Erro de Conversão do tipo String em RevCommit", e);
+        } catch (RevisionSyntaxException | IOException e) {
+            throw new ConvertionException("Erro de conversão do tipo String em RevCommit", e);
+        }
     }
 
     public List<DiffEntry> getDiff(String commit, boolean flag) throws IOException {
@@ -140,24 +184,16 @@ public class Git implements SCM {
         ObjectId oldTree = git.getRepository().resolve(commit + "^{tree}"); // equals newCommit.getTree()
         oldTreeIter.reset(reader, oldTree);
         ObjectId newTree = null;
-        CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
 
         if (flag) {
             newTree = git.getRepository().resolve(commit + "^{tree}"); // equals oldCommit.getTree()
         } else {
             newTree = git.getRepository().resolve(commit + "~1^{tree}"); // equals oldCommit.getTree()
         }
-        newTreeIter.reset(reader, newTree);
 
         DiffFormatter formatter = new DiffFormatter(System.out);
         formatter.setRepository(git.getRepository());
-//
         List<DiffEntry> scan = formatter.scan(oldTree, newTree);
-//        DiffEntry e = null;
-//        for (DiffEntry entry : scan) {
-//            formatter.format(entry);
-//        }
-
         return scan;
     }
 
@@ -217,27 +253,6 @@ public class Git implements SCM {
             throw new AuthorizationException("Verifique as permissões de acesso a pastas de seu computador.", e);
         } catch (IOException e) {
             throw new ReferenceException("Ocorreu um erro, tente novamente mais tarde", e);
-        }
-    }
-
-    /**
-     *
-     * @param repository {@link org.eclipse.jgit.lib.Repository} Repositorio
-     * JGit
-     * @param commit String hashCode do commit
-     * @return {@link RevCommit} RevCommit
-     */
-    private RevCommit convertStringToRevCommit(org.eclipse.jgit.lib.Repository repository, String commit) {
-        RevWalk rev = new RevWalk(repository);
-        rev.reset();
-        //Transformando o hash commit em um Objeto RevCommit
-        try {
-            ObjectId obj = repository.resolve(commit);
-            return rev.parseCommit(obj);
-        } catch (IncorrectObjectTypeException e) {
-            throw new ConvertionException("Erro de Conversão do tipo String em RevCommit", e);
-        } catch (RevisionSyntaxException | IOException e) {
-            throw new ConvertionException("Erro de conversão do tipo String em RevCommit", e);
         }
     }
 
@@ -347,25 +362,6 @@ public class Git implements SCM {
 //                System.out.println("Old Prefix: " + formatter.getOldPrefix());
 //            }
         }
-    }
-
-    /**
-     * Recupera a referencia do RevCommit
-     * @param repository {@link org.eclipse.jgit.lib.Repository} Repositorio
-     * JGit
-     * @param commit String
-     * @return List {@link List} de de {@link ChangedFiles}
-     */
-    private List<ChangedFiles> getChangedFilesFromSpecifiedVersion(org.eclipse.jgit.lib.Repository repository, String commit) {
-        RevCommit revCommit1 = convertStringToRevCommit(repository, commit);
-        //Fluxo alternativo quando chegar no primeiro commit
-        if (revCommit1.getParentCount() <= 0) {
-            //return searchDiff(repository, revCommit1, revCommit1);
-            return searchDiff(repository, revCommit1, revCommit1);
-        }
-        //trocado pela chamada de metodos
-        RevCommit revCommit2 = convertStringToRevCommit(repository, revCommit1.getParents()[0].getName());
-        return searchDiff(repository, revCommit1, revCommit2);
     }
 
     @Override

@@ -31,7 +31,11 @@ public class CloneExample {
 
         System.out.println("Local URL: " + repository.getPathLocal());
         System.out.println("Remote URL: " + repository.getUrlRemote());
-        
+        repository.getVersions().stream().forEach(t -> {
+            System.out.println(t.getCommitDate());
+            System.out.println(t.getHashCode());
+            System.out.println(t.getMessage());
+        });
 //        new FileHelper(dir).apagar(); 
     }
  
