@@ -49,7 +49,6 @@ public class Git implements SCM {
     private org.eclipse.jgit.lib.Repository repoJGit;
     private static String HEAD = "^{tree}";
     private static String HEAD_NEIGHBOR = "~1^{tree}";
-    private SCM scm;
 
     public Git() {
         this.repository = new Repository();
@@ -75,6 +74,8 @@ public class Git implements SCM {
     private org.eclipse.jgit.lib.Repository getReferenceRepository() throws SCMException {
         try {
             git = org.eclipse.jgit.api.Git.open(dir);
+            repoJGit = git.getRepository();
+            this.url = this.getUrlFromLocalRepository();
             return git.getRepository();
         } catch (IOException e) {
             e.printStackTrace();
@@ -83,7 +84,11 @@ public class Git implements SCM {
     }
 
     private org.eclipse.jgit.lib.Repository cloneRepository() throws CloneNotSupportedException, GitAPIException {
-        this.git = org.eclipse.jgit.api.Git.cloneRepository().setURI(url).setDirectory(dir).call();
+        try {
+            this.git = org.eclipse.jgit.api.Git.cloneRepository().setURI(url).setDirectory(dir).call();
+        } catch (Exception e) {
+            this.git = org.eclipse.jgit.api.Git.cloneRepository().setDirectory(dir).call();
+        }
         return this.git.getRepository();
     }
 
