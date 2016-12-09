@@ -9,15 +9,7 @@ import br.edu.ifpb.scm.api.Builder;
 import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.ScmBuilder;
 import br.edu.ifpb.scm.api.ScmType;
-import br.edu.ifpb.scm.api.git.ChangedFiles;
-import br.edu.ifpb.scm.api.git.Version;
-import java.io.IOException;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.DiffFormatter;
 
 /**
  *
@@ -26,9 +18,9 @@ import org.eclipse.jgit.diff.DiffFormatter;
 public class FilesChangedExamples {
 
     public static void main(String[] args) throws Exception {
-        ResourceBundle resource = ResourceBundle.getBundle("scm");
-        String dir = resource.getString("dir.local.jair");
-        String url = resource.getString("url.repo");
+        ResourceBundle banco = ResourceBundle.getBundle("scm");
+        String dir = banco.getString("dir.local.jair");
+        String url = banco.getString("url.repo");
         Builder builder = new ScmBuilder();
         Repository repository = builder
                 .dir(dir)
@@ -36,26 +28,19 @@ public class FilesChangedExamples {
                 .create(ScmType.GIT)
                 .build();
 
-//        repository.getVersions().forEach((Version version) -> {
-//            System.out.println("Data do Commit: " + version.getCommitDate());
-//            System.out.println("HashCode do Commit: " + version.getHashCode());
-//            System.out.println("Mensagem: " + version.getMessage());
-//            List<DiffEntry> diffs = version.getDiffs();
-//            DiffFormatter format = new DiffFormatter(System.out);
-//            format.setRepository(builder.getScm().getScmJGit());
-//            for (DiffEntry diffEntry : diffs) {
-//                try {
-//                    format.format(diffEntry);
-//                } catch (IOException ex) {
-//                    Logger.getLogger(FilesChangedExamples.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//            version.getChanges().forEach((ChangedFiles changedFile) -> {
-//                System.out.println("Tipo de mudança: " + changedFile.getChangedType());
-//                System.out.println("Nome antigo do arquivo: " + changedFile.getOldFileName());
-//                System.out.println("Nome novo do arquivo: " + changedFile.getNewFileName());
-//            });
-//        });
+        System.out.println("Local URL: " + repository.getPathLocal());
+        System.out.println("Remote URL: " + repository.getUrlRemote());
 
+        repository.getVersions().forEach(v -> {
+            System.out.println("Commit Date: " + v.getCommitDate());
+            System.out.println("Commit HashCode: " + v.getHashCode());
+            System.out.println("Message: " + v.getMessage());
+            v.getDiffs().stream().forEach(d -> {
+                System.out.println("Change Type: " + d.getChangeType());
+                System.out.println("Old File Name: " + d.getOldPath());
+                System.out.println("New File Name: " + d.getNewPath());
+            });
+
+        });
     }
 }

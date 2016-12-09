@@ -30,32 +30,6 @@ public class CloneExample {
 
         System.out.println("Local URL: " + repository.getPathLocal());
         System.out.println("Remote URL: " + repository.getUrlRemote());
-//        repository.getVersions().stream().forEach(v -> {
-//            System.out.println(v.getCommitDate());
-//            System.out.println(v.getCommitDate());
-//            System.out.println(v.getHashCode());
-//            System.out.println(v.getMessage());
-
-            
-//            v.getDiffs().stream().forEach(c -> {
-//                System.out.println(c.getChangedType());
-//                System.out.println(c.getOldFileName());
-//                System.out.println(c.getNewFileName());
-////                System.out.println(c.get);
-//            });
-            
-//            List<DiffEntry> diffs = v.getDiffs();
-//            DiffFormatter format = new DiffFormatter(System.out);
-//            format.setRepository(builder.getScm().getScmJGit());
-//            for (DiffEntry diff : diffs) {
-//                try {
-//                    format.format(diff);
-//                } catch (IOException ex) {
-//                    Logger.getLogger(CloneExample.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        });
-//        new FileHelper(dir).apagar(); 
     }
 
 }

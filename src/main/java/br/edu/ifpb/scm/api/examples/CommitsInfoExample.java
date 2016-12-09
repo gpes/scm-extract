@@ -26,10 +26,10 @@ public class CommitsInfoExample {
                     .create(ScmType.GIT).build();
 
             repository.getVersions().forEach(version -> {
-                System.out.println("\n ---- Informações sobre os Commits ---- ");
-                System.out.println("Data do Commit: " + version.getCommitDate());
-                System.out.println("HashCode do Commit: " + version.getHashCode());
-                System.out.println("Mensagem:" + version.getMessage());
+                System.out.println("\n ---- Commits Info ---- ");
+                System.out.println("Commit Date: " + version.getCommitDate());
+                System.out.println("Commit Hashcode: " + version.getHashCode());
+                System.out.println("Message:" + version.getMessage());
                 System.out.println("\n");
             });
 

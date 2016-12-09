@@ -22,7 +22,6 @@ public class ReferenceRepositoryExample {
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
         ResourceBundle resource = ResourceBundle.getBundle("scm");
-//        String url = resource.getString("url.repo");
         String dir = resource.getString("dir.local.jair");
         Builder builder = new ScmBuilder();
         Repository repository = builder
