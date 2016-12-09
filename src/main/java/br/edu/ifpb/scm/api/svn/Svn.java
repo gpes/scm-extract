@@ -52,6 +52,11 @@ public class Svn implements SCM {
         }
 
     }
+    //TODO
+    @Override
+    public Repository buildRepository() {
+        return cloneRepository();
+    }
 
     public Repository cloneRepository() {
         try {
@@ -134,11 +139,6 @@ public class Svn implements SCM {
 
     @Override
     public org.eclipse.jgit.lib.Repository getScmJGit() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Repository buildRepository() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

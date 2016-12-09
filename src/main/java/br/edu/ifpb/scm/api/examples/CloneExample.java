@@ -16,9 +16,9 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 public class CloneExample {
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
-        ResourceBundle banco = ResourceBundle.getBundle("scm");
-        String url = banco.getString("url.repo");
-        String dir = banco.getString("dir.local.jair");
+        ResourceBundle resource = ResourceBundle.getBundle("scm");
+        String url = resource.getString("url.repo");
+        String dir = resource.getString("dir.local.jair");
 
         Builder builder = new ScmBuilder();
 
