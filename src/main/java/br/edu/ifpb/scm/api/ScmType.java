@@ -6,6 +6,8 @@
 package br.edu.ifpb.scm.api;
 
 import br.edu.ifpb.scm.api.git.Git;
+import br.edu.ifpb.scm.api.hg.Mercurial;
+import br.edu.ifpb.scm.api.svn.Svn;
 
 /**
  *
@@ -17,19 +19,19 @@ public enum ScmType {
         public SCM getScmType() {
             return new Git();
         }
+    },
+    MERCURIAL {
+        @Override
+        public SCM getScmType() {
+            return new Mercurial();
+        }
+    },
+    SVN {
+        @Override
+        public SCM getScmType() {
+            return new Svn();
+        }
     };
-//    MERCURIAL {
-//        @Override
-//        public SCM getScmType() {
-//            return new Mercurial();
-//        }
-//    },
-//    SVN {
-//        @Override
-//        public SCM getScmType() {
-//            return new Svn();
-//        }
-//    };
 
     public abstract SCM getScmType();
 

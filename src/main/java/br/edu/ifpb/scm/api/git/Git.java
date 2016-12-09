@@ -182,7 +182,7 @@ public class Git implements SCM {
         }
     }
 
-    public List<DiffEntry> getDiff(String commit, boolean flag) throws IOException {
+    private List<DiffEntry> getDiff(String commit, boolean flag) throws IOException {
         ObjectReader reader = git.getRepository().newObjectReader();
         CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
         ObjectId oldTree = git.getRepository().resolve(commit + "^{tree}"); // equals newCommit.getTree()
