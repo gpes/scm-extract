@@ -47,6 +47,9 @@ public class Git implements SCM {
     private File dir;
     private org.eclipse.jgit.api.Git git;
     private org.eclipse.jgit.lib.Repository repoJGit;
+    private static String HEAD = "^{tree}";
+    private static String HEAD_NEIGHBOR = "~1^{tree}";
+    private SCM scm;
 
     public Git() {
         this.repository = new Repository();
@@ -64,7 +67,7 @@ public class Git implements SCM {
         } else {
             repoJGit = this.getReferenceRepository();
         }
-        repository = createRepository(dir, repoJGit);
+        repository = createRepository();
         repository.AddAllVersions(versions());
         return repository;
     }
@@ -127,8 +130,9 @@ public class Git implements SCM {
         listOfDiffs = getDiff(extractHashFromCommit(it), flag);
         return new Version(extractLocalDateFromCommit(it),
                 extractHashFromCommit(it),
-                it.getShortMessage(), listOfDiffs)
-                .setChanges(listOfChangedFiles);
+                it.getShortMessage(), listOfDiffs);
+
+//                .setChanges(listOfChangedFiles);
     }
 
     /**
@@ -142,11 +146,11 @@ public class Git implements SCM {
         RevCommit revCommit1 = convertStringToRevCommit(commit);
         //Fluxo alternativo quando chegar no primeiro commit do repositório
         if (revCommit1.getParentCount() <= 0) {
-            return searchDiff(repoJGit, revCommit1, revCommit1);
+            return searchDiff(revCommit1, revCommit1);
         }
         //trocado pela chamada de metodos
         RevCommit revCommit2 = convertStringToRevCommit(revCommit1.getParents()[0].getName());
-        return searchDiff(repoJGit, revCommit1, revCommit2);
+        return searchDiff(revCommit1, revCommit2);
     }
 
     private String extractHashFromCommit(RevCommit commit) {
@@ -184,17 +188,88 @@ public class Git implements SCM {
         ObjectId oldTree = git.getRepository().resolve(commit + "^{tree}"); // equals newCommit.getTree()
         oldTreeIter.reset(reader, oldTree);
         ObjectId newTree = null;
-
         if (flag) {
-            newTree = git.getRepository().resolve(commit + "^{tree}"); // equals oldCommit.getTree()
+            newTree = git.getRepository().resolve(commit + HEAD); // equals oldCommit.getTree()
         } else {
-            newTree = git.getRepository().resolve(commit + "~1^{tree}"); // equals oldCommit.getTree()
+            newTree = git.getRepository().resolve(commit + HEAD_NEIGHBOR); // equals oldCommit.getTree()
         }
 
         DiffFormatter formatter = new DiffFormatter(System.out);
         formatter.setRepository(git.getRepository());
         List<DiffEntry> scan = formatter.scan(oldTree, newTree);
         return scan;
+    }
+
+    /**
+     * Cria um objeto Repository
+     *
+     * @param dir Path local do repositório
+     * @param repository Repositório JGit
+     * @return {@link Repository} Repositorio
+     * @throws AuthorizationException
+     * @throws DirectoryException
+     */
+    private Repository createRepository() {
+        try {
+            return new Repository(dir.getCanonicalPath(), getUrlFromLocalRepository());
+        } catch (SecurityException e) {
+            throw new AuthorizationException("Verifique as permissões de acesso a pastas de seu computador.", e);
+        } catch (IOException e) {
+            throw new ReferenceException("Ocorreu um erro, tente novamente mais tarde", e);
+        }
+    }
+
+    /**
+     * Recupera a url do repositorio remoto
+     *
+     * @param repository {@link org.eclipse.jgit.lib.Repository} JGit
+     * @return {@link String} Url do repositorio remoto
+     */
+    private String getUrlFromLocalRepository() {
+        Config config = repoJGit.getConfig();
+        return config.getString("remote", "origin", "url");
+    }
+
+    /**
+     * Recupera a difereça entre as versões
+     *
+     * @param repoJGit {@link org.eclipse.jgit.lib.Repository} Repositorio
+     * JGit JGit
+     * @param rev1 {@link RevCommit} RevCommit
+     * @param rev2 {@link RevCommit} RevCommit
+     * @return {@link List} List de {@link Version}
+     */
+    private List<ChangedFiles> searchDiff(RevCommit rev1, RevCommit rev2) {
+        List<ChangedFiles> listaOfChangedFiles = new ArrayList<>();
+        try {
+            ObjectId oldHead = repoJGit.resolve(rev2.getTree().getName());
+            ObjectId head = repoJGit.resolve(rev1.getTree().getName());
+            ObjectReader reader = repoJGit.newObjectReader();
+            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+            oldTreeIter.reset(reader, oldHead);
+            CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+            newTreeIter.reset(reader, head);
+            org.eclipse.jgit.api.Git g = new org.eclipse.jgit.api.Git(repoJGit);
+
+            List<DiffEntry> diffs = g.diff()
+                    .setNewTree(newTreeIter)
+                    .setOldTree(oldTreeIter)
+                    .call();
+
+            diffs.iterator().forEachRemaining(entry -> {
+                String oldPath = null;
+                if (entry.getChangeType().equals(DiffEntry.ChangeType.MODIFY) || entry.getChangeType().equals(DiffEntry.ChangeType.COPY)) {
+                    oldPath = entry.getOldPath();
+                }
+                List<DiffEntry> call = Collections.EMPTY_LIST;
+                ChangedFiles changed = new ChangedFiles(oldPath, entry.getNewPath(), entry.getChangeType().name(), call);
+                listaOfChangedFiles.add(changed);
+            });
+        } catch (RevisionSyntaxException | IOException | GitAPIException e) {
+            throw new DiffException(e);
+        }
+
+        return listaOfChangedFiles;
     }
 
     @Override
@@ -224,89 +299,6 @@ public class Git implements SCM {
 //                setStartPoint(check).
 //                call();
         return null;
-    }
-
-    /**
-     * Recupera a url do repositorio remoto
-     *
-     * @param repository {@link org.eclipse.jgit.lib.Repository} JGit
-     * @return {@link String} Url do repositorio remoto
-     */
-    private String getUrlFromLocalRepository(org.eclipse.jgit.lib.Repository repository) {
-        Config config = repository.getConfig();
-        return config.getString("remote", "origin", "url");
-    }
-
-    /**
-     * Cria um objeto Repository
-     *
-     * @param dir Path local do repositório
-     * @param repository Repositório JGit
-     * @return {@link Repository} Repositorio
-     * @throws AuthorizationException
-     * @throws DirectoryException
-     */
-    private Repository createRepository(File dir, org.eclipse.jgit.lib.Repository repository) {
-        try {
-            return new Repository(dir.getCanonicalPath(), getUrlFromLocalRepository(repository));
-        } catch (SecurityException e) {
-            throw new AuthorizationException("Verifique as permissões de acesso a pastas de seu computador.", e);
-        } catch (IOException e) {
-            throw new ReferenceException("Ocorreu um erro, tente novamente mais tarde", e);
-        }
-    }
-
-    /**
-     * Recupera a difereça entre as versões
-     *
-     * @param repository {@link org.eclipse.jgit.lib.Repository} Repositorio
-     * JGit JGit
-     * @param rev1 {@link RevCommit} RevCommit
-     * @param rev2 {@link RevCommit} RevCommit
-     * @return {@link List} List de {@link Version}
-     */
-    private List<ChangedFiles> searchDiff(org.eclipse.jgit.lib.Repository repository, RevCommit rev1, RevCommit rev2) {
-        List<ChangedFiles> listaOfChangedFiles = new ArrayList<>();
-        try {
-
-//            if(rev1.getParent(0))
-//            List<DiffEntry> diff = getDiff(String.valueOf(rev1.getId()).substring(7, 47));
-            ObjectId oldHead = repository.resolve(rev2.getTree().getName());
-            ObjectId head = repository.resolve(rev1.getTree().getName());
-            ObjectReader reader = repository.newObjectReader();
-            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
-            oldTreeIter.reset(reader, oldHead);
-            CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
-            newTreeIter.reset(reader, head);
-            org.eclipse.jgit.api.Git g = new org.eclipse.jgit.api.Git(repository);
-
-            List<DiffEntry> diffs = g.diff()
-                    .setNewTree(newTreeIter)
-                    .setOldTree(oldTreeIter)
-                    .call();
-
-            diffs.iterator().forEachRemaining(entry -> {
-                String oldPath = null;
-                if (entry.getChangeType().equals(DiffEntry.ChangeType.MODIFY) || entry.getChangeType().equals(DiffEntry.ChangeType.COPY)) {
-                    oldPath = entry.getOldPath();
-                }
-                List<DiffEntry> call = Collections.EMPTY_LIST;
-//                try {
-//                    call = git.diff().setOutputStream(System.out).call();
-//                    for (DiffEntry diffEntry : call) {
-//                        System.out.println(diffEntry);
-//                    }
-//                } catch (GitAPIException ex) {
-//                    Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-                ChangedFiles changed = new ChangedFiles(oldPath, entry.getNewPath(), entry.getChangeType().name(), call);
-                listaOfChangedFiles.add(changed);
-            });
-        } catch (RevisionSyntaxException | IOException | GitAPIException e) {
-            throw new DiffException(e);
-        }
-
-        return listaOfChangedFiles;
     }
 
     /**
@@ -385,4 +377,8 @@ public class Git implements SCM {
 //    public org.eclipse.jgit.lib.Repository getScmJGit() {
 //        return this.git.getRepository();
 //    }
+    @Override
+    public org.eclipse.jgit.lib.Repository getScmJGit() {
+        return git.getRepository();
+    }
 }

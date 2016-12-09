@@ -57,6 +57,6 @@ public interface SCM {
 
 //    public SCM setScm(SCM scm);
 
-//    public org.eclipse.jgit.lib.Repository getScmJGit();
+    public org.eclipse.jgit.lib.Repository getScmJGit();
 
 }

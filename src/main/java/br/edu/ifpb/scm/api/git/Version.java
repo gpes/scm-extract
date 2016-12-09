@@ -19,16 +19,16 @@ public class Version {
     private LocalDate commitDate;
     private String hashCode;
     private String message;
-    private List<ChangedFiles> changes;
+//    private List<ChangedFiles> changes;
     private List<DiffEntry> diffs;
 
     public Version() {
-        changes = new ArrayList<>();
+//        changes = new ArrayList<>();
     }
 
     @Override
     public String toString() {
-        return "Version{" + "commitDate=" + commitDate + ", hashCode=" + hashCode + ", message=" + message + ", changes=" + changes + '}';
+        return "Version{" + "commitDate=" + commitDate + ", hashCode=" + hashCode + ", message=" + message + ", diffs=" + diffs + '}';
     }
 
     public Version(LocalDate commitDate, String hashCode, String message, List<DiffEntry> diffs) {
@@ -38,15 +38,14 @@ public class Version {
         this.diffs = diffs;
     }
 
-    public List<ChangedFiles> getChanges() {
-        return changes;
-    }
-
-    public Version setChanges(List<ChangedFiles> changes) {
-        this.changes = changes;
-        return this;
-    }
-
+//    public List<ChangedFiles> getChanges() {
+//        return changes;
+//    }
+//
+//    public Version setChanges(List<ChangedFiles> changes) {
+//        this.changes = changes;
+//        return this;
+//    }
     public LocalDate getCommitDate() {
         return commitDate;
     }
