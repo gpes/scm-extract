@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -40,7 +41,7 @@ public class SvnTest {
         }
     }
 
-//    @After
+    @After
     public void deleteTempFile() {
         new FileHelper(dir).apagar();
     }

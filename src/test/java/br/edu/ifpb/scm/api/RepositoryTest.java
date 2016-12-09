@@ -1,9 +1,9 @@
 package br.edu.ifpb.scm.api;
 
-import br.edu.ifpb.scm.api.util.FileHelper;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -56,7 +56,7 @@ public class RepositoryTest {
         }
     }
 
-//    @After
+    @After
     public void deleteTempFile() {
 //        new FileHelper(dir).apagar();
     }
