@@ -14,21 +14,16 @@ import br.edu.ifpb.scm.api.SCM;
 import br.edu.ifpb.scm.api.exception.ReferenceException;
 import java.io.File;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
-import org.eclipse.jgit.diff.Edit;
-import org.eclipse.jgit.diff.EditList;
-import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.lib.Config;
@@ -50,26 +45,42 @@ public class Git implements SCM {
     private String url;
     private File dir;
     private org.eclipse.jgit.api.Git git;
+    private org.eclipse.jgit.lib.Repository repo;
 
     public Git() {
-        repository = new Repository();
+        this.repository = new Repository();
+        this.git = null;
     }
 
     @Override
-    public Repository cloneRepository() {
+    public Repository buildRepository() {
         if (!dir.exists() && !dir.isDirectory()) {
-            git = null;
             try {
-                git = org.eclipse.jgit.api.Git.cloneRepository().setURI(url).setDirectory(dir).call();
-                org.eclipse.jgit.lib.Repository repo = git.getRepository();
-                repository = createRepository(dir, repo);
-                repository.AddAllVersions(versions(git));
-            } catch (GitAPIException e) {
-                throw new SCMException("Não foi possível realizar um clone do repositório.", e);
+                 repo = cloneRepository();
+            } catch (CloneNotSupportedException | GitAPIException ex) {
+                Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
             }
-            return repository;
+        } else {
+            repo = this.getReferenceRepository();
         }
-        return this.getRepository();
+        repository.AddAllVersions(versions());
+        repository = createRepository(dir, repo);
+        return repository;
+    }
+
+    private org.eclipse.jgit.lib.Repository getReferenceRepository() throws SCMException {
+        try {
+            git = org.eclipse.jgit.api.Git.open(dir);
+            return git.getRepository();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new SCMException("Erro ao recuperar referencia do repositório.", e);
+        }
+    }
+
+    private org.eclipse.jgit.lib.Repository cloneRepository() throws CloneNotSupportedException, GitAPIException {
+        this.git = org.eclipse.jgit.api.Git.cloneRepository().setURI(url).setDirectory(dir).call();
+        return this.git.getRepository();
     }
 
     public List<DiffEntry> getDiff(String commit, boolean flag) throws IOException {
@@ -89,27 +100,14 @@ public class Git implements SCM {
 
         DiffFormatter formatter = new DiffFormatter(System.out);
         formatter.setRepository(git.getRepository());
-
+//
         List<DiffEntry> scan = formatter.scan(oldTree, newTree);
-        DiffEntry e = null;
-        for (DiffEntry entry : scan) {
-            formatter.format(entry);
-        }
+//        DiffEntry e = null;
+//        for (DiffEntry entry : scan) {
+//            formatter.format(entry);
+//        }
 
         return scan;
-    }
-
-    @Override
-    public Repository getRepository() throws SCMException {
-        try {
-            git = org.eclipse.jgit.api.Git.open(dir);
-            repository = createRepository(dir, git.getRepository());
-            repository.AddAllVersions(versions(git));
-            return repository;
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new SCMException("Erro ao recuperar referencia do repositório.", e);
-        }
     }
 
     /**
@@ -118,15 +116,17 @@ public class Git implements SCM {
      * @param git Git JGit
      * @return List {@link List} de {@link Version}
      */
-    private List<Version> versions(org.eclipse.jgit.api.Git git) {
+    private List<Version> versions() {
         List<Version> list = new ArrayList();
         LogCommand log = git.log();
         try {
             log.call().forEach(rc -> {
                 try {
                     list.add(createVersion(git.getRepository(), rc));
+
                 } catch (IOException ex) {
-                    Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Git.class
+                            .getName()).log(Level.SEVERE, null, ex);
                 }
             });
         } catch (GitAPIException | NullPointerException e) {
@@ -194,11 +194,10 @@ public class Git implements SCM {
         }
         diff = getDiff(String.valueOf(it.getId()).substring(7, 47), flag);
 
-        DiffFormatter format = new DiffFormatter(System.out);
-
-        for (DiffEntry diffEntry : diff) {
+//        DiffFormatter format = new DiffFormatter(System.out);
+//        for (DiffEntry diffEntry : diff) {
 //            format.format(diffEntry);
-        }
+//        }
         return new Version(it.getCommitterIdent().getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                 String.valueOf(it.getId()).substring(7, 47),
                 it.getShortMessage(), diff)
@@ -280,14 +279,14 @@ public class Git implements SCM {
                     oldPath = entry.getOldPath();
                 }
                 List<DiffEntry> call = Collections.EMPTY_LIST;
-                try {
-                    call = git.diff().setOutputStream(System.out).call();
-                    for (DiffEntry diffEntry : call) {
-                        System.out.println(diffEntry);
-                    }
-                } catch (GitAPIException ex) {
-                    Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-                }
+//                try {
+//                    call = git.diff().setOutputStream(System.out).call();
+//                    for (DiffEntry diffEntry : call) {
+//                        System.out.println(diffEntry);
+//                    }
+//                } catch (GitAPIException ex) {
+//                    Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+//                }
                 ChangedFiles changed = new ChangedFiles(oldPath, entry.getNewPath(), entry.getChangeType().name(), call);
                 listaOfChangedFiles.add(changed);
             });
@@ -305,39 +304,37 @@ public class Git implements SCM {
      * JGit
      * @param diff {@link DiffEntry} Objeto Diff
      */
-    private String showFileDiffs(org.eclipse.jgit.lib.Repository repository, DiffEntry diff) {
-        try {
-
-            DiffFormatter formatter = new DiffFormatter(System.out);
-            formatter.setRepository(repository);
-            formatter.setDiffComparator(RawTextComparator.DEFAULT);
-            formatter.setDetectRenames(true);
-            //Filtrando apenas as modificações para efeito de testes
-            if (DiffEntry.ChangeType.MODIFY.equals(diff.getChangeType())) {
-                System.out.println(MessageFormat.format("[ {0} {1} {2} ]", diff.getChangeType().name(), diff.getNewMode().getBits(), diff.getNewPath()));
-//                Listando as informações do arquivo
-//                changesInFiles = formatter.toFileHeader(diff).getBuffer();
-//                System.out.println(new String(changesInFiles));
-                EditList toEditList = formatter.toFileHeader(diff).toEditList();
-                toEditList.stream().forEach(new Consumer<Edit>() {
-                    @Override
-                    public void accept(Edit t) {
-                        System.out.println(MessageFormat.format("\tinfo sobre: {0}", t));
-                    }
-                });
-                formatter.format(diff);
-                System.out.println(diff);
-                System.out.println("\n\n\r");
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-//        String toString = new String(changesInFiles);
-//        return toString;
-        return null;
-    }
-
+//    private String showFileDiffs(org.eclipse.jgit.lib.Repository repository, DiffEntry diff) {
+//        try {
+//            DiffFormatter formatter = new DiffFormatter(System.out);
+//            formatter.setRepository(repository);
+//            formatter.setDiffComparator(RawTextComparator.DEFAULT);
+//            formatter.setDetectRenames(true);
+    //Filtrando apenas as modificações para efeito de testes
+//            if (DiffEntry.ChangeType.MODIFY.equals(diff.getChangeType())) {
+//                System.out.println(MessageFormat.format("[ {0} {1} {2} ]", diff.getChangeType().name(), diff.getNewMode().getBits(), diff.getNewPath()));
+////                Listando as informações do arquivo
+////                changesInFiles = formatter.toFileHeader(diff).getBuffer();
+////                System.out.println(new String(changesInFiles));
+//                EditList toEditList = formatter.toFileHeader(diff).toEditList();
+//                toEditList.stream().forEach(new Consumer<Edit>() {
+//                    @Override
+//                    public void accept(Edit t) {
+//                        System.out.println(MessageFormat.format("\tinfo sobre: {0}", t));
+//                    }
+//                });
+//                formatter.format(diff);
+//                System.out.println(diff);
+//                System.out.println("\n\n\r");
+//            }
+//        } catch (IOException ex) {
+//            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+//            return null;
+//        }
+////        String toString = new String(changesInFiles);
+////        return toString;
+//        return null;
+//    }
     public void showFileDiffs2(String file, AbstractTreeIterator oldTreeParser, AbstractTreeIterator newTreeParser) throws GitAPIException, IOException {
         List<DiffEntry> diff = git.diff().
                 setOldTree(oldTreeParser).
@@ -345,13 +342,13 @@ public class Git implements SCM {
                 setPathFilter(PathFilter.create(file)).
                 call();
         for (DiffEntry entry : diff) {
-            System.out.println("Entry: " + entry + ", from: " + entry.getOldId() + ", to: " + entry.getNewId());
-            try (DiffFormatter formatter = new DiffFormatter(System.out)) {
-                formatter.setRepository(git.getRepository());
-                formatter.format(entry);
-                System.out.println("New Prefix: " + formatter.getNewPrefix());
-                System.out.println("Old Prefix: " + formatter.getOldPrefix());
-            }
+//            System.out.println("Entry: " + entry + ", from: " + entry.getOldId() + ", to: " + entry.getNewId());
+//            try (DiffFormatter formatter = new DiffFormatter(System.out)) {
+//                formatter.setRepository(git.getRepository());
+//                formatter.format(entry);
+//                System.out.println("New Prefix: " + formatter.getNewPrefix());
+//                System.out.println("Old Prefix: " + formatter.getOldPrefix());
+//            }
         }
     }
 
@@ -386,14 +383,13 @@ public class Git implements SCM {
         return this;
     }
 
-    @Override
-    public SCM setScm(SCM scm) {
-        return scm.getRepository().scm();
-    }
-
-    @Override
-    public org.eclipse.jgit.lib.Repository getScmJGit() {
-        return this.git.getRepository();
-    }
-
+//    @Override
+//    public SCM setScm(SCM scm) {
+//        return scm.getReferenceRepository().scm();
+//    }
+//
+//    @Override
+//    public org.eclipse.jgit.lib.Repository getScmJGit() {
+//        return this.git.getRepository();
+//    }
 }

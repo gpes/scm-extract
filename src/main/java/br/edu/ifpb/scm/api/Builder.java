@@ -46,16 +46,13 @@ public interface Builder {
      * @throws IOException
      * @throws ParseException
      */
-    public Repository buildClone() throws GitAPIException, IOException, ParseException;
+    public Repository build() throws GitAPIException, IOException, ParseException;
 
     /**
      * Recupera a instância de um repositório já existente
      * @return {@link Repository} Repositório
-     * @throws org.eclipse.jgit.api.errors.GitAPIException
-     * @throws IOException
-     * @throws ParseException
      */
-    public Repository buildRepository() throws GitAPIException, IOException, ParseException;
+//    public Repository buildRepository() throws GitAPIException, IOException, ParseException;
 
     public SCM getScm();
 }

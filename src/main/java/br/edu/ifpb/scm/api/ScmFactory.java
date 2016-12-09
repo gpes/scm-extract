@@ -7,7 +7,6 @@ package br.edu.ifpb.scm.api;
 
 import br.edu.ifpb.scm.api.SCM;
 import br.edu.ifpb.scm.api.git.Git;
-import br.edu.ifpb.scm.api.svn.Svn;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +27,7 @@ public class ScmFactory {
     private static final Map<String, SCM> map = new HashMap() {
         {
             put("git", new Git());
-            put("svn", new Svn());
+//            put("svn", new Svn());
             
         }
     };

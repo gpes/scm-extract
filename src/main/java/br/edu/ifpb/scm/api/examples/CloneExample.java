@@ -7,7 +7,6 @@ import br.edu.ifpb.scm.api.ScmType;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 /**
@@ -28,7 +27,7 @@ public class CloneExample {
                 .dir(dir)
                 .url(url)
                 .create(ScmType.GIT)
-                .buildClone();
+                .build();
 
         System.out.println("Local URL: " + repository.getPathLocal());
         System.out.println("Remote URL: " + repository.getUrlRemote());

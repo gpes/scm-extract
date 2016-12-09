@@ -1,6 +1,8 @@
 package br.edu.ifpb.scm.api;
 
 //TODO: Usar apenas objetos de nossa API
+import org.eclipse.jgit.api.errors.GitAPIException;
+
 /**
  *
  * @author Priscila Gouveia <priscilaggouveia@gmail.com>
@@ -12,14 +14,14 @@ public interface SCM {
      *
      * @return {@link Repository} Repositório
      */
-    public Repository cloneRepository();
+
+    public Repository buildRepository();
 
     /**
      * Recupera a referência para um repositório local
      *
      * @return {@link Repository} Reposiório
      */
-    public Repository getRepository();
 
     /**
      * Realizar um checkout entre versões de um repositório
@@ -54,8 +56,8 @@ public interface SCM {
      */
     public SCM setDir(String dir);
 
-    public SCM setScm(SCM scm);
+//    public SCM setScm(SCM scm);
 
-    public org.eclipse.jgit.lib.Repository getScmJGit();
+//    public org.eclipse.jgit.lib.Repository getScmJGit();
 
 }

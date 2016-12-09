@@ -40,19 +40,19 @@ public final class ScmBuilder implements Builder {
     }
 
     @Override
-    public Repository buildClone() throws GitAPIException, IOException, ParseException {
+    public Repository build() throws GitAPIException, IOException, ParseException {
         return this.scm
                 .setUrl(url)
                 .setDir(dir)
-                .cloneRepository();
+                .buildRepository();
     }
 
-    @Override
-    public Repository buildRepository() throws GitAPIException, IOException, ParseException {
-        return this.scm
-                .setDir(dir)
-                .getRepository();
-    }
+//    @Override
+//    public Repository buildRepository() throws GitAPIException, IOException, ParseException {
+//        return this.scm
+//                .setDir(dir)
+//                .getRepository();
+//    }
 
     @Override
     public SCM getScm() {
