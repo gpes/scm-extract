@@ -52,6 +52,7 @@ public class Svn implements SCM {
         }
 
     }
+
     //TODO
     @Override
     public Repository buildRepository() {
@@ -99,11 +100,6 @@ public class Svn implements SCM {
             Logger.getLogger(Svn.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
-    }
-
-    @Override
-    public Repository checkoutByCommit(String hash) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void log() {

@@ -25,11 +25,6 @@ public class Mercurial implements SCM {
     }
 
     @Override
-    public Repository checkoutByCommit(String hash) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public SCM setUrl(String url) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

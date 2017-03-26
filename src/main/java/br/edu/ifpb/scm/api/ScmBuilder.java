@@ -53,10 +53,20 @@ public final class ScmBuilder implements Builder {
 //                .setDir(dir)
 //                .getRepository();
 //    }
-
     @Override
     public SCM getScm() {
         return scm;
+    }
+
+    @Override
+    public Builder toPath(String path) {
+        this.dir = path;
+        return this;
+    }
+
+    @Override
+    public Repository checkout(String hash) {
+        return this.scm.checkout(hash);
     }
 
 }

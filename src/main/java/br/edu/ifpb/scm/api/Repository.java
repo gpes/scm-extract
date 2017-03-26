@@ -45,4 +45,8 @@ public class Repository {
         return scm;
     }
 
+    public void setScm(SCM scm) {
+        this.scm = scm;
+    }
+
 }

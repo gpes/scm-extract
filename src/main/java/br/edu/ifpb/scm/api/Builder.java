@@ -31,6 +31,13 @@ public interface Builder {
      */
     public Builder dir(String dir);
 
+//    /**
+//     * Método que altera o local do clone
+//     *
+//     * @param path Caminho
+//     * @return Este objeto
+//     */
+//    public Builder toPath(String path);
     /**
      * Cria a instância de um sistema de controle de versão
      *
@@ -41,6 +48,7 @@ public interface Builder {
 
     /**
      * Contrói uma instância de um objeto {@link Repository}
+     *
      * @return {@link Repository} Repositório
      * @throws GitAPIException
      * @throws IOException
@@ -50,9 +58,13 @@ public interface Builder {
 
     /**
      * Recupera a instância de um repositório já existente
+     *
      * @return {@link Repository} Repositório
      */
 //    public Repository buildRepository() throws GitAPIException, IOException, ParseException;
-
     public SCM getScm();
+
+    public Builder toPath(String path);
+
+    public Repository checkout(String dc0f7ff60b007e3cbd033b0ba65978b85518812);
 }

@@ -6,7 +6,6 @@
 package br.edu.ifpb.scm.api.git;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.jgit.diff.DiffEntry;
 

@@ -28,6 +28,8 @@ public class CloneExample {
                 .create(ScmType.GIT)
                 .build();
 
+        
+        
         System.out.println("Local URL: " + repository.getPathLocal());
         System.out.println("Remote URL: " + repository.getUrlRemote());
     }

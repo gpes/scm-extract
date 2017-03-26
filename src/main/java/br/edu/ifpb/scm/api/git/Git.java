@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -30,6 +31,7 @@ import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.AbstractTreeIterator;
@@ -47,8 +49,9 @@ public class Git implements SCM {
     private File dir;
     private org.eclipse.jgit.api.Git git;
     private org.eclipse.jgit.lib.Repository repoJGit;
-    private static String HEAD = "^{tree}";
-    private static String HEAD_NEIGHBOR = "~1^{tree}";
+    private static final String HEAD = "^{tree}";
+    private static final String HEAD_NEIGHBOR = "~1^{tree}";
+    private SCM scm;
 
     public Git() {
         this.repository = new Repository();
@@ -68,6 +71,7 @@ public class Git implements SCM {
         }
         repository = createRepository();
         repository.AddAllVersions(versions());
+        repository.setScm(new Git());
         return repository;
     }
 
@@ -142,8 +146,8 @@ public class Git implements SCM {
 
     /**
      * Recupera a referencia do RevCommit
-     * @param repoJGit {@link org.eclipse.jgit.lib.Repository} Repositorio
-     * JGit
+     *
+     * @param repoJGit {@link org.eclipse.jgit.lib.Repository} Repositorio JGit
      * @param commit String
      * @return List {@link List} de de {@link ChangedFiles}
      */
@@ -168,8 +172,7 @@ public class Git implements SCM {
 
     /**
      *
-     * @param repoJGit {@link org.eclipse.jgit.lib.Repository} Repositorio
-     * JGit
+     * @param repoJGit {@link org.eclipse.jgit.lib.Repository} Repositorio JGit
      * @param commit String hashCode do commit
      * @return {@link RevCommit} RevCommit
      */
@@ -238,8 +241,8 @@ public class Git implements SCM {
     /**
      * Recupera a difereça entre as versões
      *
-     * @param repoJGit {@link org.eclipse.jgit.lib.Repository} Repositorio
-     * JGit JGit
+     * @param repoJGit {@link org.eclipse.jgit.lib.Repository} Repositorio JGit
+     * JGit
      * @param rev1 {@link RevCommit} RevCommit
      * @param rev2 {@link RevCommit} RevCommit
      * @return {@link List} List de {@link Version}
@@ -279,16 +282,24 @@ public class Git implements SCM {
 
     @Override
     public Repository checkout(String commit) {
-//        Git git; - Git.class da API JGit / Originalmente o método retorna um Ref.class da mesma API 
-//        return git.checkout().
-//                setCreateBranch(true).
-//                setName(check).
-//                setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).
-//                setStartPoint("origin/" + check).call();
-        return null;
+        try {
+            git.checkout().setName(commit).call();
+            buildRepository();
+            //        Git git; - Git.class da API JGit / Originalmente o método retorna um Ref.class da mesma API
+//            cloneRepository();
+        } catch (GitAPIException ex) {
+            ex.printStackTrace();
+            System.out.println(ex.getMessage());
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
+//        return git.checkout()
+//                .setCreateBranch(true)
+//                .setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK)
+//                .setStartPoint("origin/" + commit)
+//                .call();
+        return repository;
     }
 
-    @Override
     public Repository checkoutByCommit(String hash) {
 
 //        Git git; - Git.class da api JGit  / Originalmente o método retorna um Ref.class da mesma API 
@@ -386,4 +397,5 @@ public class Git implements SCM {
     public org.eclipse.jgit.lib.Repository getScmJGit() {
         return git.getRepository();
     }
+
 }
