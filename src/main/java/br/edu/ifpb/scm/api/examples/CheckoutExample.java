@@ -27,11 +27,11 @@ public class CheckoutExample {
 
             Repository repository = builder
                     .url(url)
-                    .toPath("/home/jairanderson/Desktop/Untitled Folder/teste")
+                    .toPath(dir)
                     .create(ScmType.GIT)
                     .build();
 
-            repository = builder.checkout("2dc0f7ff60b007e3cbd033b0ba65978b85518812");
+            repository = builder.checkout("0f6a9eeb760a892e253c7d7b3c14ea4418432d8f");
             
             repository.getVersions().forEach(version -> {
                 System.out.println("\n ---- Commits Info ---- ");
