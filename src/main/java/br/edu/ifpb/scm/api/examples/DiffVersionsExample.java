@@ -1,9 +1,12 @@
 package br.edu.ifpb.scm.api.examples;
 
+import br.edu.ifpb.scm.api.git.FilesChangedExamples;
+import br.edu.ifpb.scm.api.factories.AbstractFactory;
 import br.edu.ifpb.scm.api.Builder;
-import br.edu.ifpb.scm.api.Repository;
-import br.edu.ifpb.scm.api.ScmBuilder;
-import br.edu.ifpb.scm.api.ScmType;
+import br.edu.ifpb.scm.api.factories.FactoryProduces;
+import br.edu.ifpb.scm.api.factories.Repository;
+import br.edu.ifpb.scm.api.SCM;
+import br.edu.ifpb.scm.api.enums.ScmType;
 import br.edu.ifpb.scm.api.git.Version;
 import java.io.IOException;
 import java.util.List;
@@ -24,11 +27,13 @@ public class DiffVersionsExample {
         ResourceBundle banco = ResourceBundle.getBundle("scm");
         String dir = banco.getString("dir.local.jair");
         String url = banco.getString("url.repo");
-        Builder builder = new ScmBuilder();
+
+        AbstractFactory get = FactoryProduces.get(ScmType.GIT);
+        Builder builder = get.createBuilder();
+        SCM scm = get.createScm();
         Repository repository = builder
                 .dir(dir)
                 .url(url)
-                .create(ScmType.GIT)
                 .build();
         System.out.println("Local URL: " + repository.getPathLocal());
         System.out.println("Remote URL: " + repository.getUrlRemote());
@@ -39,7 +44,7 @@ public class DiffVersionsExample {
             System.out.println("Message: " + version.getMessage());
             List<DiffEntry> diffs = version.getDiffs();
             DiffFormatter format = new DiffFormatter(System.out);
-            format.setRepository(builder.getScm().getScmJGit());
+            format.setRepository(scm.getRepository());
             for (DiffEntry diffEntry : diffs) {
                 try {
                     format.format(diffEntry);

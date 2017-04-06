@@ -11,7 +11,7 @@ package br.edu.ifpb.scm.api.exception;
  */
 public class SCMException extends RuntimeException {
 
-    public SCMException(String sf, Exception e) {
+    public SCMException(String msg, Exception e) {
     }
 
 }

@@ -1,17 +1,18 @@
 package br.edu.ifpb.scm.svn;
 
-import br.edu.ifpb.scm.api.Repository;
+import br.edu.ifpb.scm.api.factories.AbstractFactory;
+import br.edu.ifpb.scm.api.Builder;
+import br.edu.ifpb.scm.api.factories.FactoryProduces;
+import br.edu.ifpb.scm.api.factories.Repository;
 import br.edu.ifpb.scm.api.RepositoryTest;
-import br.edu.ifpb.scm.api.ScmType;
-import br.edu.ifpb.scm.api.ScmBuilder;
-import br.edu.ifpb.scm.api.svn.Svn;
+import br.edu.ifpb.scm.api.enums.ScmType;
 import br.edu.ifpb.scm.api.util.FileHelper;
 import java.io.File;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
-import static org.junit.Assert.*;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -31,10 +32,12 @@ public class SvnTest {
         try {
             logger.log(Level.INFO, "iniciando teste do clone do File");
             File path = null;
-            Svn instance = new Svn(new File(dir), url);
+            AbstractFactory abs = FactoryProduces.get(ScmType.SVN);
+            Builder builder = abs.createBuilder();
+            Repository result = builder.dir(dir).url(url).build();
+            Assert.assertNull(result);
             Repository expResult = null;
-            Repository result = new ScmBuilder().url(url).dir(dir).create(ScmType.SVN).build();
-            assertEquals(expResult, result);
+            Assert.assertEquals(expResult, result);
         } catch (Exception ex) {
             ex.printStackTrace();
             logger.log(Level.SEVERE, "Problemas na execução do teste clonar SVN: ", ex);

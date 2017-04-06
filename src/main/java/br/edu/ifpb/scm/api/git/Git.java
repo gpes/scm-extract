@@ -9,7 +9,7 @@ import br.edu.ifpb.scm.api.exception.DiffException;
 import br.edu.ifpb.scm.api.exception.SCMException;
 import br.edu.ifpb.scm.api.exception.ConvertionException;
 import br.edu.ifpb.scm.api.exception.AuthorizationException;
-import br.edu.ifpb.scm.api.Repository;
+import br.edu.ifpb.scm.api.factories.Repository;
 import br.edu.ifpb.scm.api.SCM;
 import br.edu.ifpb.scm.api.exception.ReferenceException;
 import java.io.File;
@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -31,7 +30,6 @@ import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
-import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.AbstractTreeIterator;
@@ -389,13 +387,8 @@ public class Git implements SCM {
 //        return scm.getReferenceRepository().scm();
 //    }
 //
-//    @Override
-//    public org.eclipse.jgit.lib.Repository getScmJGit() {
-//        return this.git.getRepository();
-//    }
     @Override
-    public org.eclipse.jgit.lib.Repository getScmJGit() {
-        return git.getRepository();
+    public org.eclipse.jgit.lib.Repository getRepository() {
+        return this.git.getRepository();
     }
-
 }

@@ -5,7 +5,7 @@
  */
 package br.edu.ifpb.scm.api.git;
 
-import br.edu.ifpb.scm.api.Repository;
+import br.edu.ifpb.scm.api.factories.Repository;
 import br.edu.ifpb.scm.api.exception.ReferenceException;
 import java.io.File;
 import java.io.IOException;

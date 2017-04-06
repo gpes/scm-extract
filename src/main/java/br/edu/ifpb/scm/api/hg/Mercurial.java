@@ -6,7 +6,7 @@
 package br.edu.ifpb.scm.api.hg;
 
 import br.edu.ifpb.scm.api.SCM;
-import br.edu.ifpb.scm.api.Repository;
+import br.edu.ifpb.scm.api.factories.Repository;
 
 /**
  *
@@ -35,8 +35,9 @@ public class Mercurial implements SCM {
     }
 
     @Override
-    public org.eclipse.jgit.lib.Repository getScmJGit() {
+    public org.eclipse.jgit.lib.Repository getRepository() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
 
 }

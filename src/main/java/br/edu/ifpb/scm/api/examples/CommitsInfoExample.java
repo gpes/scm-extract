@@ -1,8 +1,10 @@
 package br.edu.ifpb.scm.api.examples;
 
-import br.edu.ifpb.scm.api.Repository;
-import br.edu.ifpb.scm.api.ScmBuilder;
-import br.edu.ifpb.scm.api.ScmType;
+import br.edu.ifpb.scm.api.factories.AbstractFactory;
+import br.edu.ifpb.scm.api.Builder;
+import br.edu.ifpb.scm.api.factories.FactoryProduces;
+import br.edu.ifpb.scm.api.factories.Repository;
+import br.edu.ifpb.scm.api.enums.ScmType;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ResourceBundle;
@@ -20,10 +22,13 @@ public class CommitsInfoExample {
         String url = banco.getString("url.repo");
         String dir = banco.getString("dir.local.jair");
         try {
-            Repository repository = new ScmBuilder()
+
+            AbstractFactory get = FactoryProduces.get(ScmType.GIT);
+            Builder builder = get.createBuilder();
+            Repository repository = builder
                     .dir(dir)
                     .url(url)
-                    .create(ScmType.GIT).build();
+                    .build();
 
             repository.getVersions().forEach(version -> {
                 System.out.println("\n ---- Commits Info ---- ");

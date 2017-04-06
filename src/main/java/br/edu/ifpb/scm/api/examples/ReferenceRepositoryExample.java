@@ -5,13 +5,13 @@
  */
 package br.edu.ifpb.scm.api.examples;
 
+import br.edu.ifpb.scm.api.factories.AbstractFactory;
 import br.edu.ifpb.scm.api.Builder;
-import br.edu.ifpb.scm.api.Repository;
-import br.edu.ifpb.scm.api.ScmBuilder;
-import br.edu.ifpb.scm.api.ScmType;
+import br.edu.ifpb.scm.api.factories.FactoryProduces;
+import br.edu.ifpb.scm.api.factories.Repository;
+import br.edu.ifpb.scm.api.enums.ScmType;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ResourceBundle;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 /**
@@ -21,12 +21,11 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 public class ReferenceRepositoryExample {
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
-        ResourceBundle resource = ResourceBundle.getBundle("scm");
-        String dir = resource.getString("dir.local.jair");
-        Builder builder = new ScmBuilder();
+        
+        AbstractFactory abs = FactoryProduces.get(ScmType.GIT);
+        Builder builder = abs.createBuilder();
         Repository repository = builder
-                .dir(dir)
-                .create(ScmType.GIT)
+                .dir("/home/jairanderson/NetBeansProjects/scm-extract")
                 .build();
 
         System.out.println("Local URL: " + repository.getPathLocal());

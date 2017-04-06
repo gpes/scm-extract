@@ -3,23 +3,31 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.scm.api;
+package br.edu.ifpb.scm.api.builders;
 
+import br.edu.ifpb.scm.api.Builder;
+import br.edu.ifpb.scm.api.factories.Repository;
+import br.edu.ifpb.scm.api.SCM;
+import br.edu.ifpb.scm.api.svn.Svn;
 import java.io.IOException;
 import java.text.ParseException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 /**
- * ScmFactory .url("url") .dir("") .create("git") .clone() .repository()
- * .checkout("123") Interface Fluent
  *
- * @author Anderson Souza
+ * @author <a href="https://github.com/jass2125" target="_blank">Anderson
+ * Souza</a>
+ * @since Apr 5, 2017 10:43:20 PM
  */
-public final class ScmBuilder implements Builder {
+public class SvnBuilder implements Builder {
 
     private SCM scm;
     private String url;
     private String dir;
+
+    public SvnBuilder(Svn scm) {
+        this.scm = scm;
+    }
 
     @Override
     public Builder url(String url) {
@@ -34,39 +42,17 @@ public final class ScmBuilder implements Builder {
     }
 
     @Override
-    public Builder create(ScmType type) {
-        this.scm = type.getScmType();
-        return this;
-    }
-
-    @Override
     public Repository build() throws GitAPIException, IOException, ParseException {
-        return this.scm
-                .setUrl(url)
+        return scm
                 .setDir(dir)
+                .setUrl(url)
                 .buildRepository();
-    }
-
-//    @Override
-//    public Repository buildRepository() throws GitAPIException, IOException, ParseException {
-//        return this.scm
-//                .setDir(dir)
-//                .getRepository();
-//    }
-    @Override
-    public SCM getScm() {
-        return scm;
     }
 
     @Override
     public Builder toPath(String path) {
         this.dir = path;
         return this;
-    }
-
-    @Override
-    public Repository checkout(String hash) {
-        return this.scm.checkout(hash);
     }
 
 }

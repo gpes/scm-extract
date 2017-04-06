@@ -1,5 +1,6 @@
-package br.edu.ifpb.scm.api;
+package br.edu.ifpb.scm.api.factories;
 
+import br.edu.ifpb.scm.api.SCM;
 import br.edu.ifpb.scm.api.git.Version;
 import java.util.Collections;
 import java.util.List;

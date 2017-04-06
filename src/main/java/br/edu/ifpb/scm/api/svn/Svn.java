@@ -6,7 +6,7 @@
 package br.edu.ifpb.scm.api.svn;
 
 import br.edu.ifpb.scm.api.SCM;
-import br.edu.ifpb.scm.api.Repository;
+import br.edu.ifpb.scm.api.factories.Repository;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,12 +26,12 @@ import org.tmatesoft.svn.core.wc2.SvnTarget;
 public class Svn implements SCM {
 
     private Repository repository;
-
     private SvnOperationFactory operationFactory;
     private SVNURL location;
     private File dir;
     private String url;
     private File path;
+    private SCM scm;
 
     public Svn() {
     }
@@ -52,6 +52,7 @@ public class Svn implements SCM {
         }
 
     }
+
 
     //TODO
     @Override
@@ -74,7 +75,7 @@ public class Svn implements SCM {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public Repository getRepository() {
+    public Repository getRepositorySVN() {
 
         try {
             location = SVNURL.fromFile(dir);//parseURIEncoded(url);
@@ -134,11 +135,7 @@ public class Svn implements SCM {
     }
 
     @Override
-    public org.eclipse.jgit.lib.Repository getScmJGit() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public Repository getReferenceRepository() {
+    public org.eclipse.jgit.lib.Repository getRepository() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

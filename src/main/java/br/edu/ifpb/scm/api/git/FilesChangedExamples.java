@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.scm.api.examples;
+package br.edu.ifpb.scm.api.git;
 
+import br.edu.ifpb.scm.api.factories.AbstractFactory;
 import br.edu.ifpb.scm.api.Builder;
-import br.edu.ifpb.scm.api.Repository;
-import br.edu.ifpb.scm.api.ScmBuilder;
-import br.edu.ifpb.scm.api.ScmType;
+import br.edu.ifpb.scm.api.factories.FactoryProduces;
+import br.edu.ifpb.scm.api.factories.Repository;
+import br.edu.ifpb.scm.api.enums.ScmType;
 import java.util.ResourceBundle;
 
 /**
@@ -21,11 +22,12 @@ public class FilesChangedExamples {
         ResourceBundle banco = ResourceBundle.getBundle("scm");
         String dir = banco.getString("dir.local.jair");
         String url = banco.getString("url.repo");
-        Builder builder = new ScmBuilder();
+        
+        AbstractFactory abs = FactoryProduces.get(ScmType.GIT);
+        Builder builder = abs.createBuilder();
         Repository repository = builder
                 .dir(dir)
                 .url(url)
-                .create(ScmType.GIT)
                 .build();
 
         System.out.println("Local URL: " + repository.getPathLocal());

@@ -3,15 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.scm.api.exception;
+package br.edu.ifpb.scm.api.enums;
 
 /**
  *
- * @author des02
+ * @author Anderson Souza
  */
-public class ConvertionException extends RuntimeException {
+public enum ScmType {
+    GIT, MERCURIAL, SVN;
 
-    public ConvertionException(String msg, java.lang.Exception e) {
-    }
-    
 }

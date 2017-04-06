@@ -5,26 +5,18 @@
  */
 package br.edu.ifpb.scm.api.loads;
 
-import br.edu.ifpb.scm.api.ScmAbstractFactory;
-import br.edu.ifpb.scm.api.ScmFactory;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
-import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 

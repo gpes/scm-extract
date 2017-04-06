@@ -1,5 +1,9 @@
 package br.edu.ifpb.scm.api;
 
+import br.edu.ifpb.scm.api.enums.ScmType;
+import br.edu.ifpb.scm.api.factories.Repository;
+import br.edu.ifpb.scm.api.factories.AbstractFactory;
+import br.edu.ifpb.scm.api.factories.FactoryProduces;
 import br.edu.ifpb.scm.api.util.FileHelper;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -19,6 +23,7 @@ public class RepositoryTest {
     private ResourceBundle bundle = ResourceBundle.getBundle("scm");
     private final String dir = bundle.getString("dir.local.jair");
     private final String url = bundle.getString("url.repo");
+    private AbstractFactory abs;
     private Builder builder;
 
     @Test
@@ -26,9 +31,9 @@ public class RepositoryTest {
 
         try {
             logger.log(Level.INFO, "iniciando teste do clone da URL");
-            builder = new ScmBuilder();
-
-            Repository repository = builder.url(url).dir(dir).create(ScmType.GIT).build();
+            abs = FactoryProduces.get(ScmType.GIT);
+            builder = abs.createBuilder();
+            Repository repository = builder.url(url).dir(dir).build();
             assertNotNull(repository);
             assertNotNull(repository.getPathLocal());
             assertNotNull(repository.getUrlRemote());
@@ -45,7 +50,9 @@ public class RepositoryTest {
 
         try {
             logger.log(Level.INFO, "iniciando teste do clone do File");
-            Repository repository = new ScmBuilder().url(url).dir(dir).create(ScmType.GIT).build();
+            abs = FactoryProduces.get(ScmType.GIT);
+            builder = abs.createBuilder();
+            Repository repository = builder.url(url).dir(dir).build();
             assertNotNull(repository);
             assertNotNull(repository.getPathLocal());
             assertNotNull(repository.getUrlRemote());
