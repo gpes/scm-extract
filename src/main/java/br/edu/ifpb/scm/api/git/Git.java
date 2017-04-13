@@ -282,7 +282,7 @@ public class Git implements SCM {
         try {
             buildRepository();
             git.checkout().setName(commit).call();
-            
+
             //        Git git; - Git.class da API JGit / Originalmente o método retorna um Ref.class da mesma API
 //            cloneRepository();
         } catch (GitAPIException ex) {
@@ -296,23 +296,6 @@ public class Git implements SCM {
 //                .setStartPoint("origin/" + commit)
 //                .call();
         return repository;
-    }
-
-    public Repository checkoutByCommit(String hash) {
-
-//        Git git; - Git.class da api JGit  / Originalmente o método retorna um Ref.class da mesma API 
-//         git.checkout().setName(check).
-//                setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).
-//                setStartPoint("origin/" + check).
-//                call();
-//        return git.checkout().setName(check).setName("master").call();
-//        git.checkout().setCreateBranch(true).setName("new-branch").setStartPoint(check).call();
-//                git.checkout().
-//                setCreateBranch(true).
-//                setName("master").
-//                setStartPoint(check).
-//                call();
-        return null;
     }
 
     /**
@@ -353,22 +336,22 @@ public class Git implements SCM {
 ////        return toString;
 //        return null;
 //    }
-    public void showFileDiffs2(String file, AbstractTreeIterator oldTreeParser, AbstractTreeIterator newTreeParser) throws GitAPIException, IOException {
-        List<DiffEntry> diff = git.diff().
-                setOldTree(oldTreeParser).
-                setNewTree(newTreeParser).
-                setPathFilter(PathFilter.create(file)).
-                call();
-        for (DiffEntry entry : diff) {
-//            System.out.println("Entry: " + entry + ", from: " + entry.getOldId() + ", to: " + entry.getNewId());
-//            try (DiffFormatter formatter = new DiffFormatter(System.out)) {
-//                formatter.setRepository(git.getRepository());
-//                formatter.format(entry);
-//                System.out.println("New Prefix: " + formatter.getNewPrefix());
-//                System.out.println("Old Prefix: " + formatter.getOldPrefix());
-//            }
-        }
-    }
+//    public void showFileDiffs2(String file, AbstractTreeIterator oldTreeParser, AbstractTreeIterator newTreeParser) throws GitAPIException, IOException {
+//        List<DiffEntry> diff = git.diff().
+//                setOldTree(oldTreeParser).
+//                setNewTree(newTreeParser).
+//                setPathFilter(PathFilter.create(file)).
+//                call();
+//        for (DiffEntry entry : diff) {
+////            System.out.println("Entry: " + entry + ", from: " + entry.getOldId() + ", to: " + entry.getNewId());
+////            try (DiffFormatter formatter = new DiffFormatter(System.out)) {
+////                formatter.setRepository(git.getRepository());
+////                formatter.format(entry);
+////                System.out.println("New Prefix: " + formatter.getNewPrefix());
+////                System.out.println("Old Prefix: " + formatter.getOldPrefix());
+////            }
+//        }
+//    }
 
     @Override
     public SCM setUrl(String url) {
