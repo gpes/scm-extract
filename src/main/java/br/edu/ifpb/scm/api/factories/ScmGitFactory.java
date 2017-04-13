@@ -5,10 +5,9 @@
  */
 package br.edu.ifpb.scm.api.factories;
 
+import br.edu.ifpb.scm.api.AbstractFactory;
 import br.edu.ifpb.scm.api.SCM;
-import br.edu.ifpb.scm.api.Builder;
 import br.edu.ifpb.scm.api.git.Git;
-import br.edu.ifpb.scm.api.builders.GitBuilder;
 
 /**
  *
@@ -16,18 +15,13 @@ import br.edu.ifpb.scm.api.builders.GitBuilder;
  * Souza</a>
  * @since Apr 5, 2017 9:45:10 PM
  */
-public class GitFactory implements AbstractFactory {
+public class ScmGitFactory implements AbstractFactory {
 
     private Git git = new Git();
 
     @Override
     public SCM createScm() {
         return git;
-    }
-
-    @Override
-    public Builder createBuilder() {
-        return new GitBuilder(git);
     }
 
 }

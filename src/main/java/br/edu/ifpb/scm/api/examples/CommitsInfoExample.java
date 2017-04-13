@@ -1,10 +1,10 @@
 package br.edu.ifpb.scm.api.examples;
 
-import br.edu.ifpb.scm.api.factories.AbstractFactory;
-import br.edu.ifpb.scm.api.Builder;
-import br.edu.ifpb.scm.api.factories.FactoryProduces;
-import br.edu.ifpb.scm.api.factories.Repository;
-import br.edu.ifpb.scm.api.enums.ScmType;
+import br.edu.ifpb.scm.api.AbstractFactory;
+import br.edu.ifpb.scm.api.SCM;
+import br.edu.ifpb.scm.api.Repository;
+import br.edu.ifpb.scm.api.factories.ScmGitFactory;
+import br.edu.ifpb.scm.api.util.FileHelper;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ResourceBundle;
@@ -23,12 +23,10 @@ public class CommitsInfoExample {
         String dir = banco.getString("dir.local.jair");
         try {
 
-            AbstractFactory get = FactoryProduces.get(ScmType.GIT);
-            Builder builder = get.createBuilder();
-            Repository repository = builder
-                    .dir(dir)
-                    .url(url)
-                    .build();
+            AbstractFactory factory = new ScmGitFactory();
+            SCM scm = factory.createScm();
+            scm.setDir(dir).setUrl(url);
+            Repository repository = scm.buildRepository();
 
             repository.getVersions().forEach(version -> {
                 System.out.println("\n ---- Commits Info ---- ");
@@ -41,6 +39,6 @@ public class CommitsInfoExample {
         } catch (RuntimeException e) {
             e.printStackTrace();
         }
-
+        new FileHelper(dir).apagar();
     }
 }

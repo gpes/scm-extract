@@ -2,8 +2,6 @@ package br.edu.ifpb.scm.api;
 
 //TODO: Usar apenas objetos de nossa API
 
-import br.edu.ifpb.scm.api.factories.Repository;
-
 /**
  *
  * @author Priscila Gouveia <priscilaggouveia@gmail.com>

@@ -1,12 +1,9 @@
 package br.edu.ifpb.scm.api.examples;
 
-import br.edu.ifpb.scm.api.git.FilesChangedExamples;
-import br.edu.ifpb.scm.api.factories.AbstractFactory;
-import br.edu.ifpb.scm.api.Builder;
-import br.edu.ifpb.scm.api.factories.FactoryProduces;
-import br.edu.ifpb.scm.api.factories.Repository;
+import br.edu.ifpb.scm.api.AbstractFactory;
+import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.SCM;
-import br.edu.ifpb.scm.api.enums.ScmType;
+import br.edu.ifpb.scm.api.factories.ScmGitFactory;
 import br.edu.ifpb.scm.api.git.Version;
 import java.io.IOException;
 import java.util.List;
@@ -28,13 +25,10 @@ public class DiffVersionsExample {
         String dir = banco.getString("dir.local.jair");
         String url = banco.getString("url.repo");
 
-        AbstractFactory get = FactoryProduces.get(ScmType.GIT);
-        Builder builder = get.createBuilder();
-        SCM scm = get.createScm();
-        Repository repository = builder
-                .dir(dir)
-                .url(url)
-                .build();
+        AbstractFactory factory = new ScmGitFactory();
+        SCM scm = factory.createScm();
+        scm.setDir(dir).setUrl(url);
+        Repository repository = scm.buildRepository();
         System.out.println("Local URL: " + repository.getPathLocal());
         System.out.println("Remote URL: " + repository.getUrlRemote());
 

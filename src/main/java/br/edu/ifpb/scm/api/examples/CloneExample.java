@@ -1,14 +1,14 @@
 package br.edu.ifpb.scm.api.examples;
 
-import br.edu.ifpb.scm.api.Builder;
-import br.edu.ifpb.scm.api.factories.FactoryProduces;
-import br.edu.ifpb.scm.api.factories.Repository;
-import br.edu.ifpb.scm.api.enums.ScmType;
+import br.edu.ifpb.scm.api.SCM;
+import br.edu.ifpb.scm.api.Repository;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ResourceBundle;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import br.edu.ifpb.scm.api.factories.AbstractFactory;
+import br.edu.ifpb.scm.api.AbstractFactory;
+import br.edu.ifpb.scm.api.factories.ScmGitFactory;
+import br.edu.ifpb.scm.api.util.FileHelper;
 
 /**
  *
@@ -20,16 +20,17 @@ public class CloneExample {
         ResourceBundle resource = ResourceBundle.getBundle("scm");
         String url = resource.getString("url.repo");
         String dir = resource.getString("dir.local.jair");
-        
-        AbstractFactory get = FactoryProduces.get(ScmType.GIT);
-        Builder builder = get.createBuilder();
-        Repository repository = builder
-                .dir(dir)
-                .url(url)
-                .build();
+
+        AbstractFactory abs = new ScmGitFactory();
+
+        SCM scm = abs.createScm();
+        scm.setUrl(url);
+        scm.setDir(dir);
+        Repository repository = scm.buildRepository();
 
         System.out.println("Local URL: " + repository.getPathLocal());
         System.out.println("Remote URL: " + repository.getUrlRemote());
-    }
 
+        new FileHelper(dir).apagar();
+    }
 }

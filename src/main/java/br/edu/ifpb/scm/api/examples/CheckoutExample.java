@@ -5,12 +5,11 @@
  */
 package br.edu.ifpb.scm.api.examples;
 
-import br.edu.ifpb.scm.api.factories.AbstractFactory;
-import br.edu.ifpb.scm.api.Builder;
-import br.edu.ifpb.scm.api.factories.FactoryProduces;
-import br.edu.ifpb.scm.api.factories.Repository;
+import br.edu.ifpb.scm.api.AbstractFactory;
+import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.SCM;
-import br.edu.ifpb.scm.api.enums.ScmType;
+import br.edu.ifpb.scm.api.factories.ScmGitFactory;
+import br.edu.ifpb.scm.api.util.FileHelper;
 import java.util.ResourceBundle;
 
 /**
@@ -25,17 +24,11 @@ public class CheckoutExample {
             String url = resource.getString("url.repo");
             String dir = resource.getString("dir.local.jair");
 
-            AbstractFactory get = FactoryProduces.get(ScmType.GIT);
-            
-            Builder builder = get.createBuilder();
-            SCM scm = get.createScm();
-            
-            Repository repository = builder
-                    .url(url)
-                    .toPath(dir)
-                    .build();
+            AbstractFactory factory = new ScmGitFactory();
 
-            repository = scm.checkout("0f6a9eeb760a892e253c7d7b3c14ea4418432d8f");
+            SCM scm = factory.createScm();
+            scm.setDir(dir).setUrl(url);
+            Repository repository = scm.checkout("0f6a9eeb760a892e253c7d7b3c14ea4418432d8f");
 
             repository.getVersions().forEach(version -> {
                 System.out.println("\n ---- Commits Info ---- ");
@@ -44,7 +37,7 @@ public class CheckoutExample {
                 System.out.println("Message:" + version.getMessage());
                 System.out.println("\n");
             });
-
+            new FileHelper(dir).apagar();
         } catch (Exception e) {
             e.printStackTrace();
         }

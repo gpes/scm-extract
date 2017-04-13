@@ -1,11 +1,10 @@
 package br.edu.ifpb.scm.svn;
 
-import br.edu.ifpb.scm.api.factories.AbstractFactory;
-import br.edu.ifpb.scm.api.Builder;
-import br.edu.ifpb.scm.api.factories.FactoryProduces;
-import br.edu.ifpb.scm.api.factories.Repository;
+import br.edu.ifpb.scm.api.AbstractFactory;
+import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.RepositoryTest;
-import br.edu.ifpb.scm.api.enums.ScmType;
+import br.edu.ifpb.scm.api.SCM;
+import br.edu.ifpb.scm.api.factories.ScmSvnFactory;
 import br.edu.ifpb.scm.api.util.FileHelper;
 import java.io.File;
 import java.util.ResourceBundle;
@@ -32,9 +31,11 @@ public class SvnTest {
         try {
             logger.log(Level.INFO, "iniciando teste do clone do File");
             File path = null;
-            AbstractFactory abs = FactoryProduces.get(ScmType.SVN);
-            Builder builder = abs.createBuilder();
-            Repository result = builder.dir(dir).url(url).build();
+            
+            AbstractFactory abs = new ScmSvnFactory();
+            SCM scm = abs.createScm();
+            scm.setDir(dir).setUrl(url);
+            Repository result = scm.buildRepository();
             Assert.assertNull(result);
             Repository expResult = null;
             Assert.assertEquals(expResult, result);

@@ -3,10 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifpb.scm.api.factories;
-
-import br.edu.ifpb.scm.api.SCM;
-import br.edu.ifpb.scm.api.Builder;
+package br.edu.ifpb.scm.api;
 
 /**
  *
@@ -17,6 +14,4 @@ import br.edu.ifpb.scm.api.Builder;
 public interface AbstractFactory {
 
     public SCM createScm();
-
-    public Builder createBuilder();
 }

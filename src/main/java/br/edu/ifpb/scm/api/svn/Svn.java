@@ -6,7 +6,7 @@
 package br.edu.ifpb.scm.api.svn;
 
 import br.edu.ifpb.scm.api.SCM;
-import br.edu.ifpb.scm.api.factories.Repository;
+import br.edu.ifpb.scm.api.Repository;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;

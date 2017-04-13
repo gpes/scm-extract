@@ -9,7 +9,7 @@ import br.edu.ifpb.scm.api.exception.DiffException;
 import br.edu.ifpb.scm.api.exception.SCMException;
 import br.edu.ifpb.scm.api.exception.ConvertionException;
 import br.edu.ifpb.scm.api.exception.AuthorizationException;
-import br.edu.ifpb.scm.api.factories.Repository;
+import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.SCM;
 import br.edu.ifpb.scm.api.exception.ReferenceException;
 import java.io.File;
@@ -49,7 +49,6 @@ public class Git implements SCM {
     private org.eclipse.jgit.lib.Repository repoJGit;
     private static final String HEAD = "^{tree}";
     private static final String HEAD_NEIGHBOR = "~1^{tree}";
-    private SCM scm;
 
     public Git() {
         this.repository = new Repository();
@@ -281,8 +280,9 @@ public class Git implements SCM {
     @Override
     public Repository checkout(String commit) {
         try {
-            git.checkout().setName(commit).call();
             buildRepository();
+            git.checkout().setName(commit).call();
+            
             //        Git git; - Git.class da API JGit / Originalmente o método retorna um Ref.class da mesma API
 //            cloneRepository();
         } catch (GitAPIException ex) {

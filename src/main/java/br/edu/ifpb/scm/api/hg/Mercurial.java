@@ -6,7 +6,7 @@
 package br.edu.ifpb.scm.api.hg;
 
 import br.edu.ifpb.scm.api.SCM;
-import br.edu.ifpb.scm.api.factories.Repository;
+import br.edu.ifpb.scm.api.Repository;
 
 /**
  *
