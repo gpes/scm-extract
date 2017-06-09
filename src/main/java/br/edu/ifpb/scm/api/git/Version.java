@@ -20,6 +20,7 @@ public class Version {
     private String message;
 //    private List<ChangedFiles> changes;
     private List<DiffEntry> diffs;
+    private Author author;
 
     public Version() {
 //        changes = new ArrayList<>();
@@ -30,11 +31,12 @@ public class Version {
         return "Version{" + "commitDate=" + commitDate + ", hashCode=" + hashCode + ", message=" + message + ", diffs=" + diffs + '}';
     }
 
-    public Version(LocalDate commitDate, String hashCode, String message, List<DiffEntry> diffs) {
+    public Version(LocalDate commitDate, String hashCode, String message, List<DiffEntry> diffs, Author author) {
         this.commitDate = commitDate;
         this.hashCode = hashCode;
         this.message = message;
         this.diffs = diffs;
+        this.author = author;
     }
 
 //    public List<ChangedFiles> getChanges() {
@@ -75,6 +77,14 @@ public class Version {
 
     public List<DiffEntry> getDiffs() {
         return diffs;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
 }

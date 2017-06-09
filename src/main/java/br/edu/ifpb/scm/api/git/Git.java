@@ -32,9 +32,7 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.eclipse.jgit.treewalk.filter.PathFilter;
 
 /**
  * @author Priscila Gouveia <priscilaggouveia@gmail.com>
@@ -126,6 +124,9 @@ public class Git implements SCM {
      * @return {@link Version} Versão
      */
     private Version createVersion(RevCommit it) throws IOException {
+        Author author = new Author();
+        author.setName(it.getAuthorIdent().getName());
+        author.setEmail(it.getAuthorIdent().getEmailAddress());
         List<ChangedFiles> listOfChangedFiles = getChangedFilesFromSpecifiedVersion(extractHashFromCommit(it));
         List<DiffEntry> listOfDiffs = Collections.EMPTY_LIST;
         boolean flag = false;
@@ -136,7 +137,7 @@ public class Git implements SCM {
         listOfDiffs = getDiff(extractHashFromCommit(it), flag);
         return new Version(extractLocalDateFromCommit(it),
                 extractHashFromCommit(it),
-                it.getShortMessage(), listOfDiffs);
+                it.getShortMessage(), listOfDiffs, author);
 
 //                .setChanges(listOfChangedFiles);
     }
@@ -202,6 +203,7 @@ public class Git implements SCM {
         DiffFormatter formatter = new DiffFormatter(System.out);
         formatter.setRepository(git.getRepository());
         List<DiffEntry> scan = formatter.scan(oldTree, newTree);
+        
         return scan;
     }
 
@@ -352,7 +354,6 @@ public class Git implements SCM {
 ////            }
 //        }
 //    }
-
     @Override
     public SCM setUrl(String url) {
         this.url = url;

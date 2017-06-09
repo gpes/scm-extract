@@ -33,6 +33,8 @@ public class CommitsInfoExample {
                 System.out.println("Commit Date: " + version.getCommitDate());
                 System.out.println("Commit Hashcode: " + version.getHashCode());
                 System.out.println("Message:" + version.getMessage());
+                System.out.println("Author: " + version.getAuthor().getName());
+                System.out.println("Email: " + version.getAuthor().getEmail());
                 System.out.println("\n");
             });
 
