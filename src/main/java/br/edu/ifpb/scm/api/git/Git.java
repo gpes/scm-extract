@@ -124,9 +124,6 @@ public class Git implements SCM {
      * @return {@link Version} Versão
      */
     private Version createVersion(RevCommit it) throws IOException {
-        Author author = new Author();
-        author.setName(it.getAuthorIdent().getName());
-        author.setEmail(it.getAuthorIdent().getEmailAddress());
         List<ChangedFiles> listOfChangedFiles = getChangedFilesFromSpecifiedVersion(extractHashFromCommit(it));
         List<DiffEntry> listOfDiffs = Collections.EMPTY_LIST;
         boolean flag = false;
@@ -137,7 +134,7 @@ public class Git implements SCM {
         listOfDiffs = getDiff(extractHashFromCommit(it), flag);
         return new Version(extractLocalDateFromCommit(it),
                 extractHashFromCommit(it),
-                it.getShortMessage(), listOfDiffs, author);
+                it.getShortMessage(), listOfDiffs, createAuthor(it));
 
 //                .setChanges(listOfChangedFiles);
     }
@@ -203,7 +200,7 @@ public class Git implements SCM {
         DiffFormatter formatter = new DiffFormatter(System.out);
         formatter.setRepository(git.getRepository());
         List<DiffEntry> scan = formatter.scan(oldTree, newTree);
-        
+
         return scan;
     }
 
@@ -300,12 +297,17 @@ public class Git implements SCM {
         return repository;
     }
 
+    private Author createAuthor(RevCommit it) {
+        try {
+            return new Author(it.getAuthorIdent().getName(), it.getAuthorIdent().getEmailAddress());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     /**
      * Imprime a diferença entre as versões em forma de texto
      *
-     * @param repository {@link org.eclipse.jgit.lib.Repository} Repositorio
-     * JGit
-     * @param diff {@link DiffEntry} Objeto Diff
      */
 //    private String showFileDiffs(org.eclipse.jgit.lib.Repository repository, DiffEntry diff) {
 //        try {
@@ -375,4 +377,5 @@ public class Git implements SCM {
     public org.eclipse.jgit.lib.Repository getRepository() {
         return this.git.getRepository();
     }
+
 }
