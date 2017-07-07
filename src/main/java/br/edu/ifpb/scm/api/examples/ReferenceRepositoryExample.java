@@ -11,6 +11,7 @@ import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.factories.ScmGitFactory;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ResourceBundle;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 /**
@@ -21,9 +22,12 @@ public class ReferenceRepositoryExample {
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
 
+        ResourceBundle resource = ResourceBundle.getBundle("scm");
+        String dir = System.getProperty("java.io.tmpdir") + resource.getString("dir");
+
         AbstractFactory abs = new ScmGitFactory();
         SCM scm = abs.createScm();
-        scm.setDir("/home/jairanderson/NetBeansProjects/scm-extract");
+        scm.setDir(dir);
         Repository repository = scm.buildRepository();
 
         System.out.println("Local URL: " + repository.getPathLocal());

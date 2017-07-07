@@ -21,9 +21,9 @@ import org.eclipse.jgit.diff.DiffFormatter;
 public class DiffVersionsExample {
 
     public static void main(String[] args) throws Exception {
-        ResourceBundle banco = ResourceBundle.getBundle("scm");
-        String dir = banco.getString("dir.local.jair");
-        String url = banco.getString("url.repo");
+        ResourceBundle resource = ResourceBundle.getBundle("scm");
+        String dir = System.getProperty("java.io.tmpdir") + resource.getString("dir");
+        String url = resource.getString("url.repo");
 
         AbstractFactory factory = new ScmGitFactory();
         SCM scm = factory.createScm();

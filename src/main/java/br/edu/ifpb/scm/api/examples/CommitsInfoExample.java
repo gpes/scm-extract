@@ -18,9 +18,10 @@ public class CommitsInfoExample {
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
 
-        ResourceBundle banco = ResourceBundle.getBundle("scm");
-        String url = banco.getString("url.repo");
-        String dir = banco.getString("dir.local.jair");
+        ResourceBundle resource = ResourceBundle.getBundle("scm");
+        String dir = System.getProperty("java.io.tmpdir") + resource.getString("dir");
+        String url = resource.getString("url.repo");
+
         try {
 
             AbstractFactory factory = new ScmGitFactory();

@@ -18,9 +18,9 @@ import java.util.ResourceBundle;
 public class FilesChangedExamples {
 
     public static void main(String[] args) throws Exception {
-        ResourceBundle banco = ResourceBundle.getBundle("scm");
-        String dir = banco.getString("dir.local.jair");
-        String url = banco.getString("url.repo");
+        ResourceBundle resource = ResourceBundle.getBundle("scm");
+        String dir = System.getProperty("java.io.tmpdir") + resource.getString("dir");
+        String url = resource.getString("url.repo");
 
         AbstractFactory abs = new ScmGitFactory();
         SCM scm = abs.createScm();

@@ -18,7 +18,7 @@ public class CloneExample {
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
         ResourceBundle resource = ResourceBundle.getBundle("scm");
         String url = resource.getString("url.repo");
-        String dir = resource.getString("dir.local.jair");
+        String dir = System.getProperty("java.io.tmpdir") + resource.getString("dir");
 
         AbstractFactory abs = new ScmGitFactory();
 
