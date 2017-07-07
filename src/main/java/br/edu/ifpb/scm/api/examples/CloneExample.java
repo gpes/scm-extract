@@ -17,11 +17,8 @@ public class CloneExample {
 
     public static void main(String[] args) throws GitAPIException, IOException, ParseException {
         ResourceBundle resource = ResourceBundle.getBundle("scm");
-//        String url = resource.getString("url.repo");
-//        String dir = resource.getString("dir.local.jair");
-
-        String url = "https://github.com/google/gson";
-        String dir = "/home/jairanderson/Desktop/TCC";
+        String url = resource.getString("url.repo");
+        String dir = resource.getString("dir.local.jair");
 
         AbstractFactory abs = new ScmGitFactory();
 
