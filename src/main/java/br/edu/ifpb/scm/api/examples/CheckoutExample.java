@@ -21,6 +21,7 @@ public class CheckoutExample {
     public static void main(String[] args) {
         try {
             ResourceBundle resource = ResourceBundle.getBundle("scm");
+
             String dir = System.getProperty("java.io.tmpdir") + resource.getString("dir");
             String url = resource.getString("url.repo");
 

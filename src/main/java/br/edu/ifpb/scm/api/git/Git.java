@@ -11,9 +11,15 @@ import br.edu.ifpb.scm.api.exception.ConvertionException;
 import br.edu.ifpb.scm.api.exception.AuthorizationException;
 import br.edu.ifpb.scm.api.Repository;
 import br.edu.ifpb.scm.api.SCM;
+import br.edu.ifpb.scm.api.examples.FilesChangedExamples;
 import br.edu.ifpb.scm.api.exception.ReferenceException;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -30,9 +36,11 @@ import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.eclipse.jgit.treewalk.TreeWalk;
 
 /**
  * @author Priscila Gouveia <priscilaggouveia@gmail.com>
@@ -116,6 +124,67 @@ public class Git implements SCM {
         return listOfVersions;
     }
 
+    public void shouldComputeTheDiffOfACommit(org.eclipse.jgit.lib.Repository repository, String hascodeCommit) throws Exception {
+        // print = true;
+        // Find the commit ...
+        Ref ref = repository.getRef("master");
+        ref = repository.peel(ref);
+        RevWalk walker = new RevWalk(repository);
+        walker.setRetainBody(true);
+        try {
+            RevCommit commit = walker.parseCommit(convertStringToRevCommit(hascodeCommit).toObjectId());
+            // Set up the tree walk to obtain the difference between the commit and it's parent(s) ...
+            TreeWalk tw = new TreeWalk(repository);
+            tw.setRecursive(true);
+            tw.addTree(commit.getTree());
+            for (RevCommit parent : commit.getParents()) {
+                RevCommit parentCommit = walker.parseCommit(parent);
+                tw.addTree(parentCommit.getTree());
+            }
+
+            // Now process the diff of each file ...
+            for (DiffEntry fileDiff : DiffEntry.scan(tw)) {
+                DiffEntry.ChangeType type = fileDiff.getChangeType();
+                switch (type) {
+                    case ADD:
+                        String newPath = fileDiff.getNewPath();
+//                        print("ADD   ", newPath);
+                        break;
+                    case COPY:
+                        newPath = fileDiff.getNewPath();
+                        String origPath = fileDiff.getOldPath();
+//                        print("COPY   ", origPath, " -> ", newPath);
+                        break;
+                    case DELETE:
+                        origPath = fileDiff.getOldPath();
+//                        print("DELETE ", origPath);
+                        break;
+                    case MODIFY:
+                        newPath = fileDiff.getNewPath();
+//                        print("MODIFY ", newPath);
+                        break;
+                    case RENAME:
+                        newPath = fileDiff.getNewPath();
+                        origPath = fileDiff.getOldPath();
+//                        print("RENAME ", origPath, " -> ", newPath);
+                        break;
+                    default:
+                        // skip
+                        break;
+                }
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
+                DiffFormatter formatter = new DiffFormatter(output);
+                formatter.setRepository(repository);
+                formatter.format(fileDiff);
+                String diff = output.toString("UTF-8");
+                System.out.println(output);
+//                print(diff);
+            }
+        } finally {
+            walker.dispose();
+        }
+    }
+
     /**
      * Cria um objeto versão
      *
@@ -132,9 +201,17 @@ public class Git implements SCM {
             listOfDiffs = getDiff(extractHashFromCommit(it), flag);
         }
         listOfDiffs = getDiff(extractHashFromCommit(it), flag);
+        String hashFromCommit = extractHashFromCommit(it);
+        try {
+            shouldComputeTheDiffOfACommit(repoJGit, hashFromCommit);
+        } catch (Exception ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return new Version(extractLocalDateFromCommit(it),
                 extractHashFromCommit(it),
-                it.getShortMessage(), listOfDiffs, createAuthor(it));
+                it.getShortMessage(),
+                listOfDiffs,
+                createAuthor(it));
 
 //                .setChanges(listOfChangedFiles);
     }
@@ -199,8 +276,22 @@ public class Git implements SCM {
 
         DiffFormatter formatter = new DiffFormatter(System.out);
         formatter.setRepository(git.getRepository());
+
         List<DiffEntry> scan = formatter.scan(oldTree, newTree);
 
+        /*OLHAR ESSE TRECHO */
+//        DiffFormatter format = new DiffFormatter(System.out);
+//        format.
+//        format.setRepository(repoJGit);
+//        for (DiffEntry diffEntry : scan) {
+//            try {
+//                format.format(diffEntry);
+//            } catch (IOException ex) {
+//                Logger.getLogger(FilesChangedExamples.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
+
+        /*OLHAR ESSE TRECHO */
         return scan;
     }
 
