@@ -34,10 +34,10 @@ public class FilesChangedExamples {
             System.out.println("Commit Date: " + v.getCommitDate());
             System.out.println("Commit HashCode: " + v.getHashCode());
             System.out.println("Message: " + v.getMessage());
-            v.getDiffs().stream().forEach(d -> {
-                System.out.println("Change Type: " + d.getChangeType());
-                System.out.println("Old File Name: " + d.getOldPath());
-                System.out.println("New File Name: " + d.getNewPath());
+            v.getChanges().forEach(d -> {
+                System.out.println("Change Type: " + d.getChangedType());
+                System.out.println("Old File Name: " + d.getOldFileName());
+                System.out.println("New File Name: " + d.getNewFileName());
             });
 
         });

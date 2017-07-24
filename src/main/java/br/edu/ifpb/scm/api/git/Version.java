@@ -6,8 +6,8 @@
 package br.edu.ifpb.scm.api.git;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import org.eclipse.jgit.diff.DiffEntry;
 
 /**
  *
@@ -18,35 +18,31 @@ public class Version {
     private LocalDate commitDate;
     private String hashCode;
     private String message;
-//    private List<ChangedFiles> changes;
-    private List<DiffEntry> diffs;
+    private List<ChangedFiles> changes = new ArrayList<>();
+    private StringBuilder diffs = new StringBuilder();
     private Author author;
 
     public Version() {
-//        changes = new ArrayList<>();
     }
 
-    @Override
-    public String toString() {
-        return "Version{" + "commitDate=" + commitDate + ", hashCode=" + hashCode + ", message=" + message + ", diffs=" + diffs + '}';
-    }
-
-    public Version(LocalDate commitDate, String hashCode, String message, List<DiffEntry> diffs, Author author) {
+    public Version(LocalDate commitDate, String hashCode, String message, List<ChangedFiles> changedFiles, StringBuilder diffs, Author author) {
         this.commitDate = commitDate;
         this.hashCode = hashCode;
         this.message = message;
+        this.changes = changedFiles;
         this.diffs = diffs;
         this.author = author;
     }
 
-//    public List<ChangedFiles> getChanges() {
-//        return changes;
-//    }
+    public List<ChangedFiles> getChanges() {
+        return changes;
+    }
 //
 //    public Version setChanges(List<ChangedFiles> changes) {
 //        this.changes = changes;
 //        return this;
 //    }
+
     public LocalDate getCommitDate() {
         return commitDate;
     }
@@ -71,11 +67,11 @@ public class Version {
         this.message = message;
     }
 
-    public void setDiffs(List<DiffEntry> diffs) {
+    public void setDiffs(StringBuilder diffs) {
         this.diffs = diffs;
     }
 
-    public List<DiffEntry> getDiffs() {
+    public StringBuilder getDiffs() {
         return diffs;
     }
 
@@ -87,4 +83,8 @@ public class Version {
         this.author = author;
     }
 
+    @Override
+    public String toString() {
+        return "Version{" + "commitDate=" + commitDate + ", hashCode=" + hashCode + ", message=" + message + ", diffs=" + diffs + '}';
+    }
 }
